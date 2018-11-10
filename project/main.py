@@ -1,21 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-
-
-class Actor:
-    def __init__(self, x, y, sprite):
-        self.x = x
-        self.y = y
-        self.sprite = sprite
-
-    def control(self, x_change, y_change):
-        if not MAP[self.y + y_change][self.x + x_change]:  # Checks if can step there
-            self.x += x_change
-            self.y += y_change
-
-    def draw(self):
-        SURFACE_MAIN.blit(self.sprite, (self.x * const.TILE_WIDTH, self.y * const.TILE_HEIGHT))
+import actor
 
 
 def create_map():
@@ -90,9 +76,10 @@ def game_init():
 
     pg.init()
     SURFACE_MAIN = pg.display.set_mode((const.MAIN_SURFACE_HEIGHT, const.MAIN_SURFACE_WIDTH))
-    PLAYER = Actor(1, 1, const.SPRITE_PLAYER)
 
     MAP = create_map()
+
+    PLAYER = actor.Actor(1, 1, const.SPRITE_PLAYER, MAP, SURFACE_MAIN)
 
 
 if __name__ == '__main__':
