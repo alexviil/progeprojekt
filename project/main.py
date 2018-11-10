@@ -1,48 +1,9 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import actor
-
-
-def create_map():
-    # new_map = [[False for y in range(0, const.MAP_HEIGHT)] for x in range(0, const.MAP_WIDTH)]
-    new_map = list()
-    for y in range(0, const.MAP_HEIGHT):
-        row = []
-        for x in range(0, const.MAP_WIDTH):
-            if y == 0 or y == const.MAP_HEIGHT-1 or x == 0 or x == const.MAP_WIDTH-1:
-                row.append(True)
-                continue
-            row.append(False)
-        new_map.append(row)
-    return new_map
-
-
-def draw_map(map_list: list):
-    global SURFACE_MAIN
-
-    for x in range(0, const.MAP_WIDTH):
-        for y in range(1, const.MAP_HEIGHT+1):
-            if map_list[y-1][x]:
-                SURFACE_MAIN.blit(const.SPRITE_WALL, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
-            else:
-                SURFACE_MAIN.blit(const.SPRITE_FLOOR, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
-
-
-def draw_game():
-    global SURFACE_MAIN
-
-    # Reset the surface
-    SURFACE_MAIN.fill(const.GRAY)
-
-    # Draw the map
-    draw_map(MAP)
-
-    # Draw the character
-    PLAYER.draw()
-
-    # Update display
-    pg.display.flip()
+import Actor
+import Draw
+import Map
 
 
 def game_loop():
@@ -68,7 +29,7 @@ def game_loop():
                     PLAYER.control(1, 0)
 
         # Draw game
-        draw_game()
+        Draw.Draw(SURFACE_MAIN, MAP, PLAYER).draw_game()
 
 
 def game_init():
@@ -77,9 +38,11 @@ def game_init():
     pg.init()
     SURFACE_MAIN = pg.display.set_mode((const.MAIN_SURFACE_HEIGHT, const.MAIN_SURFACE_WIDTH))
 
-    MAP = create_map()
+    map_obj = Map.Map()
+    map_obj.create_map()
+    MAP = map_obj.get_game_map()
 
-    PLAYER = actor.Actor(1, 1, const.SPRITE_PLAYER, MAP, SURFACE_MAIN)
+    PLAYER = Actor.Actor(1, 1, const.SPRITE_PLAYER, MAP, SURFACE_MAIN)
 
 
 if __name__ == '__main__':
