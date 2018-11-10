@@ -35,9 +35,9 @@ def create_map():
 def draw_map(map_list: list):
     global SURFACE_MAIN
 
-    for x, row in enumerate(map_list):
-        for y, tile in enumerate(row):
-            if tile:  # If tile == True, then it blocks path
+    for x in range(0, const.MAP_WIDTH):
+        for y in range(1, const.MAP_HEIGHT+1):
+            if map_list[y-1][x]:
                 SURFACE_MAIN.blit(const.SPRITE_WALL, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
             else:
                 SURFACE_MAIN.blit(const.SPRITE_FLOOR, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
