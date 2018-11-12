@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map
+import Actor, Draw, Map, Animations
 
 
 class Main:
@@ -12,8 +12,10 @@ class Main:
         map_obj = Map.Map()
         map_obj.create_map()
         self.game_map = map_obj.get_game_map()
-
-        self.player = Actor.Actor(1, 1, const.SPRITE_PLAYER, self.game_map, self.surface_main)
+        
+        self.actors = []
+        self.player = Actor.Actor(1, 1, const.SPRITE_PLAYER, const.SPRITE_PLAYER_IDLES, False, self.game_map, self.surface_main)
+        self.actors.append(self.player)
 
     def game_loop(self):
         run = True
@@ -36,6 +38,9 @@ class Main:
                         self.player.control(-1, 0)
                     elif event.key == pg.K_d:
                         self.player.control(1, 0)
+            
+            # Update actors' sprites
+            Animations.Animations(self.actors).update()
 
             # Draw game
             Draw.Draw(self.surface_main, self.game_map, self.player).draw_game()
