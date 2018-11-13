@@ -13,12 +13,18 @@ class Main:
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
         
+        self.actors_inanimate = []
         self.actors = []
-        self.player = Actor.Actor(1, 1, const.SPRITES_PLAYER, False, self.game_map, self.surface_main)
+        
+        self.player = Actor.Creature(1, 1, const.SPRITES_PLAYER, False, self.game_map, self.surface_main)
         self.actors.append(self.player)
         
-        self.npc = Actor.Actor(5, 7, const.SPRITES_DEMON, True, self.game_map, self.surface_main)
-        self.actors.append(self.npc)
+        self.actors.append(Actor.Creature(5, 7, const.SPRITES_DEMON, True, self.game_map, self.surface_main))
+        
+        self.actors_inanimate.append(Actor.Container(7, 7, const.SPRITE_CHEST, self.game_map, self.surface_main))
+        self.actors_inanimate.append(Actor.Container(3, 7, const.SPRITE_CHEST, self.game_map, self.surface_main))
+        
+        self.actors_all = self.actors + self.actors_inanimate
 
     def game_loop(self):
         run = True
@@ -43,7 +49,7 @@ class Main:
                         self.player.control(1, 0)
             
             # Update actor's collision box location
-            actor_locations = [actor.get_location() for actor in self.actors]
+            actor_locations = [actor.get_location() for actor in self.actors_all]
             self.map_obj.update(actor_locations)
             self.game_map = self.map_obj.get_game_map()
             
@@ -51,7 +57,7 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.npc).draw_game()
+            Draw.Draw(self.surface_main, self.game_map, self.player, self.actors, self.actors_inanimate).draw_game()
 
 
 if __name__ == '__main__':

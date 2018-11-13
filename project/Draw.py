@@ -3,11 +3,12 @@ import constants as const
 
 
 class Draw:
-    def __init__(self, surface, game_map, player, npc):
+    def __init__(self, surface, game_map, player, npcs=[], containers=[]):
         self.surface = surface
         self.game_map = game_map
         self.player = player
-        self.npc = npc
+        self.npcs = npcs
+        self.containers = containers
 
     def draw_map(self):
         for x in range(0, const.MAP_WIDTH):
@@ -27,8 +28,11 @@ class Draw:
         # Draw the character
         self.player.draw()
         
-        # Draw an NPC
-        self.npc.draw()
+        # Draw NPCs
+        for npc in self.npcs: npc.draw()
+        
+        # Draw Containers
+        for container in self.containers: container.draw()
 
         # Update display
         pg.display.flip()
