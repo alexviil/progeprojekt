@@ -13,8 +13,10 @@ class Actor:
         self.surface = surface
         self.idle_frames = idle_frames
         self.frame_counter = frame_counter
-        if self.mirror == True : self.sprite = self.sprites_mirrored[0]
-        else: self.sprite = self.sprites[0]
+        if self.mirror == True :
+            self.sprite = self.sprites_mirrored[0]
+        else:
+            self.sprite = self.sprites[0]
     
     def set_sprite(self, sprite):
         self.sprite = sprite
@@ -35,5 +37,4 @@ class Actor:
         self.surface.blit(self.sprite, (self.x * const.TILE_WIDTH, self.y * const.TILE_HEIGHT))
     
     def get_location(self):
-        return (self.x, self.y)
-        
+        return self.x, self.y

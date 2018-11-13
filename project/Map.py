@@ -19,17 +19,17 @@ class Map:
             self.game_map.append(row)
             
     def update(self, actor_locations):
-        
         for y in range(0, const.MAP_HEIGHT):
             for x in range(0, const.MAP_WIDTH):
-                
                 # Actor collision boxes
                 for actor_location in actor_locations:
                     if actor_location[0] == x and actor_location[1] == y:
                         self.game_map[y][x][1] = True
                     else:
                         self.game_map[y][x][1] = False
-        
 
     def get_game_map(self):
         return self.game_map
+
+    def get_tile(self, x, y):
+        return self.game_map[y][x]
