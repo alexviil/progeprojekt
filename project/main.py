@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations
+import Actor, Draw, Map, Animations, Tile
 
 
 class Main:
@@ -9,13 +9,25 @@ class Main:
         pg.init()
         self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_HEIGHT, const.MAIN_SURFACE_WIDTH))
 
+        # Game Map
+
         self.map_obj = Map.Map()
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
         
+        self.test = [] # Collision attribute values of each tile for debugging
+        for y in self.game_map:
+            row = []
+            for tile in y:
+                row.append(tile.get_is_wall())
+            self.test.append(row)
+        print(self.test)
+        
         self.actors_inanimate = []
         self.actors = []
-        
+
+        # Actors
+
         self.player = Actor.Creature(1, 1, const.SPRITES_PLAYER, False, self.game_map, self.surface_main)
         self.actors.append(self.player)
         

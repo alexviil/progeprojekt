@@ -37,7 +37,7 @@ class Creature(Actor):
             self.sprite = self.sprites[0]
             
     def control(self, x_change, y_change):
-        if not self.world_map[self.y + y_change][self.x + x_change][0] and not self.world_map[self.y + y_change][self.x + x_change][1]:  # Checks if can step there
+        if not self.world_map[self.y + y_change][self.x + x_change].get_is_wall() and not self.world_map[self.y + y_change][self.x + x_change].get_is_creature():  # Checks if can step there
             self.x += x_change
             self.y += y_change
 
@@ -45,7 +45,7 @@ class Creature(Actor):
             self.sprite = (pg.transform.flip(self.sprite, True, False))
             self.mirror = True
         elif x_change == 1 and self.mirror == True:
-            self.sprite =(pg.transform.flip(self.sprite, True, False))
+            self.sprite = (pg.transform.flip(self.sprite, True, False))
             self.mirror = False
 
 class Container(Actor):
