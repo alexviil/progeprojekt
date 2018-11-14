@@ -13,7 +13,7 @@ class Map:
         self.game_map = list()
         for y in range(const.MAP_HEIGHT):
             row = []
-            for x in range(const.MAP_HEIGHT):
+            for x in range(const.MAP_WIDTH):
                 if y == 0 or y == const.MAP_HEIGHT - 1 or x == 0 or x == const.MAP_WIDTH - 1:
                     row.append(Tile.Tile(x, y + 1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
                     continue

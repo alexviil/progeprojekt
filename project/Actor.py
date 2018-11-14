@@ -3,7 +3,7 @@ import constants as const
 
 
 class Actor:
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate):
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages):
         self.x = x
         self.y = y
         self.name = name
@@ -12,7 +12,8 @@ class Actor:
         self.surface = surface
         self.actors = actors
         self.actors_inanimate = actors_inanimate
-    
+        self.messages = messages
+
     def set_sprite(self, sprite):
         self.sprite = sprite
 
@@ -27,8 +28,8 @@ class Actor:
 
 
 class Creature(Actor):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, hp, idle_frames=30, frame_counter=0):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate)
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames=30, frame_counter=0):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
         self.sprites_mirrored = [pg.transform.flip(e, True, False) for e in sprites]
         self.mirror = mirror
         self.idle_frames = idle_frames
@@ -49,7 +50,7 @@ class Creature(Actor):
                 break
 
         if isinstance(target, Creature):  # if creature exists, attacks it
-            print(self.name + " attacks " + target.name + " for 3 damage.")
+            self.messages.append(self.name + " attacks " + target.name + " for 3 damage.")
             target.take_damage(3)
 
         if not self.world_map[self.y + y_change][self.x + x_change].get_is_wall() and target is None:  # Checks if can step there
@@ -66,13 +67,13 @@ class Creature(Actor):
 
     def take_damage(self, damage):
         self.hp -= damage
-        print(self.name + "'s health is " + str(self.hp) + "/" + str(self.max_hp))
+        self.messages.append(self.name + "'s health is " + str(self.hp) + "/" + str(self.max_hp))
 
         if self.hp <= 0:
             self.death()
 
     def death(self):
-        print(self.name + " is dead :(")
+        self.messages.append(self.name + " is dead.")
         self.actors.remove(self)
 
 
@@ -81,8 +82,8 @@ class Enemy(Creature):
 
 
 class Container(Actor):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, inventory=[]):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate)
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages, inventory=[]):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
         self.inventory = inventory
         self.sprite = sprites
     

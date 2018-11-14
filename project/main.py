@@ -7,7 +7,7 @@ import Actor, Draw, Map, Animations, Ai, Tile
 class Main:
     def __init__(self):
         pg.init()
-        self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_HEIGHT, const.MAIN_SURFACE_WIDTH))
+        self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_WIDTH, const.MAIN_SURFACE_HEIGHT))
 
         # Game Map
 
@@ -15,21 +15,25 @@ class Main:
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
 
-        self.test = []  # Collision attribute values of each tile for debugging
-        for y in self.game_map:
-            row = []
-            for tile in y:
-                row.append(tile.get_is_wall())
-            self.test.append(row)
+        # self.test = []  # Collision attribute values of each tile for debugging
+        # for y in self.game_map:
+        #     row = []
+        #     for tile in y:
+        #         row.append(tile.get_is_wall())
+        #     self.test.append(row)s
+        # print(self.test)
         
         self.actors_inanimate = []
         self.actors = []
 
+        # Game messages
+        self.messages = []
+
         # Actors
-        self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate))
-        self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate))
-        self.actors.append(Actor.Enemy(5, 7, "Deemon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, 10))
-        self.player = Actor.Creature(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, 20)
+        self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
+        self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
+        self.actors.append(Actor.Enemy(5, 7, "Deemon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
+        self.player = Actor.Creature(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
         self.actors.append(self.player)
 
         self.actors_all = self.actors + self.actors_inanimate
@@ -38,6 +42,8 @@ class Main:
         self.map_obj.calculate_fov_map(self.player)
 
         self.ai = Ai.Ai()
+
+        self.clock = pg.time.Clock()
 
     def game_loop(self):
         run = True
@@ -73,7 +79,10 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game()
+            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game(self.clock, self.messages)
+
+            # FPS limit and tracker
+            self.clock.tick(const.FPS_LIMIT)
 
     def update_actor_locations(self):
         # Update actor's collision box location

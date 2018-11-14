@@ -21,12 +21,18 @@ class Draw:
                 elif tile.explored:
                     self.surface.blit(tile.explored_sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
 
-    def draw_game(self):
+    def draw_game(self, clock, messages):
         # Reset the surface
         self.surface.fill(const.GRAY)
 
         # Draw the map
         self.draw_map()
+
+        # Draw debug text
+        self.draw_fps(clock)
+
+        # Draw Console text
+        self.draw_console_messages(messages, const.FONT_CONSOLE)
 
         # Draw Containers
         for container in self.containers:
@@ -44,5 +50,34 @@ class Draw:
         # Update display
         pg.display.flip()
 
+    def draw_text(self, text, text_x, text_y, text_color, font, back_color=None):
+        if back_color:
+            text_surface = font.render(text, False, text_color, back_color)
+        else:
+            text_surface = font.render(text, False, text_color)
+        text_rect = text_surface.get_rect()
+
+        text_rect.topleft = text_x, text_y
+
+        self.surface.blit(text_surface, text_rect)
+
+    def draw_fps(self, clock):
+        self.draw_text(str(int(clock.get_fps())), 0, 0, const.BLACK, const.FONT_DEBUG)
+
+    def draw_console_messages(self, messages: list, font):
+        messages = messages[-const.MESSAGE_NUMBER:]
+        # Places the console near bottom right
+        font_height = self.get_font_height(const.FONT_CONSOLE)
+
+        y = const.MAIN_SURFACE_HEIGHT - const.MESSAGE_NUMBER * font_height
+
+        for i, message in enumerate(messages):
+            self.draw_text(message, 0, y + i * font_height, const.WHITE, font, const.BLACK)
+
     def check_fov(self, x, y):
         return libt.map_is_in_fov(self.fov_map, x, y)
+
+    def get_font_height(self, font):
+        font_obj = font.render('test', False, const.BLACK)
+        font_rect = font_obj.get_rect()
+        return font_rect.height
