@@ -3,7 +3,7 @@ import constants as const
 
 
 class Actor:
-    def __init__(self, x, y, name, sprites, world_map, surface, actors):
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate):
         self.x = x
         self.y = y
         self.name = name
@@ -11,6 +11,7 @@ class Actor:
         self.world_map = world_map
         self.surface = surface
         self.actors = actors
+        self.actors_inanimate = actors_inanimate
     
     def set_sprite(self, sprite):
         self.sprite = sprite
@@ -26,8 +27,8 @@ class Actor:
 
 
 class Creature(Actor):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, hp, idle_frames=30, frame_counter=0):
-        super().__init__(x, y, name, sprites, world_map, surface, actors)
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, hp, idle_frames=30, frame_counter=0):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate)
         self.sprites_mirrored = [pg.transform.flip(e, True, False) for e in sprites]
         self.mirror = mirror
         self.idle_frames = idle_frames
@@ -42,7 +43,7 @@ class Creature(Actor):
             
     def control(self, x_change, y_change):
         target = None
-        for actor in self.actors:  # Checks if creature exists and target location
+        for actor in self.actors + self.actors_inanimate:  # Checks if creature exists and target location
             if actor is not self and actor.get_location() == (self.x + x_change, self.y + y_change) and isinstance(actor, Actor):
                 target = actor
                 break
@@ -51,7 +52,7 @@ class Creature(Actor):
             print(self.name + " attacks " + target.name + " for 3 damage.")
             target.take_damage(3)
 
-        if not self.world_map[self.y + y_change][self.x + x_change][0] and target is None:  # Checks if can step there
+        if not self.world_map[self.y + y_change][self.x + x_change].get_is_wall() and target is None:  # Checks if can step there
             self.x += x_change
             self.y += y_change
 
@@ -67,14 +68,21 @@ class Creature(Actor):
         self.hp -= damage
         print(self.name + "'s health is " + str(self.hp) + "/" + str(self.max_hp))
 
+        if self.hp <= 0:
+            self.death()
+
+    def death(self):
+        print(self.name + " is dead :(")
+        self.actors.remove(self)
+
 
 class Enemy(Creature):
     pass
 
 
 class Container(Actor):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, inventory=[]):
-        super().__init__(x, y, name, sprites, world_map, surface, actors)
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, inventory=[]):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate)
         self.inventory = inventory
         self.sprite = sprites
     
