@@ -7,8 +7,8 @@ from random import randint
 pg.init()
 
 # Init values
-MAIN_SURFACE_HEIGHT = 700
-MAIN_SURFACE_WIDTH = 610
+MAIN_SURFACE_HEIGHT = 705
+MAIN_SURFACE_WIDTH = 615
 
 # Colors
 GRAY = (122, 122, 122)

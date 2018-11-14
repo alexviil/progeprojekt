@@ -32,7 +32,7 @@ class Main:
         # Actors
         self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
         self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
-        self.actors.append(Actor.Enemy(5, 7, "Deemon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
+        self.actors.append(Actor.Enemy(5, 7, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
         self.player = Actor.Creature(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
         self.actors.append(self.player)
 

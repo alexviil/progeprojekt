@@ -28,7 +28,7 @@ class Actor:
 
 
 class Creature(Actor):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames=30, frame_counter=0):
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames=10, frame_counter=0):
         super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
         self.sprites_mirrored = [pg.transform.flip(e, True, False) for e in sprites]
         self.mirror = mirror
