@@ -16,7 +16,10 @@ class Draw:
         for y in self.game_map:
             for tile in y:
                 if self.check_fov(tile.x, tile.y):  # only draws if area is in field of view
+                    tile.explored = True
                     self.surface.blit(tile.sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
+                elif tile.explored:
+                    self.surface.blit(tile.explored_sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
 
     def draw_game(self):
         # Reset the surface
@@ -27,7 +30,7 @@ class Draw:
 
         # Draw Containers
         for container in self.containers:
-            if self.check_fov(container.x, container.y):  # only draws if area is in field of view
+            if self.check_fov(container.x, container.y+1):  # only draws if area is in field of view
                 container.draw()
 
         # Draw the character
@@ -35,7 +38,7 @@ class Draw:
         
         # Draw NPCs
         for npc in self.npcs:
-            if self.check_fov(npc.x, npc.y):  # only draws if area is in field of view
+            if self.check_fov(npc.x, npc.y+1):  # only draws if area is in field of view
                 npc.draw()
 
         # Update display

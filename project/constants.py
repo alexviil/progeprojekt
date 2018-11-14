@@ -2,6 +2,8 @@ import pygame as pg
 import libtcodpy as libt
 from random import randint
 
+# Assets from https://0x72.itch.io/dungeontileset-ii
+
 pg.init()
 
 # Init values
@@ -21,7 +23,9 @@ SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png"),
                       pg.image.load("sprites/chort_idle_anim_f2.png"),
                       pg.image.load("sprites/chort_idle_anim_f3.png")]
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
+SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_goo.png")  # TODO Placeholder
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png")
+SPRITE_FLOOREXPLORED = pg.image.load("sprites/floor_8.png")  # TODO Placeholder
 SPRITE_FLOOR = pg.image.load("sprites/floor_1.png")
 
 # Map values

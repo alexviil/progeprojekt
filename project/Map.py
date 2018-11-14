@@ -10,18 +10,18 @@ class Map:
         self.fov_map = libt.map_new(const.MAP_WIDTH, const.MAP_HEIGHT+1)
 
     def create_map(self):
-        # self.game_map = [[False for y in range(0, const.MAP_HEIGHT)] for x in range(0, const.MAP_WIDTH)]
         self.game_map = list()
         for y in range(const.MAP_HEIGHT):
             row = []
             for x in range(const.MAP_HEIGHT):
                 if y == 0 or y == const.MAP_HEIGHT - 1 or x == 0 or x == const.MAP_WIDTH - 1:
-                    row.append(Tile.Tile(x, y + 1, True, False, const.SPRITE_WALL))
+                    row.append(Tile.Tile(x, y + 1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
                     continue
                 row.append(Tile.Tile(x, y + 1, False, False))
             self.game_map.append(row)
 
-        # self.game_map[9][9] = Tile.Tile(7, 7, True, False, const.SPRITE_WALL)
+        # TODO Need to figure out this +1 y thing
+        self.game_map[11][11] = Tile.Tile(11, 12, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED)
 
         self.create_fov_map()
 
@@ -47,4 +47,4 @@ class Map:
                 libt.map_set_properties(self.fov_map, x, y+1, not self.game_map[y][x].get_is_wall(), not self.game_map[y][x].get_is_wall())
 
     def calculate_fov_map(self, player):
-        libt.map_compute_fov(self.fov_map, player.get_location()[0], player.get_location()[1]+1, const.TORCH_RADIUS, const.FOV_LIGHT_WALLS, const.FOV_ALGORITHM)
+        libt.map_compute_fov(self.fov_map, player.x, player.y+1, const.TORCH_RADIUS, const.FOV_LIGHT_WALLS, const.FOV_ALGORITHM)
