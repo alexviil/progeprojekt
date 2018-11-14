@@ -10,10 +10,11 @@ variable names or OOP terms in Estonian.
 """
 
 class Main:
-    """The game object itself. This is where all the modules meet to form a single program.
-        Upon initialization, initializes pygame, sets the main surface, creates the map and also creates
-        the player and a bunch of actors to test out features as they're being implemented. Also has AI and
-        a clock used for the FPS counter.
+    """
+    The game object itself. This is where all the modules meet to form a single program.
+    Upon initialization, initializes pygame, sets the main surface, creates the map and also creates
+    the player and a bunch of actors to test out features as they're being implemented. Also has AI and
+    a clock used for the FPS counter.
     """
     def __init__(self):
         pg.init()
@@ -56,11 +57,12 @@ class Main:
         self.clock = pg.time.Clock()
 
     def game_loop(self):
-        """The main loop. Waits for events (player trying to move in some direction) and after every event gives the ai a turn,
-            lets creatures attack each other, updates actor locations and updates the player's field of view. After an event,
-            or even while there are no events, the while run cycle updates actor's sprites (idle frames), draws the game, and
-            creates an FPS limit (to stop unwanted side effects, like actors seeming like they're on stimulants when the game
-            runs on a fast computer).
+        """
+        The main loop. Waits for events (player trying to move in some direction) and after every event gives the ai a turn,
+        lets creatures attack each other, updates actor locations and updates the player's field of view. After an event,
+        or even while there are no events, the while run cycle updates actor's sprites (idle frames), draws the game, and
+        creates an FPS limit (to stop unwanted side effects, like actors seeming like they're on stimulants when the game
+        runs on a fast computer).
         """
         run = True
         while run:

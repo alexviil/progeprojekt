@@ -4,8 +4,9 @@ import constants as const
 
 
 class Draw:
-    """The Draw object has the sole purpose of creating a single surface onto which it then draws the game_map, the
-        fov_map (which follows the player), the player and all other actor objects like npcs and containers.
+    """
+    The Draw object has the sole purpose of creating a single surface onto which it then draws the game_map, the
+    fov_map (which follows the player), the player and all other actor objects like npcs and containers.
     """
     def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[]):
         self.surface = surface
@@ -16,8 +17,9 @@ class Draw:
         self.containers = containers
 
     def draw_map(self):
-        """Draws the map. Checks each tile in the game_map and draws it if it is in the field of view of the player.
-            Otherwise draws a darkened version of the tile that is outside of the field of view.
+        """
+        Draws the map. Checks each tile in the game_map and draws it if it is in the field of view of the player.
+        Otherwise draws a darkened version of the tile that is outside of the field of view.
         """
         for y in self.game_map:
             for tile in y:
@@ -73,9 +75,7 @@ class Draw:
         self.draw_text(str(int(clock.get_fps())), 0, 0, const.BLACK, const.FONT_DEBUG)
 
     def draw_console_messages(self, messages: list, font):
-        """Uses the draw_text function to draw a number of last messages created by actors to the console on the
-            bottom left
-        """
+        """Uses the draw_text function to draw a number of last messages created by actors to the console on thebottom left."""
         messages = messages[-const.MESSAGE_NUMBER:]
         # Places the console near bottom left
         font_height = self.get_font_height(const.FONT_CONSOLE)
