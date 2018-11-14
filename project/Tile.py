@@ -23,4 +23,3 @@ class Tile:
     
     def set_is_creature(self, bool):
         self.is_creature = bool
-        

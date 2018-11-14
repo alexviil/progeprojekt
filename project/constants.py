@@ -1,4 +1,5 @@
 import pygame as pg
+import libtcodpy as libt
 from random import randint
 
 pg.init()
@@ -24,10 +25,15 @@ SPRITE_WALL = pg.image.load("sprites/wall_mid.png")
 SPRITE_FLOOR = pg.image.load("sprites/floor_1.png")
 
 # Map values
-MAP_WIDTH = 10
-MAP_HEIGHT = 10
+MAP_WIDTH = 16
+MAP_HEIGHT = 16
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
 
 STEP = 32
+
+# FOV values
+TORCH_RADIUS = 10
+FOV_LIGHT_WALLS = True
+FOV_ALGORITHM = libt.FOV_BASIC

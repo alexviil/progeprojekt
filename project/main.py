@@ -14,14 +14,13 @@ class Main:
         self.map_obj = Map.Map()
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
-        
-        self.test = [] # Collision attribute values of each tile for debugging
+
+        self.test = []  # Collision attribute values of each tile for debugging
         for y in self.game_map:
             row = []
             for tile in y:
                 row.append(tile.get_is_wall())
             self.test.append(row)
-        print(self.test)
         
         self.actors_inanimate = []
         self.actors = []
@@ -34,6 +33,9 @@ class Main:
         self.actors.append(self.player)
 
         self.actors_all = self.actors + self.actors_inanimate
+
+        # Calculate initial FOV
+        self.map_obj.calculate_fov_map(self.player)
 
         self.ai = Ai.Ai()
 
@@ -59,6 +61,7 @@ class Main:
                     elif event.key == pg.K_d:
                         self.player.control(1, 0)
                     self.update_actor_locations()
+                    self.map_obj.calculate_fov_map(self.player)
 
                     # Moves Enemy actors
                     for actor in self.actors:
@@ -70,7 +73,7 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.actors, self.actors_inanimate).draw_game()
+            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game()
 
     def update_actor_locations(self):
         # Update actor's collision box location
