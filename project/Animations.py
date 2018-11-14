@@ -3,6 +3,10 @@ import constants as const
 
 
 class Animations:
+    """The Animations object updates the frame_counter of each actor and their sprite once the frame_counter reaches
+        a certain point. After the last sprite, the frame_counter gets reset and the animations begin from the first sprite.
+        Uses mirrored sprites, if the Actor object's mirror attribute has the value of True.
+    """
     def __init__(self, actors):
         self.frame_counter = 0
         self.actors = actors

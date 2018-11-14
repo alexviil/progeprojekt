@@ -5,6 +5,11 @@ import constants as const
 
 
 class Tile:
+    """The Tile object is used to set the properties of each tile in the game world. Each tile has it's coordinates
+        and boolean values for whether it is a wall or a creature is on it, both used for actor interactions. It also
+        has sprites, which are the regular floor by default (since that is the most used tile sprite). The explored
+        sprite only gets used when a tile is not in the player's field of view but has been at least once.
+    """
     def __init__(self, x, y, is_wall, is_creature, sprite=const.SPRITE_FLOOR, exp_sprite=const.SPRITE_FLOOREXPLORED):
         self.x = x
         self.y = y

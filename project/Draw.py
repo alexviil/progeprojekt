@@ -4,6 +4,9 @@ import constants as const
 
 
 class Draw:
+    """The Draw object has the sole purpose of creating a single surface onto which it then draws the game_map, the
+        fov_map (which follows the player), the player and all other actor objects like npcs and containers.
+    """
     def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[]):
         self.surface = surface
         self.game_map = game_map
@@ -13,6 +16,9 @@ class Draw:
         self.containers = containers
 
     def draw_map(self):
+        """Draws the map. Checks each tile in the game_map and draws it if it is in the field of view of the player.
+            Otherwise draws a darkened version of the tile that is outside of the field of view.
+        """
         for y in self.game_map:
             for tile in y:
                 if self.check_fov(tile.x, tile.y):  # only draws if area is in field of view
@@ -22,6 +28,7 @@ class Draw:
                     self.surface.blit(tile.explored_sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
 
     def draw_game(self, clock, messages):
+        """Draws the game and all elements, if they are within the field of view of the player."""
         # Reset the surface
         self.surface.fill(const.GRAY)
 
@@ -51,6 +58,7 @@ class Draw:
         pg.display.flip()
 
     def draw_text(self, text, text_x, text_y, text_color, font, back_color=None):
+        """Function used to draw text using pygame."""
         if back_color:
             text_surface = font.render(text, False, text_color, back_color)
         else:
@@ -65,8 +73,11 @@ class Draw:
         self.draw_text(str(int(clock.get_fps())), 0, 0, const.BLACK, const.FONT_DEBUG)
 
     def draw_console_messages(self, messages: list, font):
+        """Uses the draw_text function to draw a number of last messages created by actors to the console on the
+            bottom left
+        """
         messages = messages[-const.MESSAGE_NUMBER:]
-        # Places the console near bottom right
+        # Places the console near bottom left
         font_height = self.get_font_height(const.FONT_CONSOLE)
 
         y = const.MAIN_SURFACE_HEIGHT - const.MESSAGE_NUMBER * font_height
