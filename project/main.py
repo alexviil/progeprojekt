@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations
+import Actor, Draw, Map, Animations, Ai
 
 
 class Main:
@@ -15,16 +15,18 @@ class Main:
         
         self.actors_inanimate = []
         self.actors = []
-        
-        self.player = Actor.Creature(1, 1, const.SPRITES_PLAYER, False, self.game_map, self.surface_main)
+
+        self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors))
+        self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors))
+
+        self.actors.append(Actor.Enemy(5, 7, "deemon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, 10))
+
+        self.player = Actor.Creature(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, 20)
         self.actors.append(self.player)
         
-        self.actors.append(Actor.Creature(5, 7, const.SPRITES_DEMON, True, self.game_map, self.surface_main))
-        
-        self.actors_inanimate.append(Actor.Container(7, 7, const.SPRITE_CHEST, self.game_map, self.surface_main))
-        self.actors_inanimate.append(Actor.Container(3, 7, const.SPRITE_CHEST, self.game_map, self.surface_main))
-        
         self.actors_all = self.actors + self.actors_inanimate
+
+        self.ai = Ai.Ai()
 
     def game_loop(self):
         run = True
@@ -47,17 +49,25 @@ class Main:
                         self.player.control(-1, 0)
                     elif event.key == pg.K_d:
                         self.player.control(1, 0)
-            
-            # Update actor's collision box location
-            actor_locations = [actor.get_location() for actor in self.actors_all]
-            self.map_obj.update(actor_locations)
-            self.game_map = self.map_obj.get_game_map()
+                    self.update_actor_locations()
+
+                    # Moves Enemy actors
+                    for actor in self.actors:
+                        if isinstance(actor, Actor.Enemy):
+                            self.ai.move_randomly(actor, self.actors_all)
+                            self.update_actor_locations()
             
             # Update actors' sprites
             Animations.Animations(self.actors).update()
 
             # Draw game
             Draw.Draw(self.surface_main, self.game_map, self.player, self.actors, self.actors_inanimate).draw_game()
+
+    def update_actor_locations(self):
+        # Update actor's collision box location
+        actor_locations = [actor.get_location() for actor in self.actors_all]
+        self.map_obj.update(actor_locations)
+        self.game_map = self.map_obj.get_game_map()
 
 
 if __name__ == '__main__':
