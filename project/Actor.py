@@ -100,6 +100,9 @@ class Creature(Actor):
     def death(self):
         self.messages.append(self.name + " is dead.")
         self.actors.remove(self)
+    
+    def get_location(self):
+        return (self.x, self.y)
 
 
 class Enemy(Creature):
@@ -108,8 +111,8 @@ class Enemy(Creature):
 
 
 class Player(Creature):
-    """No function as of yet."""
-    pass
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames=10, frame_counter=0):
+        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames, frame_counter)
 
 
 class Container(Actor):

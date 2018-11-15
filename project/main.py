@@ -43,10 +43,10 @@ class Main:
         # Actors
         self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
         self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
-        self.actors.append(Actor.Enemy(5, 7, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
+        self.actors.append(Actor.Enemy(8, 8, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
         self.player = Actor.Player(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
         self.actors.append(self.player)
-
+        
         self.actors_all = self.actors + self.actors_inanimate
 
         # Calculate initial FOV
@@ -90,7 +90,7 @@ class Main:
                     # Moves Enemy actors
                     for actor in self.actors:
                         if isinstance(actor, Actor.Enemy):
-                            self.ai.move_randomly(actor)
+                            self.ai.aggressive_roam(actor, self.player)
                             self.update_actor_locations()
             
             # Update actors' sprites
