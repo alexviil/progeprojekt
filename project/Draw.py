@@ -16,7 +16,7 @@ class Draw:
         self.npcs = npcs
         self.containers = containers
 
-    def draw_map(self):
+    def draw_map(self, camera):
         """
         Draws the map. Checks each tile in the game_map and draws it if it is in the field of view of the player.
         Otherwise draws a darkened version of the tile that is outside of the field of view.
@@ -25,17 +25,17 @@ class Draw:
             for tile in y:
                 if self.check_fov(tile.x, tile.y):  # only draws if area is in field of view
                     tile.explored = True
-                    self.surface.blit(tile.sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
+                    self.surface.blit(tile.sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH, (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
                 elif tile.explored:
-                    self.surface.blit(tile.explored_sprite, (tile.x * const.TILE_WIDTH, tile.y * const.TILE_HEIGHT))
+                    self.surface.blit(tile.explored_sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH, (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
 
-    def draw_game(self, clock, messages):
+    def draw_game(self, clock, messages, camera):
         """Draws the game and all elements, if they are within the field of view of the player."""
         # Reset the surface
         self.surface.fill(const.GRAY)
 
         # Draw the map
-        self.draw_map()
+        self.draw_map(camera)
 
         # Draw debug text
         self.draw_fps(clock)
@@ -46,15 +46,15 @@ class Draw:
         # Draw Containers
         for container in self.containers:
             if self.check_fov(container.x, container.y+1):  # only draws if area is in field of view
-                container.draw()
+                container.draw(camera)
 
         # Draw the character
-        self.player.draw()
+        self.player.draw(camera)
         
         # Draw NPCs
         for npc in self.npcs:
             if self.check_fov(npc.x, npc.y+1):  # only draws if area is in field of view
-                npc.draw()
+                npc.draw(camera)
 
         # Update display
         pg.display.flip()

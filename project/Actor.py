@@ -23,9 +23,9 @@ class Actor:
     def set_sprite(self, sprite):
         self.sprite = sprite
 
-    def draw(self):
+    def draw(self, camera):
         """Draws the actor object onto a pygame surface with the coordinates multiplied by the game's tile width and height'"""
-        self.surface.blit(self.sprite, (self.x * const.TILE_WIDTH, self.y * const.TILE_HEIGHT))
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
     
     def get_location(self):
         return self.x, self.y
@@ -100,6 +100,9 @@ class Creature(Actor):
     def death(self):
         self.messages.append(self.name + " is dead.")
         self.actors.remove(self)
+    
+    def get_location(self):
+        return (self.x, self.y)
 
 
 class Enemy(Creature):
@@ -108,9 +111,7 @@ class Enemy(Creature):
 
 
 class Player(Creature):
-    """No function as of yet."""
     pass
-
 
 class Container(Actor):
     """
@@ -122,5 +123,5 @@ class Container(Actor):
         self.inventory = inventory
         self.sprite = sprites
     
-    def draw(self):
-        self.surface.blit(self.sprite, (self.x * const.TILE_WIDTH, (self.y + 1) * const.TILE_HEIGHT))
+    def draw(self, camera):
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))

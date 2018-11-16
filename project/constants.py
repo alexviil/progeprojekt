@@ -9,8 +9,8 @@ from random import randint
 pg.init()
 
 # Init values
-MAIN_SURFACE_HEIGHT = 705
-MAIN_SURFACE_WIDTH = 615
+MAIN_SURFACE_HEIGHT = 600
+MAIN_SURFACE_WIDTH = 800
 
 # Colors
 GRAY = (122, 122, 122)
@@ -62,6 +62,10 @@ TILE_WIDTH = 32
 TILE_HEIGHT = 32
 
 STEP = 32
+
+# Camera values (in tiles)
+CAMERA_CENTER_X = MAIN_SURFACE_WIDTH / TILE_WIDTH // 2
+CAMERA_CENTER_Y = MAIN_SURFACE_HEIGHT / TILE_HEIGHT // 2 - 1
 
 # FOV values
 TORCH_RADIUS = 10

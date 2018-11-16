@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Tile
+import Actor, Draw, Map, Animations, Ai, Tile, Camera
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -44,13 +44,17 @@ class Main:
         # Game messages
         self.messages = []
 
+        # Camera (aka offset to move the world instead of having a camera to move with the player, because pygame :)) )
+        #        (MUST BE same coordinates as player, cannot be defined after player (or at least I haven't tried yet)
+        self.camera = Camera.Camera(5, 5)
+
         # Actors
         self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
         self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
-        self.actors.append(Actor.Enemy(5, 7, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
-        self.player = Actor.Player(1, 1, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
+        self.actors.append(Actor.Enemy(8, 8, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
+        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
         self.actors.append(self.player)
-
+        
         self.actors_all = self.actors + self.actors_inanimate
 
         # Calculate initial FOV
@@ -82,26 +86,30 @@ class Main:
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_w:
                         self.player.control(0, -1)
+                        self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_s:
                         self.player.control(0, 1)
+                        self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_a:
                         self.player.control(-1, 0)
+                        self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_d:
                         self.player.control(1, 0)
+                        self.camera.set_offset(self.player.x, self.player.y)
                     self.update_actor_locations()
                     self.map_obj.calculate_fov_map(self.player)
 
                     # Moves Enemy actors
                     for actor in self.actors:
                         if isinstance(actor, Actor.Enemy):
-                            self.ai.move_randomly(actor)
+                            self.ai.aggressive_roam(actor, self.player)
                             self.update_actor_locations()
             
             # Update actors' sprites
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game(self.clock, self.messages)
+            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game(self.clock, self.messages, self.camera)
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
