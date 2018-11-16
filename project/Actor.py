@@ -23,9 +23,9 @@ class Actor:
     def set_sprite(self, sprite):
         self.sprite = sprite
 
-    def draw(self):
+    def draw(self, camera):
         """Draws the actor object onto a pygame surface with the coordinates multiplied by the game's tile width and height'"""
-        self.surface.blit(self.sprite, (self.x * const.TILE_WIDTH, self.y * const.TILE_HEIGHT))
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
     
     def get_location(self):
         return self.x, self.y
@@ -111,9 +111,7 @@ class Enemy(Creature):
 
 
 class Player(Creature):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames=10, frame_counter=0):
-        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, idle_frames, frame_counter)
-
+    pass
 
 class Container(Actor):
     """
@@ -125,5 +123,5 @@ class Container(Actor):
         self.inventory = inventory
         self.sprite = sprites
     
-    def draw(self):
-        self.surface.blit(self.sprite, (self.x * const.TILE_WIDTH, (self.y + 1) * const.TILE_HEIGHT))
+    def draw(self, camera):
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))

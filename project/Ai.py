@@ -32,4 +32,3 @@ class Ai:
                 creature.control(0, - 1)
             elif player_location[1] > creature_location[1]:
                 creature.control(0, 1)
-        
