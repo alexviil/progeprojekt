@@ -9,6 +9,10 @@ documentations are also in English and it makes it easier to explain things, wit
 variable names or OOP terms in Estonian.
 """
 
+
+"""TODO: Item system, Menus, Inventory, Map generation, Sound, win/loss conditions, different enemies."""
+
+
 class Main:
     """
     The game object itself. This is where all the modules meet to form a single program.
