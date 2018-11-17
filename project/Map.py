@@ -36,7 +36,7 @@ class Map:
                 row.append(Tile.Tile(x, y + 1, False, False, const.SPRITES_FLOOR[random], const.SPRITES_FLOOREXPLORED[random]))
             self.game_map.append(row)
 
-        # TODO Need to figure out this +1 y thing
+        # TODO Need to figure out this +1 y thing, "it's probably just pygame being pygame" - Alex
         self.game_map[11][11] = Tile.Tile(11, 12, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED)
 
         self.create_fov_map()

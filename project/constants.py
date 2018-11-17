@@ -30,9 +30,16 @@ SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png"),
                       pg.image.load("sprites/chort_idle_anim_f1.png"),
                       pg.image.load("sprites/chort_idle_anim_f2.png"),
                       pg.image.load("sprites/chort_idle_anim_f3.png")]
+
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
+SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png")
+
+SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png"),
+                       pg.image.load("sprites/weapon_red_magic_staff.png")]
+
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png")
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png")
+
 SPRITE_FLOOREXPLORED = pg.image.load("sprites/floor_1darkened.png")
 SPRITE_FLOOREXPLORED1 = pg.image.load("sprites/floor_1darkened.png")
 SPRITE_FLOOREXPLORED2 = pg.image.load("sprites/floor_2darkened.png")
@@ -43,6 +50,7 @@ SPRITE_FLOOREXPLORED6 = pg.image.load("sprites/floor_6darkened.png")
 SPRITE_FLOOREXPLORED7 = pg.image.load("sprites/floor_7darkened.png")
 SPRITE_FLOOREXPLORED8 = pg.image.load("sprites/floor_8darkened.png")
 SPRITES_FLOOREXPLORED = [eval("SPRITE_FLOOREXPLORED" + str(i)) for i in range(1, 9)]
+
 SPRITE_FLOOR = pg.image.load("sprites/floor_1.png")
 SPRITE_FLOOR1 = pg.image.load("sprites/floor_1.png")
 SPRITE_FLOOR2 = pg.image.load("sprites/floor_2.png")

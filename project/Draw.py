@@ -8,13 +8,14 @@ class Draw:
     The Draw object has the sole purpose of creating a single surface onto which it then draws the game_map, the
     fov_map (which follows the player), the player and all other actor objects like npcs and containers.
     """
-    def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[]):
+    def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[], items=[]):
         self.surface = surface
         self.game_map = game_map
         self.fov_map = fov_map
         self.player = player
         self.npcs = npcs
         self.containers = containers
+        self.items = items
 
     def draw_map(self, camera):
         """
@@ -40,8 +41,10 @@ class Draw:
         # Draw debug text
         self.draw_fps(clock)
 
-        # Draw Console text
-        self.draw_console_messages(messages, const.FONT_CONSOLE)
+        # Draw Items
+        for item in self.items:
+            if self.check_fov(item.x, item.y+1):
+                item.draw(camera)
 
         # Draw Containers
         for container in self.containers:
@@ -55,6 +58,9 @@ class Draw:
         for npc in self.npcs:
             if self.check_fov(npc.x, npc.y+1):  # only draws if area is in field of view
                 npc.draw(camera)
+
+        # Draw Console text
+        self.draw_console_messages(messages, const.FONT_CONSOLE)
 
         # Update display
         pg.display.flip()
