@@ -11,7 +11,7 @@ class Draw:
     def __init__(self, surface):
         self.surface = surface
 
-    def draw_text(self, text, text_x, text_y, text_color, font, back_color=None):
+    def draw_text(self, text, text_x, text_y, text_color, font, center: bool=False, back_color=None):
         """Function used to draw text using pygame."""
         if back_color:
             text_surface = font.render(text, False, text_color, back_color)
@@ -19,7 +19,10 @@ class Draw:
             text_surface = font.render(text, False, text_color)
         text_rect = text_surface.get_rect()
 
-        text_rect.topleft = text_x, text_y
+        if center:
+            text_rect.center = text_x, text_y
+        else:
+            text_rect.topleft = text_x, text_y
 
         self.surface.blit(text_surface, text_rect)
 
@@ -35,7 +38,7 @@ class Draw:
         y = const.MAIN_SURFACE_HEIGHT - const.MESSAGE_NUMBER * font_height
 
         for i, message in enumerate(messages):
-            self.draw_text(message, 0, y + i * font_height, const.WHITE, font, const.BLACK)
+            self.draw_text(message, 0, y + i * font_height, const.WHITE, font, False, const.BLACK)
 
     def get_font_height(self, font):
         font_obj = font.render('test', False, const.BLACK)

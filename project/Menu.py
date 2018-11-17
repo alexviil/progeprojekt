@@ -1,6 +1,6 @@
 import pygame as pg
 import constants as const
-import Draw, Actor
+import Draw, Button
 
 
 class Menu:
@@ -11,7 +11,28 @@ class Menu:
         self.items = items
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
         self.draw = Draw.Draw(self.inventory_surface)
-        pass
+
+        self.play_button = Button.Button(self.main_surface, "PLAY", (200, 100), (const.MAIN_SURFACE_WIDTH//2, const.MAIN_SURFACE_HEIGHT//2))
+
+    def menu_main(self):
+        menu_open = True
+        while menu_open:
+            events = pg.event.get()
+            mouse = pg.mouse.get_pos()
+            input = (events, mouse)
+
+            for event in events:
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    exit()
+
+            if self.play_button.update(input):
+                menu_open = False
+
+            self.main_surface.fill(const.WHITE)
+            self.play_button.draw()
+
+            pg.display.update()
 
     def inventory_menu(self):
         close = False
@@ -67,7 +88,7 @@ class Menu:
             for i, item in enumerate(self.player.inventory):
                 if i == current_index:
                     self.draw.draw_text(item.name, 0, 0 + (i * text_height), const.BLACK, const.FONT_INVENTORY,
-                                        const.WHITE)
+                                        False, const.WHITE)
                 else:
                     self.draw.draw_text(item.name, 0, 0 + (i * text_height), const.WHITE, const.FONT_INVENTORY)
 
