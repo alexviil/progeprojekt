@@ -124,8 +124,13 @@ class Creature(Actor):
 
 class Enemy(Creature):
     """Used to help Ai decide who to move."""
-    pass
-
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp=10, armor=0, dmg=1, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
+        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
+        if equipped:
+            self.hp +=  # TODO continue here
+            self.max_hp +=
+            self.armor +=
+            self.dmg +=
 
 class Player(Creature):
     def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, items, messages, hp=20, armor=0, dmg=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
