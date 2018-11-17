@@ -1,6 +1,6 @@
 import pygame as pg
 import constants as const
-import Draw, Button
+import Draw, Button, Actor
 
 
 class Menu:
