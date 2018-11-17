@@ -9,7 +9,7 @@ class Actor:
     to follow, a surface to be drawn on, the list of all actors and inanimate actors and messages related
     to the actor.
     """
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages):
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages):
         self.x = x
         self.y = y
         self.name = name
@@ -18,6 +18,7 @@ class Actor:
         self.surface = surface
         self.actors = actors
         self.actors_inanimate = actors_inanimate
+        self.ilist = ilist
         self.messages = messages
 
     def set_sprite(self, sprite):
@@ -46,8 +47,8 @@ class Creature(Actor):
     a frame_counter to keep track of when each Creature needs to have their idle sprite updated. max_hp and hp are used for
     combat, with the latter being the upper limit or maximum possible hp.
     """
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp=10, armor=0, dmg=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, messages, hp=10, armor=0, dmg=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages)
         self.sprites_mirrored = [pg.transform.flip(e, True, False) for e in sprites]
         self.mirror = mirror
         self.idle_frames = idle_frames
@@ -116,6 +117,8 @@ class Creature(Actor):
 
     def death(self):
         self.messages.append(self.name + " is dead.")
+        if self.equipped is not None:
+            self.equipped.death_drop(self, self.ilist)
         self.actors.remove(self)
     
     def get_location(self):
@@ -124,26 +127,29 @@ class Creature(Actor):
 
 class Enemy(Creature):
     """Used to help Ai decide who to move."""
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp=10, armor=0, dmg=1, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
-        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, messages, hp=10, armor=0, dmg=1, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
+        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist,  messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
         if equipped:
-            self.hp +=  # TODO continue here
-            self.max_hp +=
-            self.armor +=
-            self.dmg +=
+            self.hp +=  equipped.hpbuff
+            self.max_hp += equipped.hpbuff
+            self.armor += equipped.armorbuff
+            self.dmg += equipped.dmgbuff
 
 class Player(Creature):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, items, messages, hp=20, armor=0, dmg=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
-        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
-        self.items = items
-        self.inventory_limit = 3
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, messages, hp=20, armor=0, dmg=3, inventory_limit=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
+        super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
+        self.ilist = ilist
+        self.inventory_limit = inventory_limit
         self.selection = 0
 
     def pick_up(self):
-        for item in self.items:
-            if item.get_location() == self.get_location():
-                item.become_picked_up(self, self.items)
-                self.messages.append("Picked up " + item.name + "!")
+        if self.inventory is None or len(self.inventory) >= self.inventory_limit:
+            self.messages.append("Your inventory is already at it's limit " + str(len(self.inventory)) + "/" + str(self.inventory_limit) + ".")
+        else:
+            for item in self.ilist:
+                if item.get_location() == self.get_location():
+                    item.become_picked_up(self, self.ilist)
+                    self.messages.append("Picked up " + item.name + "!")
 
     def next_selection(self):
         self.selection += 1
@@ -171,12 +177,17 @@ class Player(Creature):
 
 
 class Item(Actor):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages, equipped=False, mirror=False):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, equipped=False, mirror=False):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages)
         self.mirror = mirror
         self.sprites = sprites
-        self.sprite = sprites[0]
+        if equipped:
+            self.sprite = sprites[1]
+        else:
+            self.sprite = sprites[0]
         self.equipped = equipped
+        self.x_offset = sprites[2]
+        self.y_offset = sprites[3]
 
     def become_picked_up(self, player, items):
         player.inventory.append(items.pop(items.index(self)))
@@ -187,19 +198,28 @@ class Item(Actor):
         self.sprite = self.sprites[0]
         items.append(creature.inventory.pop(creature.inventory.index(self)))
 
+    def death_drop(self, creature, items):
+        self.x, self.y = creature.get_location()
+        self.sprite = self.sprites[0]
+        items.append(creature.equipped)
+
     def is_equipped(self):
         return self.equipped
 
-    def draw(self, camera):
-        if self.x != 0 and self.y != 0:
+    def draw(self, camera, creature=None):
+        if not creature:
             self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
         elif self.equipped:
-            self.surface.blit(self.sprite, ((creature.x + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
+            if creature.mirror is not self.mirror:
+                self.mirror = creature.mirror
+                self.sprite = pg.transform.flip(self.sprite, True, False)
+            self.surface.blit(self.sprite, ((creature.x + self.x_offset + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + self.y_offset + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
+
 
 
 class Equipable(Item):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages, hpbuff=0, armorbuff=0, dmgbuff=0):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, hpbuff=0, armorbuff=0, dmgbuff=0, equipped=False, mirror=False):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, equipped, mirror)
         self.hpbuff = hpbuff
         self.armorbuff = armorbuff
         self.dmgbuff = dmgbuff
@@ -215,8 +235,8 @@ class Container(Actor):
     Once items are implemented, this will be one of the ways for the Player object to obtain items.
     """
 
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages, inventory=[]):
-        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, inventory=[]):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages)
         self.inventory = inventory
         self.sprite = sprites
         self.open = False

@@ -24,21 +24,28 @@ FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
 FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 14)
 FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
 
-# Sprites; all actors require four sprites for idle animations
+# Creature sprites; all Creature objects require four sprites for idle animations
 SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png"),
-                       pg.image.load("sprites/wizzard_m_idle_anim_f1.png"),
-                       pg.image.load("sprites/wizzard_m_idle_anim_f2.png"),
-                       pg.image.load("sprites/wizzard_m_idle_anim_f3.png")]
+                  pg.image.load("sprites/wizzard_m_idle_anim_f1.png"),
+                  pg.image.load("sprites/wizzard_m_idle_anim_f2.png"),
+                  pg.image.load("sprites/wizzard_m_idle_anim_f3.png")]
 SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png"),
-                      pg.image.load("sprites/chort_idle_anim_f1.png"),
-                      pg.image.load("sprites/chort_idle_anim_f2.png"),
-                      pg.image.load("sprites/chort_idle_anim_f3.png")]
+                 pg.image.load("sprites/chort_idle_anim_f1.png"),
+                 pg.image.load("sprites/chort_idle_anim_f2.png"),
+                 pg.image.load("sprites/chort_idle_anim_f3.png")]
 
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png")
 
+# Item sprites; all Item objects require dropped, equiped sprites and integers x offset and y offset
 SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png"),
-                       pg.image.load("sprites/weapon_red_magic_staff.png")]
+                       pg.image.load("sprites/weapon_red_magic_staff.png"),
+                       0,
+                       -1]
+SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png"),
+                      pg.image.load("sprites/weapon_rusty_sword.png"),
+                      -0.2,
+                      -0.5]
 
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png")
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png")

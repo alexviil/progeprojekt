@@ -99,6 +99,8 @@ class DrawWorld(Draw):
         for npc in self.npcs:
             if self.check_fov(npc.x, npc.y + 1):  # only draws if area is in field of view
                 npc.draw(camera)
+                if npc.equipped:
+                    npc.equipped.draw(camera, npc)
 
         # Draw Console text
         self.draw_console_messages(messages, const.FONT_CONSOLE)
