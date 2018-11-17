@@ -16,11 +16,13 @@ MAIN_SURFACE_WIDTH = 800
 GRAY = (122, 122, 122)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
 
 # Fonts
 FONT_DEBUG = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 16)
 FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
 FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 14)
+FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
 
 # Sprites; all actors require four sprites for idle animations
 SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png"),

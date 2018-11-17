@@ -95,6 +95,8 @@ class Main:
         creates an FPS limit (to stop unwanted side effects, like actors seeming like they're on stimulants when the game
         runs on a fast computer).
         """
+        self.game_start()
+
         run = True
         while run:
             # Get input
@@ -104,7 +106,6 @@ class Main:
             # Process input
             for event in events:
                 if event.type == pg.QUIT:
-                    pg.quit()
                     run = False
 
                 if event.type == pg.KEYDOWN:
@@ -146,11 +147,20 @@ class Main:
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
 
+        self.game_quit()
+
     def update_actor_locations(self):
         # Update actor's collision box location
         actor_locations = [actor.get_location() for actor in self.actors_all]
         self.map_obj.update(actor_locations)
         self.game_map = self.map_obj.get_game_map()
+
+    def game_quit(self):
+        pg.quit()
+        exit()
+
+    def game_start(self):
+        self.menu.menu_main()
 
 
 if __name__ == '__main__':
