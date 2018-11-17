@@ -31,6 +31,11 @@ class Menu:
                     if event.key == pg.K_k:
                         self.player.next_selection()
                         current_index = self.player.selection
+                    elif event.key == pg.K_j:
+                        if self.player.inventory:
+                            self.player.messages.append("Trying to equip/use " + self.player.inventory[current_index].name)
+                        else:
+                            self.player.messages.append("You have no items noob.")
 
             # Display list of items
             for i, item in enumerate(self.player.inventory):
