@@ -140,33 +140,56 @@ class Player(Creature):
                 item.become_picked_up(self, self.items)
                 self.messages.append("Picked up " + item.name + "!")
 
-    def print_inventory(self):
-        if not self.inventory:
-            self.messages.append("Inventory is empty.")
-        else:
-            self.messages.append("Inventory contains:")
-            for item in self.inventory:
-                self.messages.append(item.get_name())
-
     def next_selection(self):
         self.selection += 1
         if self.selection >= len(self.inventory):
             self.selection = 0
 
+    def equip(self, item):
+        if not self.equipped and item in self.inventory:
+            item.equipped = True
+            self.equipped = self.inventory.pop(self.inventory.index(item))
+            self.hp += item.hpbuff
+            self.max_hp += item.hpbuff
+            self.armor += item.armorbuff
+            self.dmg += item.dmgbuff
 
+    def unequip(self, item):
+        if self.equipped == item:
+            item.equipped = False
+            self.inventory.append(item)
+            self.equipped = None
+            self.hp -= item.hpbuff
+            self.max_hp -= item.hpbuff
+            self.armor -= item.armorbuff
+            self.dmg -= item.dmgbuff
 
 
 class Item(Actor):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages):
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages, equipped=False, mirror=False):
         super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, messages)
+        self.mirror = mirror
+        self.sprites = sprites
         self.sprite = sprites[0]
+        self.equipped = equipped
 
     def become_picked_up(self, player, items):
         player.inventory.append(items.pop(items.index(self)))
+        self.sprite = self.sprites[1]
+
+    def drop(self, creature, items):
+        self.x, self.y = creature.get_location()
+        self.sprite = self.sprites[0]
+        items.append(creature.inventory.pop(creature.inventory.index(self)))
+
+    def is_equipped(self):
+        return self.equipped
 
     def draw(self, camera):
         if self.x != 0 and self.y != 0:
             self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
+        elif self.equipped:
+            self.surface.blit(self.sprite, ((creature.x + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
 
 
 class Equipable(Item):
@@ -175,6 +198,7 @@ class Equipable(Item):
         self.hpbuff = hpbuff
         self.armorbuff = armorbuff
         self.dmgbuff = dmgbuff
+
 
 class Consumable(Item):
     pass

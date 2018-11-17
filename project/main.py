@@ -56,9 +56,9 @@ class Main:
 
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
 
-        self.items.append(Actor.Equipable(4, 4, "Staff of Great Burden", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg))
-        self.items.append(Actor.Equipable(3, 4, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg))
-        self.items.append(Actor.Equipable(4, 3, "Elongated Tubular Stiff Plant Matter", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg))
+        self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg, 5, 0, 0))
+        self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg, 0, 5, 0))
+        self.items.append(Actor.Equipable(4, 3, "Something Wizards Something Five Damage", const.SPRITE_WEAPON_STAFF, gm, sm, alist, alist, msg, 0, 0, 5))
 
         self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, msg))
         self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, msg))
@@ -85,7 +85,7 @@ class Main:
 
         self.clock = pg.time.Clock()
 
-        self.menu = Menu.Menu(self.surface_main, self.player, self.clock)
+        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items)
 
     def game_loop(self):
         """
@@ -122,13 +122,14 @@ class Main:
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_e:
                         self.player.pick_up()
+                        continue
                     elif event.key == pg.K_i:
                         self.menu.inventory_menu()
-                    # elif event.key == pg.K_k:
-                    #     self.player.next_selection()
+                        continue
+                    else:
+                        continue
                     self.update_actor_locations()
                     self.map_obj.calculate_fov_map(self.player)
-                    self.ticks_last_event = pg.time.get_ticks()
 
 
                     # Moves Enemy actors

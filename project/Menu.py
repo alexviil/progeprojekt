@@ -1,13 +1,14 @@
 import pygame as pg
 import constants as const
-import Draw
+import Draw, Actor
 
 
 class Menu:
-    def __init__(self, main_surface, player, clock):
+    def __init__(self, main_surface, player, clock, items):
         self.main_surface = main_surface
         self.player = player
         self.clock = clock
+        self.items = items
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
         self.draw = Draw.Draw(self.inventory_surface)
         pass
@@ -31,11 +32,36 @@ class Menu:
                     if event.key == pg.K_k:
                         self.player.next_selection()
                         current_index = self.player.selection
+                    if event.key == pg.K_l:
+                        if not self.player.inventory:
+                            self.player.messages.append("You have no items to drop")
+                        else:
+                            item_here = False
+                            for item in self.items:
+                                if item.get_location() == self.player.get_location():
+                                    self.player.messages.append("There is already an item here.")
+                                    item_here = True
+                                    break
+                            if not item_here:
+                                self.player.messages.append("Dropped " + self.player.inventory[current_index].name + ".")
+                                self.player.inventory[current_index].drop(self.player, self.items)
                     elif event.key == pg.K_j:
-                        if self.player.inventory:
-                            self.player.messages.append("Trying to equip/use " + self.player.inventory[current_index].name)
+                        if self.player.inventory and not self.player.equipped:
+                            if isinstance(item, Actor.Equipable):
+                                self.player.messages.append("Equipped " + self.player.inventory[current_index].name + ".")
+                                self.player.equip(self.player.inventory[current_index])
+                            elif isinstance(item, Actor.Consumable):
+                                pass  # TODO consumables
+                        elif self.player.equipped is not None:
+                            self.player.messages.append("You already have something equipped.")
                         else:
                             self.player.messages.append("You have no items noob.")
+                    elif event.key == pg.K_m:
+                        if self.player.equipped is not None:
+                            self.player.messages.append("Unequipped " + self.player.equipped.name + ".")
+                            self.player.unequip(self.player.equipped)
+                        else:
+                            self.player.messages.append("You have nothing equipped.")
 
             # Display list of items
             for i, item in enumerate(self.player.inventory):
