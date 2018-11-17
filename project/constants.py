@@ -20,6 +20,7 @@ WHITE = (255, 255, 255)
 # Fonts
 FONT_DEBUG = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 16)
 FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
+FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 14)
 
 # Sprites; all actors require four sprites for idle animations
 SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png"),
@@ -85,3 +86,7 @@ FPS_LIMIT = 60
 
 # Console messages
 MESSAGE_NUMBER = 4
+
+# Inventory Menu
+INV_MENU_WIDTH = 300
+INV_MENU_HEIGHT = 300

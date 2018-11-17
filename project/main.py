@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Tile, Camera
+import Actor, Draw, Map, Animations, Ai, Tile, Camera, Menu
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -85,6 +85,8 @@ class Main:
 
         self.clock = pg.time.Clock()
 
+        self.menu = Menu.Menu(self.surface_main, self.player, self.clock)
+
     def game_loop(self):
         """
         The main loop. Waits for events (player trying to move in some direction) and after every event gives the ai a turn,
@@ -121,9 +123,9 @@ class Main:
                     elif event.key == pg.K_e:
                         self.player.pick_up()
                     elif event.key == pg.K_i:
-                        self.player.print_inventory()
-                    elif event.key == pg.K_k:
-                        self.player.next_selection()
+                        self.menu.inventory_menu()
+                    # elif event.key == pg.K_k:
+                    #     self.player.next_selection()
                     self.update_actor_locations()
                     self.map_obj.calculate_fov_map(self.player)
                     self.ticks_last_event = pg.time.get_ticks()
@@ -139,7 +141,7 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items).draw_game(self.clock, self.messages, self.camera)
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)

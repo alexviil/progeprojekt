@@ -149,18 +149,9 @@ class Player(Creature):
                 self.messages.append(item.get_name())
 
     def next_selection(self):
-        if not self.inventory:
-            self.messages.append("Nothing to select, inventory is empty.")
-        else:
-            self.selection += 1
-            if self.selection >= len(self.inventory):
-                self.selection = 0
-            for i in range(len(self.inventory)):
-                if i == self.selection:
-                    self.messages.append(self.inventory[i].get_name() + "<<<")
-                else:
-                    self.messages.append(self.inventory[i].get_name())
-            self.messages.append("Cycling inventory | J - equip/consume |  K - cycle next")
+        self.selection += 1
+        if self.selection >= len(self.inventory):
+            self.selection = 0
 
 
 
