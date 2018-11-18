@@ -120,6 +120,9 @@ class Creature(Actor):
         if self.equipped is not None:
             self.equipped.death_drop(self, self.ilist)
         self.actors.remove(self)
+        if self.inventory:
+            for item in self.inventory:
+                item.drop(self, self.ilist)
     
     def get_location(self):
         return (self.x, self.y)
@@ -242,8 +245,7 @@ class Container(Actor):
         self.open = False
 
     def draw(self, camera):
-        self.surface.blit(self.sprite, (
-        (self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
 
     def is_open(self):
         return self.open
