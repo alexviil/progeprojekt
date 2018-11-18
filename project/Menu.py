@@ -12,10 +12,12 @@ class Menu:
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
         self.draw = Draw.Draw(self.inventory_surface)
 
-        self.play_button = Button.Button(self.main_surface, "PLAY", (200, 100), (const.MAIN_SURFACE_WIDTH//2 - 110, const.MAIN_SURFACE_HEIGHT//2))
-        self.exit_button = Button.Button(self.main_surface, "EXIT", (200, 100), (const.MAIN_SURFACE_WIDTH//2 + 110, const.MAIN_SURFACE_HEIGHT//2))
-
     def menu_main(self):
+        play_button = Button.Button(self.main_surface, "PLAY", (200, 100),
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2))
+        exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
+                                         (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
+
         menu_open = True
         while menu_open:
             events = pg.event.get()
@@ -27,17 +29,17 @@ class Menu:
                     pg.quit()
                     exit()
 
-            if self.play_button.update(input):
+            if play_button.update(input):
                 menu_open = False
 
-            if self.exit_button.update(input):
+            if exit_button.update(input):
                 pg.quit()
                 exit()
 
             self.main_surface.fill(const.WHITE)
 
-            self.play_button.draw()
-            self.exit_button.draw()
+            play_button.draw()
+            exit_button.draw()
 
             pg.display.update()
 
