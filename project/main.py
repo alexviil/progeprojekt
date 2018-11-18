@@ -55,7 +55,7 @@ class Main:
         msg = self.messages
 
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
-        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
+        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
 
         self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 5, 0, 0))
         self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 5, 0))
@@ -64,16 +64,20 @@ class Main:
         self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
         self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
 
+        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, True)]
+
+        # Consumable template: Actor.Consumable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, buff_duration, heal, equipped=False)
+
+        self.items.append(Actor.Consumable(2, 2, "Healing Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, 0, 1))
+
         # NB!: Maximum value for frame_counter -> int is 4 * idle_frames - 1
         # Actor template: Actor.Enemy(x, y, name, sprites, mirror, gm, sm, alist, aclist, msg, hp, armor, dm, equipped, inventory, idle_frames, frame_counter)
 
-        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Testy Stick of 'See if it drops when the enemy dies'", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, False)]
-
         self.actors.append(Actor.Enemy(10, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[0], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
         self.actors.append(Actor.Enemy(11, 9, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[1], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [self.enemy_weapons[2]], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[2], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
         self.actors.append(Actor.Enemy(10, 11, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
 
         self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, msg, 20, 0, 3, 3, [], None)

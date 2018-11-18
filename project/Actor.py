@@ -125,7 +125,7 @@ class Creature(Actor):
                 item.drop(self, self.ilist)
     
     def get_location(self):
-        return (self.x, self.y)
+        return self.x, self.y
 
 
 class Enemy(Creature):
@@ -137,6 +137,7 @@ class Enemy(Creature):
             self.max_hp += equipped.hpbuff
             self.armor += equipped.armorbuff
             self.dmg += equipped.dmgbuff
+
 
 class Player(Creature):
     def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, messages, hp=20, armor=0, dmg=3, inventory_limit=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
@@ -160,7 +161,8 @@ class Player(Creature):
             self.selection = 0
 
     def equip(self, item):
-        if not self.equipped and item in self.inventory:
+        if not self.equipped and item in self.inventory and isinstance(item, Equipable):
+            self.messages.append("Equipped " + item.name + ".")
             item.equipped = True
             self.equipped = self.inventory.pop(self.inventory.index(item))
             self.hp += item.hpbuff
@@ -170,6 +172,7 @@ class Player(Creature):
 
     def unequip(self, item):
         if self.equipped == item:
+            self.messages.append("Unequipped " + item.name + ".")
             item.equipped = False
             self.inventory.append(item)
             self.equipped = None
@@ -177,6 +180,17 @@ class Player(Creature):
             self.max_hp -= item.hpbuff
             self.armor -= item.armorbuff
             self.dmg -= item.dmgbuff
+
+    def consume(self, item):
+        if isinstance(item, Consumable):
+            if self.hp == self.max_hp:
+                self.messages.append("Already at full health.")
+            elif item.heal >= 0:
+                self.messages.append("Used " + item.name + "!")
+                hp_before = self.hp
+                self.hp = min(self.max_hp, self.hp + item.heal)
+                self.messages.append("Healed for " + str(self.hp - hp_before) + " health points!")
+                self.inventory.pop(self.inventory.index(item))
 
 
 class Item(Actor):
@@ -204,6 +218,8 @@ class Item(Actor):
     def death_drop(self, creature, items):
         self.x, self.y = creature.get_location()
         self.sprite = self.sprites[0]
+        self.mirror = False
+        self.equipped = False
         items.append(creature.equipped)
 
     def is_equipped(self):
@@ -213,11 +229,11 @@ class Item(Actor):
         if not creature:
             self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
         elif self.equipped:
-            if creature.mirror is not self.mirror:
-                self.mirror = creature.mirror
-                self.sprite = pg.transform.flip(self.sprite, True, False)
-            self.surface.blit(self.sprite, ((creature.x + self.x_offset + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + self.y_offset + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
-
+            if isinstance(self, Equipable):
+                if creature.mirror is not self.mirror:
+                    self.mirror = creature.mirror
+                    self.sprite = pg.transform.flip(self.sprite, True, False)
+                self.surface.blit(self.sprite, ((creature.x + self.x_offset + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + self.y_offset + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
 
 
 class Equipable(Item):
@@ -229,7 +245,14 @@ class Equipable(Item):
 
 
 class Consumable(Item):
-    pass
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, hpbuff=0, armorbuff=0, dmgbuff=0, buff_duration=0, heal=0, equipped=False):
+        super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, messages, equipped)
+        self.hpbuff = hpbuff
+        self.armorbuff = armorbuff
+        self.dmgbuff = dmgbuff
+        self.buff_duration = buff_duration
+        self.heal = heal
+
 
 
 class Container(Actor):

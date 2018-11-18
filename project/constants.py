@@ -38,14 +38,27 @@ SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png")
 
 # Item sprites; all Item objects require dropped, equiped sprites and integers x offset and y offset
+# Equipables
+
 SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png"),
                        pg.image.load("sprites/weapon_red_magic_staff.png"),
                        0,
                        -1]
 SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png"),
                       pg.image.load("sprites/weapon_rusty_sword.png"),
-                      -0.2,
-                      -0.5]
+                      -0.4,
+                      -0.8]
+
+# Consumables
+
+SPRITE_POTION_RED = [pg.image.load("sprites/flask_red.png"),
+                     pg.image.load("sprites/flask_red.png"),
+                     0,
+                     0]
+SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png"),
+                           pg.image.load("sprites/flask_big_red.png"),
+                           0,
+                           0]
 
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png")
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png")

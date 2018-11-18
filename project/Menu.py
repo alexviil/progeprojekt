@@ -57,7 +57,10 @@ class Menu:
             self.inventory_surface.fill(const.BLACK)
 
             events = pg.event.get()
-            current_index = self.player.selection
+            if self.player.selection > len(self.player.inventory) - 1:
+                current_index = self.player.selection = 0
+            else:
+                current_index = self.player.selection
 
             # Close inventory if press I
             for event in events:
@@ -81,19 +84,16 @@ class Menu:
                                 self.player.messages.append("Dropped " + self.player.inventory[current_index].name + ".")
                                 self.player.inventory[current_index].drop(self.player, self.items)
                     elif event.key == pg.K_j:
-                        if self.player.inventory and not self.player.equipped:
-                            if isinstance(item, Actor.Equipable):
-                                self.player.messages.append("Equipped " + self.player.inventory[current_index].name + ".")
-                                self.player.equip(self.player.inventory[current_index])
-                            elif isinstance(item, Actor.Consumable):
-                                pass  # TODO consumables
-                        elif self.player.equipped is not None:
+                        if self.player.inventory and not self.player.equipped and isinstance(self.player.inventory[current_index], Actor.Equipable):
+                            self.player.equip(self.player.inventory[current_index])
+                        elif isinstance(self.player.equipped, Actor.Equipable):
                             self.player.messages.append("You already have something equipped.")
+                        elif self.player.inventory:
+                            self.player.consume(self.player.inventory[current_index])
                         else:
                             self.player.messages.append("You have no items noob.")
                     elif event.key == pg.K_m:
                         if self.player.equipped is not None:
-                            self.player.messages.append("Unequipped " + self.player.equipped.name + ".")
                             self.player.unequip(self.player.equipped)
                         else:
                             self.player.messages.append("You have nothing equipped.")
