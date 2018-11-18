@@ -13,6 +13,7 @@ class Button:
         self.color_default = color_default
         self.text_color_mouseover = text_color_mouseover
         self.text_color_default = text_color_default
+        self.current_color = text_color_default
 
         self.rect = pg.Rect(self.coordinates, size)
         self.rect.center = self.coordinates
@@ -23,15 +24,20 @@ class Button:
         events, mouse_loc = input
         mouse_x, mouse_y = mouse_loc
 
+        mouseover = self.rect.right >= mouse_x >= self.rect.left and self.rect.bottom >= mouse_y >= self.rect.top
         button_clicked = False
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN:
-                if event.button == 1 and (self.rect.right >= mouse_x >= self.rect.left and self.rect.bottom >= mouse_y >= self.rect.top):
+                if event.button == 1 and mouseover:
                     button_clicked = True
+
+        if mouseover:
+            self.current_color = self.color_mouseover
+        else:
+            self.current_color = self.color_default
 
         return button_clicked
 
-
     def draw(self):
-        pg.draw.rect(self.surface, self.color_default, self.rect)
+        pg.draw.rect(self.surface, self.current_color, self.rect)
         self.draw_obj.draw_text(self.text, self.coordinates[0], self.coordinates[1], self.text_color_default, const.FONT_MENU_BUTTON, True)
