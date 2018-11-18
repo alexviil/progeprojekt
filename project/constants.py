@@ -72,6 +72,11 @@ SPRITE_FLOOR7 = pg.image.load("sprites/floor_7.png")
 SPRITE_FLOOR8 = pg.image.load("sprites/floor_8.png")
 SPRITES_FLOOR = [eval("SPRITE_FLOOR" + str(i)) for i in range(1, 9)]
 
+# Audio, not sure if can use Hendy Marvin's music technically
+# Also probably better things out there, just going with this for now
+BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
+MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
+
 # Map values
 MAP_WIDTH = 19
 MAP_HEIGHT = 19

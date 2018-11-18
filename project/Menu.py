@@ -18,6 +18,11 @@ class Menu:
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
                                          (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
 
+        self.main_surface.fill(const.WHITE)
+
+        pg.mixer.music.load(const.MENU_MUSIC)
+        pg.mixer.music.play(-1)  # Infinitely looping music
+
         menu_open = True
         while menu_open:
             events = pg.event.get()
@@ -30,13 +35,12 @@ class Menu:
                     exit()
 
             if play_button.update(input):
+                pg.mixer.music.stop()
                 menu_open = False
 
             if exit_button.update(input):
                 pg.quit()
                 exit()
-
-            self.main_surface.fill(const.WHITE)
 
             play_button.draw()
             exit_button.draw()

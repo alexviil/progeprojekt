@@ -100,6 +100,9 @@ class Main:
         """
         self.game_start()
 
+        pg.mixer.music.load(const.BACKGROUND_MUSIC)
+        pg.mixer.music.play(-1)
+
         run = True
         while run:
             # Get input
