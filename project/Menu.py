@@ -20,8 +20,9 @@ class Menu:
 
         self.main_surface.fill(const.WHITE)
 
-        pg.mixer.music.load(const.MENU_MUSIC)
-        pg.mixer.music.play(-1)  # Infinitely looping music
+        music = pg.mixer.Sound(const.MENU_MUSIC)
+        music.set_volume(0.05)
+        music.play(-1)  # Infinitely looping music
 
         menu_open = True
         while menu_open:
@@ -35,7 +36,7 @@ class Menu:
                     exit()
 
             if play_button.update(input):
-                pg.mixer.music.stop()
+                music.stop()
                 menu_open = False
 
             if exit_button.update(input):
