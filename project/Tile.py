@@ -26,8 +26,8 @@ class Tile:
     def get_is_creature(self):
         return self.is_creature
     
-    def set_is_wall(self, bool):
-        self.is_wall = bool
+    def set_is_wall(self, boolean):
+        self.is_wall = boolean
     
-    def set_is_creature(self, bool):
-        self.is_creature = bool
+    def set_is_creature(self, boolean):
+        self.is_creature = boolean

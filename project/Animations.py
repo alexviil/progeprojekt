@@ -21,11 +21,11 @@ class Animations:
                     actor.set_sprite(actor.sprites[0])
                     actor.frame_counter = 0
                 elif actor.frame_counter % actor.idle_frames == 0:
-                    actor.set_sprite(actor.sprites[actor.frame_counter // actor.idle_frames])
+                    actor.set_sprite(actor.sprites[int(actor.frame_counter // actor.idle_frames)])
                    
             elif actor.mirror == True:
                 if actor.frame_counter == actor.idle_frames*4:
                     actor.set_sprite(actor.sprites_mirrored[0])
                     actor.frame_counter = 0
                 elif actor.frame_counter % actor.idle_frames == 0:
-                    actor.set_sprite(actor.sprites_mirrored[actor.frame_counter // actor.idle_frames])
+                    actor.set_sprite(actor.sprites_mirrored[int(actor.frame_counter // actor.idle_frames)])

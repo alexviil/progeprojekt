@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Tile, Camera
+import Actor, Draw, Map, Animations, Ai, Tile, Camera, Menu
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -37,25 +37,59 @@ class Main:
         #         row.append(tile.get_is_wall())
         #     self.test.append(row)s
         # print(self.test)
-        
-        self.actors_inanimate = []
+
+        self.items = []
+        self.actors_containers = []
         self.actors = []
 
         # Game messages
         self.messages = []
 
-        # Camera (aka offset to move the world instead of having a camera to move with the player, because pygame :)) )
-        #        (MUST BE same coordinates as player, cannot be defined after player (or at least I haven't tried yet)
+        # Camera (aka offset to move the world surface instead of having a camera to move with the player, because pygame :)
+        #         NB! Set initial coordinates same as player to avoid
         self.camera = Camera.Camera(5, 5)
 
-        # Actors
-        self.actors_inanimate.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
-        self.actors_inanimate.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages))
-        self.actors.append(Actor.Enemy(8, 8, "Demon", const.SPRITES_DEMON, True, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 10))
-        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, self.game_map, self.surface_main, self.actors, self.actors_inanimate, self.messages, 20)
+        # Actors (Creatures, containers, items)
+
+        gm = self.game_map
+        sm = self.surface_main
+        alist = self.actors
+        aclist = self.actors_containers
+        ilist = self.items
+        msg = self.messages
+
+        # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
+        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
+
+        self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 5, 0, 0))
+        self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 5, 0))
+        self.items.append(Actor.Equipable(4, 3, "Something Wizards Something Five Damage", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 5))
+
+        self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
+        self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
+
+        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, True)]
+
+        # Consumable template: Actor.Consumable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, buff_duration, heal, equipped=False)
+
+        self.items.append(Actor.Consumable(2, 2, "Healing Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, 0, 1))
+
+        # NB!: Maximum value for frame_counter -> int is 4 * idle_frames - 1
+        # Actor template: Actor.Enemy(x, y, name, sprites, mirror, gm, sm, alist, aclist, msg, hp, armor, dm, equipped, inventory, idle_frames, frame_counter)
+
+        self.actors.append(Actor.Enemy(10, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[0], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(11, 9, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[1], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[2], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(10, 11, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+
+        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, msg, 20, 0, 3, 3, [], None)
+
         self.actors.append(self.player)
-        
-        self.actors_all = self.actors + self.actors_inanimate
+
+        # Actor locations used for collision boxes
+        self.actors_all = self.actors + self.actors_containers
 
         # Calculate initial FOV
         self.map_obj.calculate_fov_map(self.player)
@@ -63,6 +97,8 @@ class Main:
         self.ai = Ai.Ai()
 
         self.clock = pg.time.Clock()
+
+        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items)
 
     def game_loop(self):
         """
@@ -72,15 +108,21 @@ class Main:
         creates an FPS limit (to stop unwanted side effects, like actors seeming like they're on stimulants when the game
         runs on a fast computer).
         """
+        self.game_start()
+
+        music = pg.mixer.Sound(const.BACKGROUND_MUSIC)
+        music.set_volume(0.05)
+        music.play(-1)
+
         run = True
         while run:
             # Get input
+
             events = pg.event.get()
 
             # Process input
             for event in events:
                 if event.type == pg.QUIT:
-                    pg.quit()
                     run = False
 
                 if event.type == pg.KEYDOWN:
@@ -96,8 +138,17 @@ class Main:
                     elif event.key == pg.K_d:
                         self.player.control(1, 0)
                         self.camera.set_offset(self.player.x, self.player.y)
+                    elif event.key == pg.K_e:
+                        self.player.pick_up()
+                        continue
+                    elif event.key == pg.K_i:
+                        self.menu.inventory_menu()
+                        continue
+                    else:
+                        continue
                     self.update_actor_locations()
                     self.map_obj.calculate_fov_map(self.player)
+
 
                     # Moves Enemy actors
                     for actor in self.actors:
@@ -109,16 +160,25 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.Draw(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_inanimate).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items).draw_game(self.clock, self.messages, self.camera)
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
+
+        self.game_quit()
 
     def update_actor_locations(self):
         # Update actor's collision box location
         actor_locations = [actor.get_location() for actor in self.actors_all]
         self.map_obj.update(actor_locations)
         self.game_map = self.map_obj.get_game_map()
+
+    def game_quit(self):
+        pg.quit()
+        exit()
+
+    def game_start(self):
+        self.menu.menu_main()
 
 
 if __name__ == '__main__':
