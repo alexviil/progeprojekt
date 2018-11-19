@@ -60,6 +60,13 @@ SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png"),
                            0,
                            0]
 
+# Buffs
+
+SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png"),
+                    pg.image.load("sprites/buff_red_f1.png"),
+                    pg.image.load("sprites/buff_red_f2.png"),
+                    pg.image.load("sprites/buff_red_f3.png")]
+
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png")
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png")
 

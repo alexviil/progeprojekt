@@ -86,7 +86,7 @@ class Menu:
                     elif event.key == pg.K_j:
                         if self.player.inventory and not self.player.equipped and isinstance(self.player.inventory[current_index], Actor.Equipable):
                             self.player.equip(self.player.inventory[current_index])
-                        elif isinstance(self.player.equipped, Actor.Equipable):
+                        elif isinstance(self.player.equipped, Actor.Equipable) and not isinstance(self.player.inventory[current_index], Actor.Consumable):
                             self.player.messages.append("You already have something equipped.")
                         elif self.player.inventory:
                             self.player.consume(self.player.inventory[current_index])

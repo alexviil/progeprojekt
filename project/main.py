@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Tile, Camera, Menu
+import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -37,6 +37,7 @@ class Main:
         self.items = []
         self.actors_containers = []
         self.actors = []
+        self.buffs = []
 
         # Game messages
         self.messages = []
@@ -52,35 +53,37 @@ class Main:
         alist = self.actors
         aclist = self.actors_containers
         ilist = self.items
+        blist = self.buffs
         msg = self.messages
 
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
-        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
+        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
 
-        self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 5, 0, 0))
-        self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 5, 0))
-        self.items.append(Actor.Equipable(4, 3, "Something Wizards Something Five Damage", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 5))
+        self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 5, 0, 0))
+        self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, blist, ilist, msg, 0, 5, 0))
+        self.items.append(Actor.Equipable(4, 3, "Something Wizards Something Five Damage", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, blist, ilist, msg, 0, 0, 5))
 
-        self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
-        self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, msg))
+        self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg))
+        self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg))
 
-        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, True)]
+        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 1, True),
+                              Actor.Equipable(0, 0, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 0, True)]
 
-        # Consumable template: Actor.Consumable(x, y, name, sprites, gm, sm, alist, aclist, ilist, msg, hpbuff, armorbuff, dmgbuff, buff_duration, heal, equipped=False)
+        # Consumable template: Actor.Consumable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, buff_duration, heal, equipped=False)
 
-        self.items.append(Actor.Consumable(2, 2, "Healing Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, msg, 0, 0, 0, 0, 1))
+        self.items.append(Actor.Consumable(2, 2, "Healing Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 0, 0, 1))
+        self.items.append(Actor.Consumable(2, 3, "All +3 Potion", const.SPRITE_POTION_RED_LARGE, gm, sm, alist, aclist, ilist, blist, msg, 3, 3, 3, 30, 0, const.SPRITES_RED_BUFF))
 
         # NB!: Maximum value for frame_counter -> int is 4 * idle_frames - 1
-        # Actor template: Actor.Enemy(x, y, name, sprites, mirror, gm, sm, alist, aclist, msg, hp, armor, dm, equipped, inventory, idle_frames, frame_counter)
+        # Actor template: Actor.Enemy(x, y, name, sprites, mirror, gm, sm, alist, aclist, ilist, blist, msg, hp, armor, dm, equipped, inventory, idle_frames, frame_counter)
 
-        self.actors.append(Actor.Enemy(10, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[0], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(11, 9, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[1], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], self.enemy_weapons[2], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(10, 11, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, msg, 10, 0, 1, [], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(10, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[0], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(11, 9, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[1], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[2], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
+        self.actors.append(Actor.Enemy(10, 11, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
 
-        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, msg, 20, 0, 3, 3, [], None)
+        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, blist, msg, 20, 0, 3, 3, [], None)
 
         self.actors.append(self.player)
 
@@ -145,18 +148,21 @@ class Main:
                     self.update_actor_locations()
                     self.map_obj.calculate_fov_map(self.player)
 
-
                     # Moves Enemy actors
                     for actor in self.actors:
                         if isinstance(actor, Actor.Enemy):
                             self.ai.aggressive_roam(actor, self.player)
                             self.update_actor_locations()
-            
+
+                    # Update active buffs
+                    for buff in self.buffs:
+                        buff.update(self.buffs)
+
             # Update actors' sprites
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
