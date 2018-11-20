@@ -20,7 +20,7 @@ class Buff:
         self.x, self.y = self.target.get_location()
         self.mirror = self.target.mirror
         self.frame_counter = 0
-        self.idle_frames = 4
+        self.idle_frames = 7
 
     def update(self, blist):
         self.turn_counter += 1
@@ -32,9 +32,17 @@ class Buff:
             self.target.dmg -= self.dmgbuff
             self.target.armor -= self.armorbuff
             blist.pop(blist.index(self))
+            btype = ""
+            if self.dmgbuff + self.hpbuff + self.armorbuff < 0:
+                btype = "de"
+            self.target.messages.append(self.target.name + "'s {0}buff wanes off.".format(btype))
 
     def draw(self, camera):
+        if self.frame_counter == self.idle_frames * 4:
+            self.frame_counter = 0
+        self.sprite = self.sprites[self.frame_counter // self.idle_frames]
         if self.mirror:
             self.surface.blit(self.sprite, ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
         else:
             self.surface.blit(pg.transform.flip(self.sprite, True, False), ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
+        self.frame_counter += 1

@@ -1,6 +1,5 @@
 import pygame as pg
 import libtcodpy as libt
-from random import randint
 
 """Contains all the constant values like window size, colors, fonts, sprites and other values that other modules use."""
 
@@ -33,11 +32,15 @@ SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png"),
                  pg.image.load("sprites/chort_idle_anim_f1.png"),
                  pg.image.load("sprites/chort_idle_anim_f2.png"),
                  pg.image.load("sprites/chort_idle_anim_f3.png")]
+SPRITES_MIMIC = [pg.image.load("sprites/chest_mimic_open_anim_f1.png"),
+                 pg.image.load("sprites/chest_mimic_open_anim_f2.png"),
+                 pg.image.load("sprites/chest_mimic_open_anim_f1.png"),
+                 pg.image.load("sprites/chest_mimic_open_anim_f2.png")]
 
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png")
 
-# Item sprites; all Item objects require dropped, equiped sprites and integers x offset and y offset
+# Item sprites; all Item objects require dropped, equipped sprites and integers x offset and y offset
 # Equipables
 
 SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png"),

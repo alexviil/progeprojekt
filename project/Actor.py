@@ -89,10 +89,17 @@ class Creature(Actor):
         elif isinstance(target, Container) and isinstance(self, Player):
             if target.is_open():
                 self.messages.append("The chest has already been opened.")
-            elif target.inventory == []:
-                self.messages.append("The chest contains nothing of value.")
+            elif target.inventory == "MIMIC":
+                self.actors.append(Enemy(target.get_location()[0], target.get_location()[1], "Mimic", const.SPRITES_MIMIC, False, self.world_map, self.surface, self.actors, self.actors_inanimate, self.ilist, self.blist, self.messages, 6, 0, 3))
+                self.actors_inanimate.remove(target)
+            elif target.inventory:
+                for item in target.inventory:
+                    self.messages.append("The chest contained something!")
+                    target.y += 1  # very bootleg way of making the item(s) drop in front of the chest but  ¯\_(ツ)_/¯
+                    item.drop(target, self.ilist)
+                    target.y -= 1
             else:
-                self.messages.append("The chest contains an item!")
+                self.messages.append("The chest contains nothing of value.")
             target.set_open(True)
             target.set_sprite(const.SPRITE_CHEST_OPEN)
 
@@ -149,11 +156,11 @@ class Player(Creature):
         self.selection = 0
 
     def pick_up(self):
-        if self.inventory is None or len(self.inventory) >= self.inventory_limit:
-            self.messages.append("Your inventory is already at it's limit " + str(len(self.inventory)) + "/" + str(self.inventory_limit) + ".")
-        else:
-            for item in self.ilist:
-                if item.get_location() == self.get_location():
+        for item in self.ilist:
+            if item.get_location() == self.get_location():
+                if self.inventory is None or len(self.inventory) >= self.inventory_limit:
+                    self.messages.append("Your inventory is already at it's limit " + str(len(self.inventory)) + "/" + str(self.inventory_limit) + ".")
+                else:
                     item.become_picked_up(self, self.ilist)
                     self.messages.append("Picked up " + item.name + "!")
 
@@ -174,14 +181,17 @@ class Player(Creature):
 
     def unequip(self, item):
         if self.equipped == item:
-            self.messages.append("Unequipped " + item.name + ".")
-            item.equipped = False
-            self.inventory.append(item)
-            self.equipped = None
-            self.hp -= item.hpbuff
-            self.max_hp -= item.hpbuff
-            self.armor -= item.armorbuff
-            self.dmg -= item.dmgbuff
+            if self.inventory_limit == len(self.inventory):
+                self.messages.append("Your inventory is full, you need to drop something first.")
+            else:
+                self.messages.append("Unequipped " + item.name + ".")
+                item.equipped = False
+                self.inventory.append(item)
+                self.equipped = None
+                self.hp -= item.hpbuff
+                self.max_hp -= item.hpbuff
+                self.armor -= item.armorbuff
+                self.dmg -= item.dmgbuff
 
     def consume(self, item):
         if isinstance(item, Consumable):
@@ -198,6 +208,7 @@ class Player(Creature):
                 self.blist.append(Buffs.Buff(self.surface, item.buff_sprites, self, item.hpbuff, item.dmgbuff, item.armorbuff, item.buff_duration))
                 self.messages.append("Buffed for " + str(item.buff_duration) + " turns! HP+:{0} DMG+: {1} ARM+: {2}".format(item.hpbuff, item.dmgbuff, item.armorbuff))
                 self.inventory.pop(self.inventory.index(item))
+
 
 class Item(Actor):
     def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, blist, messages, equipped=False, mirror=False):
@@ -275,7 +286,7 @@ class Container(Actor):
         self.open = False
 
     def draw(self, camera):
-        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
+        self.surface.blit(self.sprite, ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
 
     def is_open(self):
         return self.open
