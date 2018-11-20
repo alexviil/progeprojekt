@@ -14,7 +14,9 @@ class Map:
     """
     def __init__(self):
         self.game_map = list()
+        self.bit_map = list()
         self.fov_map = libt.map_new(const.MAP_WIDTH, const.MAP_HEIGHT+1)
+        self.first_room_center = (1, 1)
 
     def create_map(self):
         """
@@ -31,9 +33,9 @@ class Map:
                     bias += 1
                     random = libt.random_get_int(0, 0, 7)
                 if y == 0 or y == const.MAP_HEIGHT - 1 or x == 0 or x == const.MAP_WIDTH - 1:
-                    row.append(Tile.Tile(x, y + 1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
+                    row.append(Tile.Tile(x, y+1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
                     continue
-                row.append(Tile.Tile(x, y + 1, False, False, const.SPRITES_FLOOR[random], const.SPRITES_FLOOREXPLORED[random]))
+                row.append(Tile.Tile(x, y+1, False, False, const.SPRITES_FLOOR[random], const.SPRITES_FLOOREXPLORED[random]))
             self.game_map.append(row)
 
         # TODO Need to figure out this +1 y thing, "it's probably just pygame being pygame" - Alex
@@ -64,7 +66,80 @@ class Map:
     def create_fov_map(self):
         for y in range(const.MAP_HEIGHT):
             for x in range(const.MAP_WIDTH):
-                libt.map_set_properties(self.fov_map, x, y+1, not self.game_map[y][x].get_is_wall(), not self.game_map[y][x].get_is_wall())
+                libt.map_set_properties(self.fov_map, x, y+1,
+                                        not self.game_map[y][x].get_is_wall(),
+                                        not self.game_map[y][x].get_is_wall())
 
     def calculate_fov_map(self, player):
         libt.map_compute_fov(self.fov_map, player.x, player.y+1, const.TORCH_RADIUS, const.FOV_LIGHT_WALLS, const.FOV_ALGORITHM)
+
+    def create_test_map(self):
+        for y in range(const.MAP_HEIGHT):
+            self.game_map.append(list())
+            for x in range(const.MAP_WIDTH):
+                self.game_map[y].append(Tile.Tile(x, y+1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
+        rooms = list()
+
+        for n in range(const.POSSIBLE_ROOM_NUM):
+            width = libt.random_get_int(0, const.MIN_ROOM_SIZE, const.MAX_ROOM_SIZE)
+            height = libt.random_get_int(0, const.MIN_ROOM_SIZE, const.MAX_ROOM_SIZE)
+            x = libt.random_get_int(0, 0, const.MAP_WIDTH-width-1)
+            y = libt.random_get_int(0, 0, const.MAP_HEIGHT-height-1)
+
+            room = Room(x, y, width, height)
+
+            if not any(room.check_intersection(other_room) for other_room in rooms):
+                rooms.append(room)
+                self.insert_room(room)
+
+                if len(rooms) >= 2:
+                    if libt.random_get_int(0, 0, 1):  # Randomizes whether it goes horizontal or vertical tunnel first
+                        self.x_tunnel(rooms[-2], rooms[-1])
+                        self.y_tunnel(rooms[-2], rooms[-1])
+                    else:
+                        self.y_tunnel(rooms[-2], rooms[-1])
+                        self.x_tunnel(rooms[-2], rooms[-1])
+
+        self.first_room_center = rooms[0].center_x, rooms[0].center_y
+
+        self.create_fov_map()
+
+    def insert_room(self, room):
+        for y in range(room.y1+1, room.y2):
+            for x in range(room.x1+1, room.x2):
+                self.game_map[y][x] = self.create_floor_tile(x, y)
+
+    def x_tunnel(self, room1, room2):
+        for x in range(min(room1.center_x, room2.center_x), max(room1.center_x, room2.center_x)+1):
+            self.game_map[room1.center_y][x] = self.create_floor_tile(x, room1.center_y)
+
+    def y_tunnel(self, room1, room2):
+        for y in range(min(room1.center_y, room2.center_y), max(room1.center_y, room2.center_y)+1):
+            self.game_map[y][room2.center_x] = self.create_floor_tile(room2.center_x, y)
+
+    def create_floor_tile(self, x, y):
+        bias = 0
+        random = libt.random_get_int(0, 0, 7)
+        while random != 0 and bias != 12:
+            bias += 1
+            random = libt.random_get_int(0, 0, 7)
+        return Tile.Tile(x, y+1, False, False, const.SPRITES_FLOOR[random], const.SPRITES_FLOOREXPLORED[random])
+
+
+class Room:
+    def __init__(self, x, y, width, height):
+        self.x1 = x
+        self.y1 = y
+        self.x2 = x + width
+        self.y2 = y + height
+        self.center_x = (self.x1 + self.x2) // 2
+        self.center_y = (self.y1 + self.y2) // 2
+
+    def check_intersection(self, other_room):
+        return self.x1 <= other_room.x2 and self.x2 >= other_room.x1 and self.y1 <= other_room.y2 and self.y2 >= other_room.y1
+
+
+if __name__ == '__main__':
+    level = Map()
+    level.create_map()
+    level.create_test_map()

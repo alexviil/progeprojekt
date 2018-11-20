@@ -11,6 +11,7 @@ variable names or OOP terms in Estonian.
 
 # TODO: comment code... one day... maybe...
 
+
 class Main:
     """
     The game object itself. This is where all the modules meet to form a single program.
@@ -20,12 +21,16 @@ class Main:
     """
     def __init__(self):
         pg.init()
+
+        # Continuous movement
+        pg.key.set_repeat(200, 100)
+
         self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_WIDTH, const.MAIN_SURFACE_HEIGHT))
 
         # Game Map
 
         self.map_obj = Map.Map()
-        self.map_obj.create_map()
+        self.map_obj.create_test_map()
         self.game_map = self.map_obj.get_game_map()
 
         # self.test = []  # Collision attribute values of each tile for debugging
@@ -35,6 +40,7 @@ class Main:
         #         row.append(tile.get_is_wall())
         #     self.test.append(row)s
         # print(self.test)
+
 
         self.items = []
         self.actors_containers = []
@@ -46,7 +52,8 @@ class Main:
 
         # Camera (aka offset to move the world surface instead of having a camera to move with the player, because pygame :)
         #         NB! Set initial coordinates same as player to avoid
-        self.camera = Camera.Camera(5, 5)
+        player_x, player_y = self.map_obj.first_room_center
+        self.camera = Camera.Camera(player_x, player_y)
 
         # Actors (Creatures, containers, items)
 
@@ -57,7 +64,7 @@ class Main:
         ilist = self.items
         blist = self.buffs
         msg = self.messages
-
+        '''
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
         # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
 
@@ -88,8 +95,8 @@ class Main:
         self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg))
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
-
-        self.player = Actor.Player(5, 5, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, blist, msg, 20, 0, 3, 3, [], None)
+        '''
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, blist, msg, 20, 0, 3, 3, [], None)
 
         self.actors.append(self.player)
 

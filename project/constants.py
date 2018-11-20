@@ -8,8 +8,8 @@ import libtcodpy as libt
 pg.init()
 
 # Init values
-MAIN_SURFACE_HEIGHT = 600
-MAIN_SURFACE_WIDTH = 800
+MAIN_SURFACE_HEIGHT = 800
+MAIN_SURFACE_WIDTH = 1200
 
 # Colors
 GRAY = (122, 122, 122)
@@ -101,8 +101,12 @@ BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
 # Map values
-MAP_WIDTH = 19
-MAP_HEIGHT = 19
+MAP_WIDTH = 70
+MAP_HEIGHT = 70
+
+MAX_ROOM_SIZE = 25
+MIN_ROOM_SIZE = 10
+POSSIBLE_ROOM_NUM = 25
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
