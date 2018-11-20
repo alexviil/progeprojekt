@@ -47,7 +47,7 @@ class Draw:
 
 
 class DrawWorld(Draw):
-    def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[], items=[]):
+    def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[], items=[], buffs=[]):
         super().__init__(surface)
         self.game_map = game_map
         self.fov_map = fov_map
@@ -55,6 +55,7 @@ class DrawWorld(Draw):
         self.npcs = npcs
         self.containers = containers
         self.items = items
+        self.buffs = buffs
 
     def draw_map(self, camera):
         """
@@ -101,6 +102,10 @@ class DrawWorld(Draw):
                 npc.draw(camera)
                 if npc.equipped:
                     npc.equipped.draw(camera, npc)
+
+        # Draw Buffs
+        for buff in self.buffs:
+            buff.draw(camera)
 
         # Draw Console text
         self.draw_console_messages(messages, const.FONT_CONSOLE)

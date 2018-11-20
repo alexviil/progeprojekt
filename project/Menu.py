@@ -84,14 +84,15 @@ class Menu:
                                 self.player.messages.append("Dropped " + self.player.inventory[current_index].name + ".")
                                 self.player.inventory[current_index].drop(self.player, self.items)
                     elif event.key == pg.K_j:
-                        if self.player.inventory and not self.player.equipped and isinstance(self.player.inventory[current_index], Actor.Equipable):
-                            self.player.equip(self.player.inventory[current_index])
-                        elif isinstance(self.player.equipped, Actor.Equipable):
-                            self.player.messages.append("You already have something equipped.")
-                        elif self.player.inventory:
-                            self.player.consume(self.player.inventory[current_index])
+                        if self.player.inventory == []:
+                            self.player.messages.append("You have no items noob")
                         else:
-                            self.player.messages.append("You have no items noob.")
+                            if self.player.inventory and not self.player.equipped and isinstance(self.player.inventory[current_index], Actor.Equipable):
+                                self.player.equip(self.player.inventory[current_index])
+                            elif isinstance(self.player.equipped, Actor.Equipable) and not isinstance(self.player.inventory[current_index], Actor.Consumable):
+                                self.player.messages.append("You already have something equipped.")
+                            elif self.player.inventory:
+                                self.player.consume(self.player.inventory[current_index])
                     elif event.key == pg.K_m:
                         if self.player.equipped is not None:
                             self.player.unequip(self.player.equipped)
