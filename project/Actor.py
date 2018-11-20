@@ -206,7 +206,7 @@ class Player(Creature):
                     self.inventory.pop(self.inventory.index(item))
             elif item.armorbuff > 0 or item.hpbuff > 0 or item.dmgbuff > 0:
                 self.blist.append(Buffs.Buff(self.surface, item.buff_sprites, self, item.hpbuff, item.dmgbuff, item.armorbuff, item.buff_duration))
-                self.messages.append("Buffed for " + str(item.buff_duration) + " turns! HP+:{0} DMG+: {1} ARM+: {2}".format(item.hpbuff, item.dmgbuff, item.armorbuff))
+                self.messages.append("Buffed for " + str(item.buff_duration) + " turns! HP+: {0} DMG+: {1} ARM+: {2}".format(item.hpbuff, item.dmgbuff, item.armorbuff))
                 self.inventory.pop(self.inventory.index(item))
 
 
