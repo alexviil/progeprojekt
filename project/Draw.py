@@ -64,13 +64,15 @@ class DrawWorld(Draw):
         """
         for y in self.game_map:
             for tile in y:
-                if self.check_fov(tile.x, tile.y):  # only draws if area is in field of view
-                    tile.explored = True
-                    self.surface.blit(tile.sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH,
-                                                    (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
-                elif tile.explored:
-                    self.surface.blit(tile.explored_sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH,
-                                                             (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
+                if (0 <= (tile.x + camera.get_x_offset()) * const.TILE_WIDTH <= const.MAIN_SURFACE_WIDTH and
+                        0 <= (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT <= const.MAIN_SURFACE_HEIGHT):
+                    if self.check_fov(tile.x, tile.y):  # only draws if area is in field of view
+                        tile.explored = True
+                        self.surface.blit(tile.sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH,
+                                                        (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
+                    elif tile.explored:
+                        self.surface.blit(tile.explored_sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH,
+                                                                 (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
 
     def draw_game(self, clock, messages, camera):
         """Draws the game and all elements, if they are within the field of view of the player."""
