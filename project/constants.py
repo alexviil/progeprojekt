@@ -10,6 +10,7 @@ pg.init()
 # Init values
 MAIN_SURFACE_HEIGHT = 800
 MAIN_SURFACE_WIDTH = 1200
+pg.display.set_mode((MAIN_SURFACE_WIDTH, MAIN_SURFACE_HEIGHT))
 
 # Colors
 GRAY = (122, 122, 122)
@@ -70,29 +71,29 @@ SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png"),
                     pg.image.load("sprites/buff_red_f2.png"),
                     pg.image.load("sprites/buff_red_f3.png")]
 
-SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png")
-SPRITE_WALL = pg.image.load("sprites/wall_mid.png")
+SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
+SPRITE_WALL = pg.image.load("sprites/wall_mid.png").convert()
 
-SPRITE_FLOOREXPLORED = pg.image.load("sprites/floor_1darkened.png")
-SPRITE_FLOOREXPLORED1 = pg.image.load("sprites/floor_1darkened.png")
-SPRITE_FLOOREXPLORED2 = pg.image.load("sprites/floor_2darkened.png")
-SPRITE_FLOOREXPLORED3 = pg.image.load("sprites/floor_3darkened.png")
-SPRITE_FLOOREXPLORED4 = pg.image.load("sprites/floor_4darkened.png")
-SPRITE_FLOOREXPLORED5 = pg.image.load("sprites/floor_5darkened.png")
-SPRITE_FLOOREXPLORED6 = pg.image.load("sprites/floor_6darkened.png")
-SPRITE_FLOOREXPLORED7 = pg.image.load("sprites/floor_7darkened.png")
-SPRITE_FLOOREXPLORED8 = pg.image.load("sprites/floor_8darkened.png")
+SPRITE_FLOOREXPLORED = pg.image.load("sprites/floor_1darkened.png").convert()
+SPRITE_FLOOREXPLORED1 = pg.image.load("sprites/floor_1darkened.png").convert()
+SPRITE_FLOOREXPLORED2 = pg.image.load("sprites/floor_2darkened.png").convert()
+SPRITE_FLOOREXPLORED3 = pg.image.load("sprites/floor_3darkened.png").convert()
+SPRITE_FLOOREXPLORED4 = pg.image.load("sprites/floor_4darkened.png").convert()
+SPRITE_FLOOREXPLORED5 = pg.image.load("sprites/floor_5darkened.png").convert()
+SPRITE_FLOOREXPLORED6 = pg.image.load("sprites/floor_6darkened.png").convert()
+SPRITE_FLOOREXPLORED7 = pg.image.load("sprites/floor_7darkened.png").convert()
+SPRITE_FLOOREXPLORED8 = pg.image.load("sprites/floor_8darkened.png").convert()
 SPRITES_FLOOREXPLORED = [eval("SPRITE_FLOOREXPLORED" + str(i)) for i in range(1, 9)]
 
-SPRITE_FLOOR = pg.image.load("sprites/floor_1.png")
-SPRITE_FLOOR1 = pg.image.load("sprites/floor_1.png")
-SPRITE_FLOOR2 = pg.image.load("sprites/floor_2.png")
-SPRITE_FLOOR3 = pg.image.load("sprites/floor_3.png")
-SPRITE_FLOOR4 = pg.image.load("sprites/floor_4.png")
-SPRITE_FLOOR5 = pg.image.load("sprites/floor_5.png")
-SPRITE_FLOOR6 = pg.image.load("sprites/floor_6.png")
-SPRITE_FLOOR7 = pg.image.load("sprites/floor_7.png")
-SPRITE_FLOOR8 = pg.image.load("sprites/floor_8.png")
+SPRITE_FLOOR = pg.image.load("sprites/floor_1.png").convert()
+SPRITE_FLOOR1 = pg.image.load("sprites/floor_1.png").convert()
+SPRITE_FLOOR2 = pg.image.load("sprites/floor_2.png").convert()
+SPRITE_FLOOR3 = pg.image.load("sprites/floor_3.png").convert()
+SPRITE_FLOOR4 = pg.image.load("sprites/floor_4.png").convert()
+SPRITE_FLOOR5 = pg.image.load("sprites/floor_5.png").convert()
+SPRITE_FLOOR6 = pg.image.load("sprites/floor_6.png").convert()
+SPRITE_FLOOR7 = pg.image.load("sprites/floor_7.png").convert()
+SPRITE_FLOOR8 = pg.image.load("sprites/floor_8.png").convert()
 SPRITES_FLOOR = [eval("SPRITE_FLOOR" + str(i)) for i in range(1, 9)]
 
 # Audio, not sure if can use Hendy Marvin's music technically
@@ -101,8 +102,8 @@ BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
 # Map values
-MAP_WIDTH = 200
-MAP_HEIGHT = 200
+MAP_WIDTH = 100
+MAP_HEIGHT = 100
 
 MAX_ROOM_SIZE = 25
 MIN_ROOM_SIZE = 10
