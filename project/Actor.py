@@ -142,7 +142,7 @@ class Enemy(Creature):
     def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hp=10, armor=0, dmg=1, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
         super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist,  messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
         if equipped:
-            self.hp +=  equipped.hpbuff
+            self.hp += equipped.hpbuff
             self.max_hp += equipped.hpbuff
             self.armor += equipped.armorbuff
             self.dmg += equipped.dmgbuff
@@ -270,7 +270,6 @@ class Consumable(Item):
         self.buff_duration = buff_duration
         self.heal = heal
         self.buff_sprites = buff_sprites
-
 
 
 class Container(Actor):

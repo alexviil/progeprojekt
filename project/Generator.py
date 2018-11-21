@@ -1,0 +1,39 @@
+import pygame as pg
+import libtcodpy as libt
+import constants as const
+import Actor
+
+
+class Generator:
+    def __init__(self, game_map, surface, actors, containers, items, buffs, messages):
+        self.actors = actors
+        self.containers = containers
+        self.items = items
+        self.gm = game_map
+        self.sm = surface
+        self.buffs = buffs
+        self.msgs = messages
+
+    def gen_staff(self, x, y):
+        hpbuff = libt.random_get_int(0, 1, 4)
+        armorbuff = libt.random_get_int(0, 1, 4)
+        dmgbuff = libt.random_get_int(0, 1, 4)
+
+        self.items.append(Actor.Equipable(x, y, "A Pretty Neat Staff", const.SPRITE_WEAPON_STAFF, self.gm, self.sm, self.actors,
+                          self.containers, self.items, self.buffs, self.msgs, hpbuff, armorbuff, dmgbuff))
+
+    def gen_healing_potion(self, x, y):
+        heal = libt.random_get_int(0, 6, 9)
+
+        self.items.append(Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
+                          self.containers, self.items, self.buffs, self.msgs, 0, 0, 0,
+                          0, heal))
+
+    def plus_3_potion(self, x, y):
+        self.items.append(Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED_LARGE, self.gm, self.sm, self.actors,
+                          self.containers, self.items, self.buffs, self.msgs, 3, 3, 3, 30, 0, const.SPRITES_RED_BUFF))
+
+    def gen_chest(self, x, y, items):
+        self.containers.append(Actor.Container(x, y, "Chest", const.SPRITE_CHEST, self.gm, self.sm, self.actors,
+                               self.containers, self.items, self.buffs, self.msgs, items))
+
