@@ -44,7 +44,7 @@ class Generator:
                           0, heal))
 
     def gen_plus_3_potion(self, x, y):
-        self.items.append(Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED_LARGE, self.gm, self.sm, self.actors,
+        self.items.append(Actor.Consumable(x, y, "+3 Potion", const.SPRITE_POTION_RED_LARGE, self.gm, self.sm, self.actors,
                           self.containers, self.items, self.buffs, self.msgs, 3, 3, 3, 30, 0, const.SPRITES_RED_BUFF))
 
     def gen_container(self, x, y, items):
