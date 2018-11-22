@@ -1,7 +1,7 @@
 import pygame as pg
 import constants as const
 import libtcodpy as libt
-import Tile
+import Tile, Generator
 
 
 class Map:
@@ -17,6 +17,7 @@ class Map:
         self.bit_map = list()
         self.fov_map = libt.map_new(const.MAP_WIDTH, const.MAP_HEIGHT+1)
         self.first_room_center = (1, 1)
+        self.rooms = list()
 
     def create_map(self):
         """
@@ -78,7 +79,6 @@ class Map:
             self.game_map.append(list())
             for x in range(const.MAP_WIDTH):
                 self.game_map[y].append(Tile.Tile(x, y+1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
-        rooms = list()
 
         for n in range(const.POSSIBLE_ROOM_NUM):
             width = libt.random_get_int(0, const.MIN_ROOM_SIZE, const.MAX_ROOM_SIZE)
@@ -88,19 +88,19 @@ class Map:
 
             room = Room(x, y, width, height)
 
-            if not any(room.check_intersection(other_room) for other_room in rooms):
-                rooms.append(room)
+            if not any(room.check_intersection(other_room) for other_room in self.rooms):
+                self.rooms.append(room)
                 self.insert_room(room)
 
-                if len(rooms) >= 2:
+                if len(self.rooms) >= 2:
                     if libt.random_get_int(0, 0, 1):  # Randomizes whether it goes horizontal or vertical tunnel first
-                        self.x_tunnel(rooms[-2], rooms[-1])
-                        self.y_tunnel(rooms[-2], rooms[-1])
+                        self.x_tunnel(self.rooms[-2], self.rooms[-1])
+                        self.y_tunnel(self.rooms[-2], self.rooms[-1])
                     else:
-                        self.y_tunnel(rooms[-2], rooms[-1])
-                        self.x_tunnel(rooms[-2], rooms[-1])
+                        self.y_tunnel(self.rooms[-2], self.rooms[-1])
+                        self.x_tunnel(self.rooms[-2], self.rooms[-1])
 
-        self.first_room_center = rooms[0].center_x, rooms[0].center_y
+        self.first_room_center = self.rooms[0].center_x, self.rooms[0].center_y
 
         self.create_fov_map()
 
@@ -124,6 +124,21 @@ class Map:
             bias += 1
             random = libt.random_get_int(0, 0, 7)
         return Tile.Tile(x, y+1, False, False, const.SPRITES_FLOOR[random], const.SPRITES_FLOOREXPLORED[random])
+
+    def populate_rooms(self, generator):
+        for room in self.rooms:
+            room_width = abs(room.x1 - room.x2)
+            room_height = abs(room.y1 - room.y2)
+            room_area = room_width * room_height
+
+            for i in range(room_area // 30):
+                rand_num = libt.random_get_int(0, 0, 100)
+                if rand_num >= 30:
+                    generator.gen_item(libt.random_get_int(0, room.x1+1, room.x2-1),
+                                       libt.random_get_int(0, room.y1+1, room.y2-1))
+                elif rand_num < 30:
+                    generator.gen_equipable(libt.random_get_int(0, room.x1+1, room.x2-1),
+                                       libt.random_get_int(0, room.y1+1, room.y2-1))
 
 
 class Room:
