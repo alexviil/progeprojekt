@@ -64,6 +64,7 @@ class Main:
         ilist = self.items
         blist = self.buffs
         msg = self.messages
+
         self.generator = Generator.Generator(gm, sm, alist, aclist, ilist, blist, msg)
         self.map_obj.populate_rooms(self.generator)
         '''
@@ -160,14 +161,16 @@ class Main:
                         continue
                     else:
                         continue
-                    self.update_actor_locations()
-                    self.map_obj.calculate_fov_map(self.player)
 
                     # Moves Enemy actors
                     for actor in self.actors:
                         if isinstance(actor, Actor.Enemy):
                             self.ai.aggressive_roam(actor, self.player)
-                            self.update_actor_locations()
+
+                    #TODO: On a big map it takes too long to update actor locations !!!, 100x100 is too much 50x50 was fine, could be fixed with lower spawn rates prob.
+                    self.update_actor_locations()
+
+                    self.map_obj.calculate_fov_map(self.player)
 
                     # Update active buffs
                     for buff in self.buffs:

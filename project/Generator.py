@@ -57,3 +57,16 @@ class Generator:
         self.containers.append(Actor.Container(x, y, "Chest", const.SPRITE_CHEST, self.gm, self.sm, self.actors,
                                self.containers, self.items, self.buffs, self.msgs, items))
 
+    def gen_monster(self, x, y):
+        random_num = libt.random_get_int(0, 1, 1)
+
+        if random_num == 1:
+            self.gen_demon(x, y)
+
+    def gen_demon(self, x, y):
+        self.actors.append(Actor.Enemy(x, y, "Demon", const.SPRITES_DEMON, True, self.gm, self.sm, self.actors,
+                                       self.containers, self.items, self.buffs,
+                                       self.msgs, 10, 0, 1, [],
+                                       Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, self.gm, self.sm,
+                                                       self.actors, self.containers, self.items, self.buffs, self.msgs, 0, 0, 1, True),
+                                       libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
