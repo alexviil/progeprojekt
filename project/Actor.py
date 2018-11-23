@@ -209,6 +209,27 @@ class Player(Creature):
                 self.messages.append("Buffed for " + str(item.buff_duration) + " turns! HP+: {0} DMG+: {1} ARM+: {2}".format(item.hpbuff, item.dmgbuff, item.armorbuff))
                 self.inventory.pop(self.inventory.index(item))
 
+    def draw_hud(self):
+        self.hud_heart_sprite = const.HUD_HEART_FULL
+        full_hearts = self.hp
+        drawn_hearts = 0
+        y = 0
+        for x in range(self.max_hp):
+            if drawn_hearts >= 10:
+                y = drawn_hearts // 10
+                x -= 10*y
+            self.surface.blit(self.hud_heart_sprite, (x*32, y*32))
+            drawn_hearts += 1
+            if drawn_hearts == self.hp:
+                self.hud_heart_sprite = const.HUD_HEART_EMPTY
+        y += 1
+        for x in range(self.armor):
+            self.surface.blit(const.HUD_SHIELD, (x*32, y*32))
+        y += 1
+        for x in range(self.dmg):
+            self.surface.blit(const.HUD_SWORD, (x*32, y*32))
+
+
 
 class Item(Actor):
     def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, blist, messages, equipped=False, mirror=False):

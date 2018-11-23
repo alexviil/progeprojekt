@@ -1,6 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
+import Actor
 
 
 class Draw:
@@ -100,6 +101,8 @@ class DrawWorld(Draw):
 
         # Draw NPCs
         for npc in self.npcs:
+            if isinstance(npc, Actor.Player):
+                npc.draw_hud()
             if self.check_fov(npc.x, npc.y + 1):  # only draws if area is in field of view
                 npc.draw(camera)
                 if npc.equipped:

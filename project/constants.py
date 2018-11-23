@@ -24,6 +24,13 @@ FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
 FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 14)
 FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
 
+# HUD
+HUD_HEART_FULL = pg.image.load("sprites/ui_heart_full.png")
+HUD_HEART_FLASH = pg.image.load("sprites/ui_heart_flash.png")
+HUD_HEART_EMPTY = pg.image.load("sprites/ui_heart_empty.png")
+HUD_SWORD = pg.image.load("sprites/ui_dmg_sword.png")
+HUD_SHIELD = pg.image.load("sprites/ui_shield.png")
+
 # Creature sprites; all Creature objects require four sprites for idle animations
 SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png"),
                   pg.image.load("sprites/wizzard_m_idle_anim_f1.png"),
