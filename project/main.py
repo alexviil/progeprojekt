@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs
+import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -64,6 +64,9 @@ class Main:
         ilist = self.items
         blist = self.buffs
         msg = self.messages
+
+        self.generator = Generator.Generator(gm, sm, alist, aclist, ilist, blist, msg)
+        self.map_obj.populate_rooms(self.generator)
         '''
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
         # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
@@ -160,14 +163,16 @@ class Main:
                         continue
                     else:
                         continue
-                    self.update_actor_locations()
-                    self.map_obj.calculate_fov_map(self.player)
 
                     # Moves Enemy actors
                     for actor in self.actors:
                         if isinstance(actor, Actor.Enemy):
                             self.ai.aggressive_roam(actor, self.player)
-                            self.update_actor_locations()
+
+                    #TODO: On a big map it takes too long to update actor locations !!!, 100x100 is too much 50x50 was fine, could be fixed with lower spawn rates prob.
+                    self.update_actor_locations()
+
+                    self.map_obj.calculate_fov_map(self.player)
 
                     # Update active buffs
                     for buff in self.buffs:
