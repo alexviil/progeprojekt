@@ -75,7 +75,7 @@ class Map:
         libt.map_compute_fov(self.fov_map, player.x, player.y+1, const.TORCH_RADIUS, const.FOV_LIGHT_WALLS, const.FOV_ALGORITHM)
 
     def create_test_map(self):
-        self.game_map = list()
+        self.__init__()
         for y in range(const.MAP_HEIGHT):
             self.game_map.append(list())
             for x in range(const.MAP_WIDTH):

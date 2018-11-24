@@ -84,7 +84,7 @@ class Menu:
                                 self.player.messages.append("Dropped " + self.player.inventory[current_index].name + ".")
                                 self.player.inventory[current_index].drop(self.player, self.items)
                     elif event.key == pg.K_j:
-                        if self.player.inventory == []:
+                        if not self.player.inventory:
                             self.player.messages.append("You have no items noob")
                         else:
                             if self.player.inventory and not self.player.equipped and isinstance(self.player.inventory[current_index], Actor.Equipable):

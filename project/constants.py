@@ -113,8 +113,8 @@ BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
 # Map values
-MAP_WIDTH = 120
-MAP_HEIGHT = 120
+MAP_WIDTH = 30
+MAP_HEIGHT = 30
 
 MAX_ROOM_SIZE = 20
 MIN_ROOM_SIZE = 7

@@ -98,7 +98,7 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, gm, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None)
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None)
 
         self.actors.append(Actor.Enemy(player_x-2, player_y-2, "asd", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg))
 
@@ -206,6 +206,7 @@ class Main:
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.actors = []
         self.actors_containers = []
+        self.player.set_world_map(self.game_map)
         self.actors.append(self.player)
 
     def game_quit(self):

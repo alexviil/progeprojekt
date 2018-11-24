@@ -43,6 +43,9 @@ class Actor:
     def get_name(self):
         return self.name
 
+    def set_world_map(self, game_map):
+        self.world_map = game_map
+
 
 class Creature(Actor):
     """
