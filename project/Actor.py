@@ -36,6 +36,10 @@ class Actor:
     def get_location(self):
         return self.x, self.y
 
+    def set_location(self, x, y):
+        self.x = x
+        self.y = y
+
     def get_name(self):
         return self.name
 

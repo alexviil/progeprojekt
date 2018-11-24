@@ -155,7 +155,10 @@ class Main:
                         self.player.control(1, 0)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_e:
-                        self.player.pick_up()
+                        if self.map_obj.get_tile(self.player.x, self.player.y).doorway:
+                            self.change_levels()
+                        else:
+                            self.player.pick_up()
                         continue
                     elif event.key == pg.K_i:
                         self.menu.inventory_menu()
@@ -196,6 +199,14 @@ class Main:
         actor_locations = [actor.get_location() for actor in self.actors]
         self.map_obj.update(actor_locations)
         self.game_map = self.map_obj.get_game_map()
+
+    def change_levels(self):
+        self.map_obj.create_test_map()
+        self.game_map = self.map_obj.get_game_map()
+        self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
+        self.actors = []
+        self.actors_containers = []
+        self.actors.append(self.player)
 
     def game_quit(self):
         pg.quit()

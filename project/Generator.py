@@ -58,13 +58,13 @@ class Generator:
         armorbuff = libt.random_get_int(0, 1, 4)
         dmgbuff = libt.random_get_int(0, 1, 4)
         chest_items = [Actor.Consumable(0, 0, "Chest Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
-                                  self.containers, self.items, self.buffs, self.msgs, 0, 0, 0, 0, 3),
-                 Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
-                                  self.containers, self.items, self.buffs, self.msgs, 0, 0, 0,
-                                  0, libt.random_get_int(0, 6, 9)),
-                 Actor.Equipable(x, y, "A Pretty Neat Staff", const.SPRITE_WEAPON_STAFF, self.gm, self.sm, self.actors,
-                                 self.containers, self.items, self.buffs, self.msgs, hpbuff, armorbuff, dmgbuff)
-                 ]
+                                        self.containers, self.items, self.buffs, self.msgs, 0, 0, 0, 0, 3),
+                       Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
+                                        self.containers, self.items, self.buffs, self.msgs, 0, 0, 0,
+                                        0, libt.random_get_int(0, 6, 9)),
+                       Actor.Equipable(x, y, "A Pretty Neat Staff", const.SPRITE_WEAPON_STAFF, self.gm, self.sm, self.actors,
+                                       self.containers, self.items, self.buffs, self.msgs, hpbuff, armorbuff, dmgbuff)
+                       ]
 
         self.containers.append(Actor.Container(x, y, "Chest", const.SPRITE_CHEST, self.gm, self.sm, self.actors,
                                self.containers, self. items, self.buffs, self.msgs,

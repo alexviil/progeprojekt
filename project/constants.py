@@ -103,6 +103,9 @@ SPRITE_FLOOR7 = pg.image.load("sprites/floor_7.png").convert()
 SPRITE_FLOOR8 = pg.image.load("sprites/floor_8.png").convert()
 SPRITES_FLOOR = [eval("SPRITE_FLOOR" + str(i)) for i in range(1, 9)]
 
+SPRITE_FLOOR_LADDER = pg.image.load("sprites/floor_ladder.png").convert()
+SPRITE_FLOOR_LADDER_EXPLORED = pg.image.load("sprites/floor_ladderdarkened.png").convert()
+
 # Audio, not sure if can use Hendy Marvin's music technically
 # Also probably better things out there, just going with this for now
 BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"

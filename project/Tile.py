@@ -11,7 +11,8 @@ class Tile:
     has sprites, which are the regular floor by default (since that is the most used tile sprite). The explored
     sprite only gets used when a tile is not in the player's field of view but has been at least once.
     """
-    def __init__(self, x, y, is_wall, is_creature, sprite=const.SPRITE_FLOOR, exp_sprite=const.SPRITE_FLOOREXPLORED):
+    def __init__(self, x, y, is_wall, is_creature, sprite=const.SPRITE_FLOOR, exp_sprite=const.SPRITE_FLOOREXPLORED,
+                 doorway=False):
         self.x = x
         self.y = y
         self.is_wall = is_wall
@@ -19,6 +20,7 @@ class Tile:
         self.sprite = sprite
         self.explored_sprite = exp_sprite
         self.explored = False
+        self.doorway = doorway
 
     def get_is_wall(self):
         return self.is_wall

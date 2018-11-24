@@ -28,7 +28,7 @@ class Draw:
         self.surface.blit(text_surface, text_rect)
 
     def draw_fps(self, clock):
-        self.draw_text(str(int(clock.get_fps())), const.MAIN_SURFACE_WIDTH-20, 0, const.BLACK, const.FONT_DEBUG)
+        self.draw_text(str(int(clock.get_fps())), const.MAIN_SURFACE_WIDTH-20, 0, const.WHITE, const.FONT_DEBUG)
 
     def draw_console_messages(self, messages: list, font):
         """Uses the draw_text function to draw a number of last messages created by actors to the console on thebottom left."""
@@ -78,7 +78,7 @@ class DrawWorld(Draw):
     def draw_game(self, clock, messages, camera):
         """Draws the game and all elements, if they are within the field of view of the player."""
         # Reset the surface
-        self.surface.fill(const.GRAY)
+        self.surface.fill(const.BLACK)
 
         # Draw the map
         self.draw_map(camera)

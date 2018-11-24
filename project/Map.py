@@ -101,6 +101,12 @@ class Map:
                         self.x_tunnel(self.rooms[-2], self.rooms[-1])
 
         self.first_room_center = self.rooms[0].center_x, self.rooms[0].center_y
+        self.game_map[self.rooms[1].center_y][self.rooms[1].center_x] = Tile.Tile(self.rooms[1].center_x,
+                                                                                  self.rooms[1].center_y+1,
+                                                                                  False, False,
+                                                                                  const.SPRITE_FLOOR_LADDER,
+                                                                                  const.SPRITE_FLOOR_LADDER_EXPLORED,
+                                                                                  True)
 
         self.create_fov_map()
 
@@ -148,7 +154,7 @@ class Map:
                                        libt.random_get_int(0, room.y1+1, room.y2-1))
                 elif rand_num < 10:
                     generator.gen_equipable(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                       libt.random_get_int(0, room.y1+1, room.y2-1))
+                                            libt.random_get_int(0, room.y1+1, room.y2-1))
 
 
 class Room:
