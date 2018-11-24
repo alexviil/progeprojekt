@@ -16,7 +16,7 @@ class Menu:
         play_button = Button.Button(self.main_surface, "PLAY", (200, 100),
                                     (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2))
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
-                                         (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
 
         self.main_surface.fill(const.WHITE)
 
@@ -54,7 +54,7 @@ class Menu:
         text_height = self.draw.get_font_height(const.FONT_INVENTORY)
 
         while not close:
-            self.inventory_surface.fill(const.BLACK)
+            self.inventory_surface.fill(const.DARK_GRAY)
 
             events = pg.event.get()
             if self.player.selection > len(self.player.inventory) - 1:
