@@ -25,58 +25,58 @@ FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 14)
 FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
 
 # HUD
-HUD_HEART_FULL = pg.image.load("sprites/ui_heart_full.png")
-HUD_HEART_FLASH = pg.image.load("sprites/ui_heart_flash.png")
-HUD_HEART_EMPTY = pg.image.load("sprites/ui_heart_empty.png")
-HUD_SWORD = pg.image.load("sprites/ui_dmg_sword.png")
-HUD_SHIELD = pg.image.load("sprites/ui_shield.png")
+HUD_HEART_FULL = pg.image.load("sprites/ui_heart_full.png").convert_alpha()
+HUD_HEART_FLASH = pg.image.load("sprites/ui_heart_flash.png").convert_alpha()
+HUD_HEART_EMPTY = pg.image.load("sprites/ui_heart_empty.png").convert_alpha()
+HUD_SWORD = pg.image.load("sprites/ui_dmg_sword.png").convert_alpha()
+HUD_SHIELD = pg.image.load("sprites/ui_shield.png").convert_alpha()
 
 # Creature sprites; all Creature objects require four sprites for idle animations
-SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png"),
-                  pg.image.load("sprites/wizzard_m_idle_anim_f1.png"),
-                  pg.image.load("sprites/wizzard_m_idle_anim_f2.png"),
-                  pg.image.load("sprites/wizzard_m_idle_anim_f3.png")]
-SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png"),
-                 pg.image.load("sprites/chort_idle_anim_f1.png"),
-                 pg.image.load("sprites/chort_idle_anim_f2.png"),
-                 pg.image.load("sprites/chort_idle_anim_f3.png")]
-SPRITES_MIMIC = [pg.image.load("sprites/chest_mimic_open_anim_f1.png"),
-                 pg.image.load("sprites/chest_mimic_open_anim_f2.png"),
-                 pg.image.load("sprites/chest_mimic_open_anim_f1.png"),
-                 pg.image.load("sprites/chest_mimic_open_anim_f2.png")]
+SPRITES_PLAYER = [pg.image.load("sprites/wizzard_m_idle_anim_f0.png").convert_alpha(),
+                  pg.image.load("sprites/wizzard_m_idle_anim_f1.png").convert_alpha(),
+                  pg.image.load("sprites/wizzard_m_idle_anim_f2.png").convert_alpha(),
+                  pg.image.load("sprites/wizzard_m_idle_anim_f3.png").convert_alpha()]
+SPRITES_DEMON = [pg.image.load("sprites/chort_idle_anim_f0.png").convert_alpha(),
+                 pg.image.load("sprites/chort_idle_anim_f1.png").convert_alpha(),
+                 pg.image.load("sprites/chort_idle_anim_f2.png").convert_alpha(),
+                 pg.image.load("sprites/chort_idle_anim_f3.png").convert_alpha()]
+SPRITES_MIMIC = [pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_alpha(),
+                 pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha(),
+                 pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_alpha(),
+                 pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha()]
 
-SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png")
-SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png")
+SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png").convert_alpha()
+SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png").convert_alpha()
 
 # Item sprites; all Item objects require dropped, equipped sprites and integers x offset and y offset
 # Equipables
 
-SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png"),
-                       pg.image.load("sprites/weapon_red_magic_staff.png"),
+SPRITE_WEAPON_STAFF = [pg.image.load("sprites/weapon_red_magic_staffdropped.png").convert_alpha(),
+                       pg.image.load("sprites/weapon_red_magic_staff.png").convert_alpha(),
                        0,
                        -1]
-SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png"),
-                      pg.image.load("sprites/weapon_rusty_sword.png"),
+SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png").convert_alpha(),
+                      pg.image.load("sprites/weapon_rusty_sword.png").convert_alpha(),
                       -0.4,
                       -0.8]
 
 # Consumables
 
-SPRITE_POTION_RED = [pg.image.load("sprites/flask_red.png"),
-                     pg.image.load("sprites/flask_red.png"),
+SPRITE_POTION_RED = [pg.image.load("sprites/flask_red.png").convert_alpha(),
+                     pg.image.load("sprites/flask_red.png").convert_alpha(),
                      0,
                      0]
-SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png"),
-                           pg.image.load("sprites/flask_big_red.png"),
+SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png").convert_alpha(),
+                           pg.image.load("sprites/flask_big_red.png").convert_alpha(),
                            0,
                            0]
 
 # Buffs
 
-SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png"),
-                    pg.image.load("sprites/buff_red_f1.png"),
-                    pg.image.load("sprites/buff_red_f2.png"),
-                    pg.image.load("sprites/buff_red_f3.png")]
+SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
+                    pg.image.load("sprites/buff_red_f1.png").convert_alpha(),
+                    pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
+                    pg.image.load("sprites/buff_red_f3.png").convert_alpha()]
 
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png").convert()
@@ -109,12 +109,12 @@ BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
 # Map values
-MAP_WIDTH = 80
-MAP_HEIGHT = 80
+MAP_WIDTH = 120
+MAP_HEIGHT = 120
 
 MAX_ROOM_SIZE = 20
 MIN_ROOM_SIZE = 7
-POSSIBLE_ROOM_NUM = 100
+POSSIBLE_ROOM_NUM = 200
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32

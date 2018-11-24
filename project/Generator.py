@@ -81,5 +81,5 @@ class Generator:
                                        self.containers, self.items, self.buffs,
                                        self.msgs, 10, 0, 1, [],
                                        Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, self.gm, self.sm,
-                                                       self.actors, self.containers, self.items, self.buffs, self.msgs, 0, 0, 1, True),
+                                                       self.actors, self.containers, self.items, self.buffs, self.msgs, 0, 0, 3, True),
                                        libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))

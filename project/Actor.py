@@ -62,7 +62,7 @@ class Creature(Actor):
         self.armor = armor
         self.dmg = dmg
         
-        if self.mirror == True :
+        if self.mirror:
             self.sprite = self.sprites_mirrored[0]
         else:
             self.sprite = self.sprites[0]

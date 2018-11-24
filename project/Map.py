@@ -135,7 +135,7 @@ class Map:
                 rand_num = libt.random_get_int(0, 0, 100)
                 if rand_num >= 55:
                     generator.gen_container(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                            libt.random_get_int(0, room.y1 + 1, room.y2 - 1))
+                                            libt.random_get_int(0, room.y1 + 1, room.y2 - 2))
 
             for i in range(room_area // 90):
                 generator.gen_monster(libt.random_get_int(0, room.x1+1, room.x2-1),
