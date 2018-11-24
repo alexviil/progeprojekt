@@ -131,16 +131,22 @@ class Map:
             room_height = abs(room.y1 - room.y2)
             room_area = room_width * room_height
 
-            for i in range(room_area // 80):
+            for i in range(room_area // 110):
+                rand_num = libt.random_get_int(0, 0, 100)
+                if rand_num >= 55:
+                    generator.gen_container(libt.random_get_int(0, room.x1+1, room.x2-1),
+                                            libt.random_get_int(0, room.y1 + 1, room.y2 - 1))
+
+            for i in range(room_area // 90):
                 generator.gen_monster(libt.random_get_int(0, room.x1+1, room.x2-1),
                                       libt.random_get_int(0, room.y1 + 1, room.y2 - 1))
 
-            for i in range(room_area // 30):
+            for i in range(room_area // 60):
                 rand_num = libt.random_get_int(0, 0, 100)
-                if rand_num >= 30:
+                if rand_num >= 10:
                     generator.gen_item(libt.random_get_int(0, room.x1+1, room.x2-1),
                                        libt.random_get_int(0, room.y1+1, room.y2-1))
-                elif rand_num < 30:
+                elif rand_num < 10:
                     generator.gen_equipable(libt.random_get_int(0, room.x1+1, room.x2-1),
                                        libt.random_get_int(0, room.y1+1, room.y2-1))
 

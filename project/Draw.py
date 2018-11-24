@@ -28,7 +28,7 @@ class Draw:
         self.surface.blit(text_surface, text_rect)
 
     def draw_fps(self, clock):
-        self.draw_text(str(int(clock.get_fps())), 0, 0, const.BLACK, const.FONT_DEBUG)
+        self.draw_text(str(int(clock.get_fps())), const.MAIN_SURFACE_WIDTH-20, 0, const.BLACK, const.FONT_DEBUG)
 
     def draw_console_messages(self, messages: list, font):
         """Uses the draw_text function to draw a number of last messages created by actors to the console on thebottom left."""

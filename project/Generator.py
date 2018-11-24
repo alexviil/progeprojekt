@@ -47,15 +47,28 @@ class Generator:
         self.items.append(Actor.Consumable(x, y, "+3 Potion", const.SPRITE_POTION_RED_LARGE, self.gm, self.sm, self.actors,
                           self.containers, self.items, self.buffs, self.msgs, 3, 3, 3, 30, 0, const.SPRITES_RED_BUFF))
 
-    def gen_container(self, x, y, items):
+    def gen_container(self, x, y):
         random_num = libt.random_get_int(0, 1, 1)
 
         if random_num == 1:
-            self.gen_chest(x, y, items)
+            self.gen_chest(x, y)
 
-    def gen_chest(self, x, y, items):
+    def gen_chest(self, x, y):
+        hpbuff = libt.random_get_int(0, 1, 4)
+        armorbuff = libt.random_get_int(0, 1, 4)
+        dmgbuff = libt.random_get_int(0, 1, 4)
+        chest_items = [Actor.Consumable(0, 0, "Chest Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
+                                  self.containers, self.items, self.buffs, self.msgs, 0, 0, 0, 0, 3),
+                 Actor.Consumable(x, y, "Healing Potion", const.SPRITE_POTION_RED, self.gm, self.sm, self.actors,
+                                  self.containers, self.items, self.buffs, self.msgs, 0, 0, 0,
+                                  0, libt.random_get_int(0, 6, 9)),
+                 Actor.Equipable(x, y, "A Pretty Neat Staff", const.SPRITE_WEAPON_STAFF, self.gm, self.sm, self.actors,
+                                 self.containers, self.items, self.buffs, self.msgs, hpbuff, armorbuff, dmgbuff)
+                 ]
+
         self.containers.append(Actor.Container(x, y, "Chest", const.SPRITE_CHEST, self.gm, self.sm, self.actors,
-                               self.containers, self.items, self.buffs, self.msgs, items))
+                               self.containers, self. items, self.buffs, self.msgs,
+                               [chest_items[libt.random_get_int(0, 0, 2)]]))
 
     def gen_monster(self, x, y):
         random_num = libt.random_get_int(0, 1, 1)

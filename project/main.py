@@ -41,7 +41,6 @@ class Main:
         #     self.test.append(row)s
         # print(self.test)
 
-
         self.items = []
         self.actors_containers = []
         self.actors = []
@@ -166,11 +165,14 @@ class Main:
 
                     # Moves Enemy actors
                     for actor in self.actors:
-                        if isinstance(actor, Actor.Enemy):
+                        if (isinstance(actor, Actor.Enemy) and
+                                0 <= (actor.x + self.camera.get_x_offset()) * const.TILE_WIDTH <= const.MAIN_SURFACE_WIDTH and
+                                0 <= (actor.y + self.camera.get_y_offset()) * const.TILE_HEIGHT <= const.MAIN_SURFACE_HEIGHT):
                             self.ai.aggressive_roam(actor, self.player)
 
                     #TODO: On a big map it takes too long to update actor locations !!!, 100x100 is too much 50x50 was fine, could be fixed with lower spawn rates prob.
-                    self.update_actor_locations()
+                    # Don't think update_actor_locations is necessary anymore, also lags the game a lot
+                    # self.update_actor_locations()
 
                     self.map_obj.calculate_fov_map(self.player)
 
@@ -191,7 +193,7 @@ class Main:
 
     def update_actor_locations(self):
         # Update actor's collision box location
-        actor_locations = [actor.get_location() for actor in self.actors_all]
+        actor_locations = [actor.get_location() for actor in self.actors]
         self.map_obj.update(actor_locations)
         self.game_map = self.map_obj.get_game_map()
 
