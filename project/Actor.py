@@ -156,11 +156,16 @@ class Enemy(Creature):
 
 
 class Player(Creature):
-    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hp=20, armor=0, dmg=3, inventory_limit=3, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
+    def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hp=20, armor=0, dmg=3, inventory_limit=3, inventory=[], equipped=None, spell=None, spell_cooldown=0, spell_range=5, spell_damage=5, idle_frames=10, frame_counter=0):
         super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
         self.ilist = ilist
         self.inventory_limit = inventory_limit
         self.selection = 0
+        self.spell = spell
+        self.spell_cooldown = spell_cooldown
+        self.spell_range = spell_range
+        self.spell_damage = spell_damage
+        self.turns_since_spell = spell_cooldown
 
     def pick_up(self):
         for item in self.ilist:

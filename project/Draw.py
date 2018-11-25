@@ -101,12 +101,13 @@ class DrawWorld(Draw):
 
         # Draw NPCs
         for npc in self.npcs:
-            if isinstance(npc, Actor.Player):
-                npc.draw_hud()
             if self.check_fov(npc.x, npc.y + 1):  # only draws if area is in field of view
                 npc.draw(camera)
                 if npc.equipped:
                     npc.equipped.draw(camera, npc)
+
+        # Draw HUD
+        self.player.draw_hud()
 
         # Draw Buffs
         for buff in self.buffs:

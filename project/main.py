@@ -98,9 +98,7 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None)
-
-        self.actors.append(Actor.Enemy(player_x-2, player_y-2, "asd", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg))
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None, "Lightning")
 
         self.actors.append(self.player)
 
@@ -163,6 +161,61 @@ class Main:
                     elif event.key == pg.K_i:
                         self.menu.inventory_menu()
                         continue
+                    elif event.key == pg.K_SPACE:
+                        if not self.player.spell:
+                            self.player.messages.append("You don't have any spells to cast.")
+                            continue
+                        elif self.player.turns_since_spell < self.player.spell_cooldown:
+                            self.player.messages.append("Spell still on cooldown, wait {0} more turns!".format(self.player.spell_cooldown - self.player.turns_since_spell))
+                            continue
+                        else:
+                            spell_cast = False
+                            spell_cast_cancel = False
+                            while not spell_cast:
+                                mouse_x = pg.mouse.get_pos()[0]
+                                mouse_y = pg.mouse.get_pos()[1]
+                                events_spell = pg.event.get()
+                                map_x = mouse_x // const.TILE_WIDTH
+                                map_y = mouse_y // const.TILE_HEIGHT
+
+                                valid_tiles_list = []
+                                valid_tiles_list_collision = []
+                                tiles_list = self.map_obj.find_line(self.player.get_location(), (map_x, map_y))
+
+                                for i, (x, y) in enumerate(tiles_list):
+                                    valid_tiles_list.append((x + self.camera.get_x_offset(), y + self.camera.get_y_offset() + 1))
+                                    valid_tiles_list_collision.append((x, y+1))
+                                    if i == self.player.spell_range -1:
+                                        break
+
+                                for spell_event in events_spell:
+                                    if spell_event.type == pg.KEYDOWN:
+                                        if spell_event.key == pg.K_SPACE:
+                                            spell_cast_cancel = True
+                                            spell_cast = True
+                                    if spell_event.type == pg.MOUSEBUTTONDOWN:
+                                        spell_cast = True
+                                        self.player.turns_since_spell = 0
+                                        print(valid_tiles_list_collision)
+                                        for npc in self.actors:
+                                            if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
+                                                npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
+                                                npc.take_damage(self.player.spell_damage)
+
+                                Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+
+                                select_surface = pg.Surface((const.TILE_WIDTH, const.TILE_HEIGHT)).convert_alpha()
+                                select_surface.fill(const.WHITE)
+                                select_surface.set_alpha(180)
+                                for (x, y) in valid_tiles_list:
+                                    self.surface_main.blit(select_surface, (x*const.TILE_WIDTH, y*const.TILE_HEIGHT))
+
+                                pg.display.flip()
+
+                                #self.clock.tick(const.FPS_LIMIT)
+
+                            if spell_cast_cancel:
+                                continue
                     else:
                         continue
 
@@ -178,6 +231,7 @@ class Main:
                     # self.update_actor_locations()
 
                     self.map_obj.calculate_fov_map(self.player)
+                    self.player.turns_since_spell += 1
 
                     # Update active buffs
                     for buff in self.buffs:
