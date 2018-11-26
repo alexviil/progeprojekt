@@ -201,13 +201,16 @@ class Main:
         self.game_map = self.map_obj.get_game_map()
 
     def change_levels(self):
-        self.map_obj.create_test_map()
-        self.game_map = self.map_obj.get_game_map()
-        self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.actors = []
         self.actors_containers = []
-        self.player.set_world_map(self.game_map)
+        self.items = []
         self.actors.append(self.player)
+        self.map_obj = Map.Map()
+        self.map_obj.create_test_map()
+        self.game_map = self.map_obj.get_game_map()
+        self.player.set_world_map(self.game_map)
+        self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
+        self.map_obj.populate_rooms(self.generator)
 
     def game_quit(self):
         pg.quit()
