@@ -216,6 +216,7 @@ class Main:
         self.player.set_world_map(self.game_map)
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.map_obj.populate_rooms(self.generator)
+        self.spells.game_map = self.game_map
 
     def game_quit(self):
         pg.quit()
