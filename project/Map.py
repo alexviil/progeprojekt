@@ -137,12 +137,18 @@ class Map:
                         self.x_tunnel(self.rooms[-2], self.rooms[-1])
 
         self.first_room_center = self.rooms[0].center_x, self.rooms[0].center_y
-        self.game_map[self.rooms[1].center_y][self.rooms[1].center_x] = Tile.Tile(self.rooms[1].center_x,
-                                                                                  self.rooms[1].center_y+1,
-                                                                                  False, False,
-                                                                                  const.SPRITE_FLOOR_LADDER,
-                                                                                  const.SPRITE_FLOOR_LADDER_EXPLORED,
-                                                                                  True)
+        if len(self.rooms) <= 1:
+            hole_x = self.rooms[0].center_x
+            hole_y = self.rooms[0].center_y
+        else:
+            hole_x = self.rooms[1].center_x
+            hole_y = self.rooms[1].center_y
+
+        self.game_map[hole_y][hole_x] = Tile.Tile(hole_x, hole_y+1, False, False,
+                                                  const.SPRITE_FLOOR_LADDER,
+                                                  const.SPRITE_FLOOR_LADDER_EXPLORED,
+                                                  True)
+
         self.create_fov_map()
 
     def insert_room(self, room):
