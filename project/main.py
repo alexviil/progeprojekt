@@ -98,7 +98,7 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None, "Lightning")
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None, "Fireball")
 
         self.actors.append(self.player)
 

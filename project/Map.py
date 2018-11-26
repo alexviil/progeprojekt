@@ -1,7 +1,7 @@
 import pygame as pg
 import constants as const
 import libtcodpy as libt
-import Tile, Generator
+import Tile, Generator, Actor
 
 
 class Map:
@@ -64,19 +64,36 @@ class Map:
     def get_tile(self, x, y):
         return self.game_map[y][x]
 
-    def find_line(self, xy1, xy2):
+    def find_line(self, xy1, xy2, penetrate_npc=True, alist=None, r=None):
         x1, y1 = xy1
         x2, y2 = xy2
         libt.line_init(x1, y1, x2, y2)
         diff_x, diff_y = libt.line_step()
         coord_list = []
         if x1 == x2 and y1 == y2:
-            return [(x1, y1)]
+            coord_list.append((x1, y1))
         while diff_x is not None and diff_y is not None:
             coord_list.append((diff_x, diff_y))
             diff_x, diff_y = libt.line_step()
+        if not penetrate_npc:
+            for e in coord_list:
+                for npc in alist:
+                    if e == npc.get_location() and isinstance(npc, Actor.Enemy):
+                        try:
+                            coord_list = coord_list[:coord_list.index(e)+1]
+                        except:
+                            coord_list = coord_list[:coord_list.index(e)]
+        if r is not None:
+            center = coord_list[-1]
+            x_min = center[0] - r
+            x_max = center[0] + r + 1
+            y_min = center[1] - r
+            y_max = center[1] + r + 1
+            for x in range(x_min, x_max):
+                for y in range(y_min, y_max):
+                    coord_list.append((x, y))
+            return coord_list
         return coord_list
-
 
     def create_fov_map(self):
         for y in range(const.MAP_HEIGHT):
