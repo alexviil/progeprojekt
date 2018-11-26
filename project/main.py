@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator
+import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -112,6 +112,8 @@ class Main:
 
         self.clock = pg.time.Clock()
 
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, alist, aclist, ilist, blist, self.clock, self.messages)
+
         self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items)
 
     def game_loop(self):
@@ -162,60 +164,9 @@ class Main:
                         self.menu.inventory_menu()
                         continue
                     elif event.key == pg.K_SPACE:
-                        if not self.player.spell:
-                            self.player.messages.append("You don't have any spells to cast.")
+                        self.spells.cast_spell()
+                        if self.player.spell_status == "cancelled":
                             continue
-                        elif self.player.turns_since_spell < self.player.spell_cooldown:
-                            self.player.messages.append("Spell still on cooldown, wait {0} more turns!".format(self.player.spell_cooldown - self.player.turns_since_spell))
-                            continue
-                        else:
-                            spell_cast = False
-                            spell_cast_cancel = False
-                            while not spell_cast:
-                                mouse_x = pg.mouse.get_pos()[0]
-                                mouse_y = pg.mouse.get_pos()[1]
-                                events_spell = pg.event.get()
-                                map_x = mouse_x // const.TILE_WIDTH
-                                map_y = mouse_y // const.TILE_HEIGHT
-
-                                valid_tiles_list = []
-                                valid_tiles_list_collision = []
-                                tiles_list = self.map_obj.find_line(self.player.get_location(), (map_x, map_y))
-
-                                for i, (x, y) in enumerate(tiles_list):
-                                    valid_tiles_list.append((x + self.camera.get_x_offset(), y + self.camera.get_y_offset() + 1))
-                                    valid_tiles_list_collision.append((x, y+1))
-                                    if i == self.player.spell_range -1:
-                                        break
-
-                                for spell_event in events_spell:
-                                    if spell_event.type == pg.KEYDOWN:
-                                        if spell_event.key == pg.K_SPACE:
-                                            spell_cast_cancel = True
-                                            spell_cast = True
-                                    if spell_event.type == pg.MOUSEBUTTONDOWN:
-                                        spell_cast = True
-                                        self.player.turns_since_spell = 0
-                                        print(valid_tiles_list_collision)
-                                        for npc in self.actors:
-                                            if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
-                                                npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
-                                                npc.take_damage(self.player.spell_damage)
-
-                                Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
-
-                                select_surface = pg.Surface((const.TILE_WIDTH, const.TILE_HEIGHT)).convert_alpha()
-                                select_surface.fill(const.WHITE)
-                                select_surface.set_alpha(180)
-                                for (x, y) in valid_tiles_list:
-                                    self.surface_main.blit(select_surface, (x*const.TILE_WIDTH, y*const.TILE_HEIGHT))
-
-                                pg.display.flip()
-
-                                #self.clock.tick(const.FPS_LIMIT)
-
-                            if spell_cast_cancel:
-                                continue
                     else:
                         continue
 

@@ -166,6 +166,7 @@ class Player(Creature):
         self.spell_range = spell_range
         self.spell_damage = spell_damage
         self.turns_since_spell = spell_cooldown
+        self.spell_status = None
 
     def pick_up(self):
         for item in self.ilist:
