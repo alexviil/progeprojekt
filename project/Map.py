@@ -143,7 +143,6 @@ class Map:
                                                                                   const.SPRITE_FLOOR_LADDER,
                                                                                   const.SPRITE_FLOOR_LADDER_EXPLORED,
                                                                                   True)
-
         self.create_fov_map()
 
     def insert_room(self, room):

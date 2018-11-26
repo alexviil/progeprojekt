@@ -206,9 +206,9 @@ class Main:
         self.game_map = self.map_obj.get_game_map()
 
     def change_levels(self):
-        self.actors = []
-        self.actors_containers = []
-        self.items = []
+        self.actors.clear()
+        self.actors_containers.clear()
+        self.items.clear()
         self.actors.append(self.player)
         self.map_obj = Map.Map()
         self.map_obj.create_test_map()
