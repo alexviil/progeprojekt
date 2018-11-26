@@ -1,7 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
-import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator
+import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -98,9 +98,7 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None)
-
-        self.actors.append(Actor.Enemy(player_x-2, player_y-2, "asd", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg))
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None, "Fireball")
 
         self.actors.append(self.player)
 
@@ -113,6 +111,8 @@ class Main:
         self.ai = Ai.Ai()
 
         self.clock = pg.time.Clock()
+
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, alist, aclist, ilist, blist, self.clock, self.messages)
 
         self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items)
 
@@ -163,6 +163,10 @@ class Main:
                     elif event.key == pg.K_i:
                         self.menu.inventory_menu()
                         continue
+                    elif event.key == pg.K_SPACE:
+                        self.spells.cast_spell()
+                        if self.player.spell_status == "cancelled":
+                            continue
                     else:
                         continue
 
@@ -178,6 +182,7 @@ class Main:
                     # self.update_actor_locations()
 
                     self.map_obj.calculate_fov_map(self.player)
+                    self.player.turns_since_spell += 1
 
                     # Update active buffs
                     for buff in self.buffs:

@@ -79,6 +79,13 @@ SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f3.png").convert_alpha()]
 
+# Spells
+
+SPRITES_SPELL_LIGHTNING = [pg.image.load("sprites/spell_lightning_f0.png").convert_alpha(),
+                           pg.image.load("sprites/spell_lightning_f1.png").convert_alpha(),
+                           pg.image.load("sprites/spell_lightning_f2.png").convert_alpha(),
+                           pg.image.load("sprites/spell_lightning_f3.png").convert_alpha()]
+
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png").convert()
 
