@@ -66,7 +66,13 @@ class Generator:
                                        self.containers, self.items, self.buffs, self.msgs, hpbuff, armorbuff, dmgbuff)
                        ]
 
-        self.containers.append(Actor.Container(x, y, "Chest", const.SPRITE_CHEST, self.gm, self.sm, self.actors,
+        name = "Chest"
+        random_num = libt.random_get_int(0, 1, 6)
+
+        if random_num == 1:
+            name = "Mimic"
+
+        self.containers.append(Actor.Container(x, y, name, const.SPRITE_CHEST, self.gm, self.sm, self.actors,
                                self.containers, self. items, self.buffs, self.msgs,
                                [chest_items[libt.random_get_int(0, 0, 2)]]))
 

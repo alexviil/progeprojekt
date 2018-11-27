@@ -96,8 +96,9 @@ class Creature(Actor):
         elif isinstance(target, Container) and isinstance(self, Player):
             if target.is_open():
                 self.messages.append("The chest has already been opened.")
-            elif target.inventory == "MIMIC":
-                self.actors.append(Enemy(target.get_location()[0], target.get_location()[1], "Mimic", const.SPRITES_MIMIC, False, self.world_map, self.surface, self.actors, self.actors_inanimate, self.ilist, self.blist, self.messages, 6, 0, 3))
+            elif target.name == "Mimic":
+                self.actors.append(Enemy(target.get_location()[0], target.get_location()[1], "Mimic", const.SPRITES_MIMIC, False, self.world_map, self.surface, self.actors, self.actors_inanimate, self.ilist, self.blist, self.messages, 9, 0, 5))
+                self.messages.append("The chest is a Mimic!")
                 self.actors_inanimate.remove(target)
             elif target.inventory:
                 for item in target.inventory:
@@ -148,6 +149,7 @@ class Enemy(Creature):
     """Used to help Ai decide who to move."""
     def __init__(self, x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hp=10, armor=0, dmg=1, inventory=[], equipped=None, idle_frames=10, frame_counter=0):
         super().__init__(x, y, name, sprites, mirror, world_map, surface, actors, actors_inanimate, ilist, blist,  messages, hp, armor, dmg, inventory, equipped, idle_frames, frame_counter)
+        self.ai = "aggressive_roam"
         if equipped:
             self.hp += equipped.hpbuff
             self.max_hp += equipped.hpbuff
@@ -191,6 +193,10 @@ class Player(Creature):
             self.max_hp += item.hpbuff
             self.armor += item.armorbuff
             self.dmg += item.dmgbuff
+            self.spell = item.spell
+            self.spell_range = item.spell_range
+            self.spell_cooldown = item.spell_cooldown
+            self.spell_damage = item.spell_damage
 
     def unequip(self, item):
         if self.equipped == item:
@@ -205,6 +211,10 @@ class Player(Creature):
                 self.max_hp -= item.hpbuff
                 self.armor -= item.armorbuff
                 self.dmg -= item.dmgbuff
+                self.spell = None
+                self.spell_range = 0
+                self.spell_cooldown = 0
+                self.spell_damage = 0
 
     def consume(self, item):
         if isinstance(item, Consumable):
@@ -288,11 +298,15 @@ class Item(Actor):
 
 
 class Equipable(Item):
-    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hpbuff=0, armorbuff=0, dmgbuff=0, equipped=False, mirror=False):
+    def __init__(self, x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, blist, messages, hpbuff=0, armorbuff=0, dmgbuff=0, equipped=False, mirror=False, spell=None, spell_damage=0, spell_cooldown=0, spell_range=0):
         super().__init__(x, y, name, sprites, world_map, surface, actors, actors_inanimate, ilist, blist, messages, equipped, mirror)
         self.hpbuff = hpbuff
         self.armorbuff = armorbuff
         self.dmgbuff = dmgbuff
+        self.spell = spell
+        self.spell_damage = spell_damage
+        self.spell_cooldown = spell_cooldown
+        self.spell_range = spell_range
 
 
 class Consumable(Item):
