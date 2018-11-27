@@ -2,7 +2,7 @@ import pygame as pg
 import libtcodpy as libt
 import constants as const
 import pickle
-import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells
+import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells, Tile
 
 """
 Simple python roguelike by Janar Aava and Alex Viil. Documentation is in English since libtcod's and pygame's
@@ -31,7 +31,7 @@ class Main:
         # Game Map
 
         self.map_obj = Map.Map()
-        self.map_obj.create_test_map()
+        self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
 
         # self.test = []  # Collision attribute values of each tile for debugging
@@ -99,11 +99,11 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 1, 3, 3)
+        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 1, 3, 3)
 
-        self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
-        self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
-        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", const.SPRITE_WEAPON_BOW, gm, sm, alist, aclist, ilist, blist, msg, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
+        self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", gm, sm, alist, aclist, ilist, blist, msg, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
 
         self.actors.append(self.player)
 
@@ -216,7 +216,7 @@ class Main:
         self.items.clear()
         self.actors.append(self.player)
         self.map_obj = Map.Map()
-        self.map_obj.create_test_map()
+        self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.camera.x_offset = const.CAMERA_CENTER_X - self.player.get_location()[0]
@@ -227,18 +227,32 @@ class Main:
             actor.set_world_map(self.game_map)
 
     def game_quit(self):
-        with open("savedata\savegame.txt", "wb") as f:
-            pickle.dump([self.player,
+        self.map_obj.destroy_surfaces()
+
+        self.player.set_surface(None)
+        self.player.set_sprites(None)
+        for actor in self.actors:
+            actor.set_surface(None)
+            actor.set_sprites(None)
+        for actor in self.actors_containers:
+            actor.set_surface(None)
+            actor.set_sprite(None)
+        for item in self.items:
+            item.set_surface(None)
+            item.set_sprites(None)
+
+        with open("savedata\savegame", "wb") as f:
+            pickle.dump([
+                         # self.player,
                          self.camera,
                          self.map_obj,
                          self.game_map,
-                         self.actors,
+                         # self.actors,
                          self.actors_containers,
-                         self.items,
+                         # self.items,
                          self.buffs,
-                         self.clock,
-                         self.messages],
-                        f)
+                         self.messages
+                        ], f)
         pg.quit()
         exit()
 

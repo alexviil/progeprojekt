@@ -79,6 +79,24 @@ SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png").convert_al
 
 # Buffs
 
+ACTOR_DICT = {
+             "SPRITE_CHEST": SPRITE_CHEST,
+             "SPRITE_CHEST_OPEN": SPRITE_CHEST_OPEN,
+             "SPRITES_MIMIC": SPRITES_MIMIC,
+             "SPRITES_DEMON": SPRITES_DEMON,
+             "SPRITES_PLAYER": SPRITES_PLAYER,
+             "HUD_HEART_FULL": HUD_HEART_FULL,
+             "HUD_HEART_FLASH": HUD_HEART_FLASH,
+             "HUD_HEART_EMPTY": HUD_HEART_EMPTY,
+             "HUD_SWORD": HUD_SWORD,
+             "HUD_SHIELD": HUD_SHIELD,
+             "SPRITE_WEAPON_STAFF": SPRITE_WEAPON_STAFF,
+             "SPRITE_RUSTY_SWORD": SPRITE_RUSTY_SWORD,
+             "SPRITE_WEAPON_BOW": SPRITE_WEAPON_BOW,
+             "SPRITE_POTION_RED": SPRITE_POTION_RED,
+             "SPRITE_POTION_RED_LARGE": SPRITE_POTION_RED_LARGE
+             }
+
 SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f1.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
@@ -96,6 +114,8 @@ SPRITES_SPELL_FIREBALL = [pg.image.load("sprites/spell_fireball_f0.png").convert
                           pg.image.load("sprites/spell_fireball_f2.png").convert_alpha(),
                           pg.image.load("sprites/spell_fireball_f3.png").convert_alpha()]
 
+
+# WALLS AND FLOORS
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png").convert()
 
@@ -123,6 +143,32 @@ SPRITES_FLOOR = [eval("SPRITE_FLOOR" + str(i)) for i in range(1, 9)]
 
 SPRITE_FLOOR_LADDER = pg.image.load("sprites/floor_ladder.png").convert()
 SPRITE_FLOOR_LADDER_EXPLORED = pg.image.load("sprites/floor_ladderdarkened.png").convert()
+
+WALL_AND_FLOOR_DICT = {
+                      "SPRITE_WALLEXPLORED": SPRITE_WALLEXPLORED,
+                      "SPRITE_WALL": SPRITE_WALL,
+                      "SPRITE_FLOOREXPLORED": SPRITE_FLOOREXPLORED1,
+                      "SPRITE_FLOOREXPLORED1": SPRITE_FLOOREXPLORED1,
+                      "SPRITE_FLOOREXPLORED2": SPRITE_FLOOREXPLORED2,
+                      "SPRITE_FLOOREXPLORED3": SPRITE_FLOOREXPLORED3,
+                      "SPRITE_FLOOREXPLORED4": SPRITE_FLOOREXPLORED4,
+                      "SPRITE_FLOOREXPLORED5": SPRITE_FLOOREXPLORED5,
+                      "SPRITE_FLOOREXPLORED6": SPRITE_FLOOREXPLORED6,
+                      "SPRITE_FLOOREXPLORED7": SPRITE_FLOOREXPLORED7,
+                      "SPRITE_FLOOREXPLORED8": SPRITE_FLOOREXPLORED8,
+                      "SPRITE_FLOOR": SPRITE_FLOOR,
+                      "SPRITE_FLOOR1": SPRITE_FLOOR1,
+                      "SPRITE_FLOOR2": SPRITE_FLOOR2,
+                      "SPRITE_FLOOR3": SPRITE_FLOOR3,
+                      "SPRITE_FLOOR4": SPRITE_FLOOR4,
+                      "SPRITE_FLOOR5": SPRITE_FLOOR5,
+                      "SPRITE_FLOOR6": SPRITE_FLOOR6,
+                      "SPRITE_FLOOR7": SPRITE_FLOOR7,
+                      "SPRITE_FLOOR8": SPRITE_FLOOR8,
+                      "SPRITE_FLOOR_LADDER": SPRITE_FLOOR_LADDER,
+                      "SPRITE_FLOOR_LADDER_EXPLORED": SPRITE_FLOOR_LADDER_EXPLORED
+                      }
+
 
 # Audio, not sure if can use Hendy Marvin's music technically
 # Also probably better things out there, just going with this for now
