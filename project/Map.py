@@ -64,7 +64,7 @@ class Map:
     def get_tile(self, x, y):
         return self.game_map[y][x]
 
-    def find_line(self, xy1, xy2, penetrate_npc=True, alist=None, r=None):
+    def find_line(self, xy1, xy2, penetrate_npc=True, alist=None):
         x1, y1 = xy1
         x2, y2 = xy2
         libt.line_init(x1, y1, x2, y2)
@@ -81,18 +81,8 @@ class Map:
                     if e == npc.get_location() and isinstance(npc, Actor.Enemy):
                         try:
                             coord_list = coord_list[:coord_list.index(e)+1]
-                        except:
-                            coord_list = coord_list[:coord_list.index(e)]
-        if r is not None:
-            center = coord_list[-1]
-            x_min = center[0] - r
-            x_max = center[0] + r + 1
-            y_min = center[1] - r
-            y_max = center[1] + r + 1
-            for x in range(x_min, x_max):
-                for y in range(y_min, y_max):
-                    coord_list.append((x, y))
-            return coord_list
+                        except ValueError:
+                            pass
         return coord_list
 
     def create_fov_map(self):

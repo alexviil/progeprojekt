@@ -5,6 +5,12 @@ from math import sqrt
 
 
 class Ai:
+    def ai_turn(self, creature, player):
+        if creature.ai == "aggressive_roam":
+            self.aggressive_roam(creature, player)
+        elif creature.ai == "dazed":
+            pass
+
     def move_randomly(self, creature):
         creature.control(libt.random_get_int(0, -1, 1), libt.random_get_int(0, -1, 1))
 

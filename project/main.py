@@ -99,7 +99,11 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 2, 3, 3, [], None, "Fireball")
+        self.player = Actor.Player(player_x, player_y, "Juhan", const.SPRITES_PLAYER, False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 1, 3, 3)
+
+        self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", const.SPRITE_WEAPON_BOW, gm, sm, alist, aclist, ilist, blist, msg, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
 
         self.actors.append(self.player)
 
@@ -176,7 +180,7 @@ class Main:
                         if (isinstance(actor, Actor.Enemy) and
                                 0 <= (actor.x + self.camera.get_x_offset()) * const.TILE_WIDTH <= const.MAIN_SURFACE_WIDTH and
                                 0 <= (actor.y + self.camera.get_y_offset()) * const.TILE_HEIGHT <= const.MAIN_SURFACE_HEIGHT):
-                            self.ai.aggressive_roam(actor, self.player)
+                            self.ai.ai_turn(actor, self.player)
 
                     #TODO: On a big map it takes too long to update actor locations !!!, 100x100 is too much 50x50 was fine, could be fixed with lower spawn rates prob.
                     # Don't think update_actor_locations is necessary anymore, also lags the game a lot
@@ -215,6 +219,8 @@ class Main:
         self.map_obj.create_test_map()
         self.game_map = self.map_obj.get_game_map()
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
+        self.camera.x_offset = const.CAMERA_CENTER_X - self.player.get_location()[0]
+        self.camera.y_offset = const.CAMERA_CENTER_Y - self.player.get_location()[1]
         self.map_obj.populate_rooms(self.generator)
         self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
         for actor in self.actors:

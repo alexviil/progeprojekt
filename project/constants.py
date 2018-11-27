@@ -61,6 +61,11 @@ SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png").con
                       -0.4,
                       -0.8]
 
+SPRITE_WEAPON_BOW = [pg.image.load("sprites/weapon_bowdropped.png").convert_alpha(),
+                     pg.image.load("sprites/weapon_bow.png").convert_alpha(),
+                     0.5,
+                     0]
+
 # Consumables
 
 SPRITE_POTION_RED = [pg.image.load("sprites/flask_red.png").convert_alpha(),
@@ -85,6 +90,11 @@ SPRITES_SPELL_LIGHTNING = [pg.image.load("sprites/spell_lightning_f0.png").conve
                            pg.image.load("sprites/spell_lightning_f1.png").convert_alpha(),
                            pg.image.load("sprites/spell_lightning_f2.png").convert_alpha(),
                            pg.image.load("sprites/spell_lightning_f3.png").convert_alpha()]
+
+SPRITES_SPELL_FIREBALL = [pg.image.load("sprites/spell_fireball_f0.png").convert_alpha(),
+                          pg.image.load("sprites/spell_fireball_f1.png").convert_alpha(),
+                          pg.image.load("sprites/spell_fireball_f2.png").convert_alpha(),
+                          pg.image.load("sprites/spell_fireball_f3.png").convert_alpha()]
 
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
 SPRITE_WALL = pg.image.load("sprites/wall_mid.png").convert()
