@@ -1,6 +1,7 @@
 import pygame as pg
 import libtcodpy as libt
 import constants as const
+import pickle
 import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells
 
 """
@@ -220,6 +221,18 @@ class Main:
             actor.set_world_map(self.game_map)
 
     def game_quit(self):
+        with open("savedata\savegame.txt", "wb") as f:
+            pickle.dump([self.player,
+                         self.camera,
+                         self.map_obj,
+                         self.game_map,
+                         self.actors,
+                         self.actors_containers,
+                         self.items,
+                         self.buffs,
+                         self.clock,
+                         self.messages],
+                        f)
         pg.quit()
         exit()
 
