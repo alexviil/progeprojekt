@@ -23,6 +23,7 @@ class Actor:
         self.ilist = ilist
         self.blist = blist
         self.messages = messages
+        self.sprite = None
 
     def set_sprite(self, sprite):
         self.sprite = sprite
@@ -104,7 +105,7 @@ class Creature(Actor):
             if target.is_open():
                 self.messages.append("The chest has already been opened.")
             elif target.name == "Mimic":
-                self.actors.append(Enemy(target.get_location()[0], target.get_location()[1], "Mimic", const.SPRITES_MIMIC, False, self.world_map, self.surface, self.actors, self.actors_inanimate, self.ilist, self.blist, self.messages, 9, 0, 5))
+                self.actors.append(Enemy(target.get_location()[0], target.get_location()[1], "Mimic", "SPRITES_MIMIC", False, self.world_map, self.surface, self.actors, self.actors_inanimate, self.ilist, self.blist, self.messages, 9, 0, 5))
                 self.messages.append("The chest is a Mimic!")
                 self.actors_inanimate.remove(target)
             elif target.inventory:
@@ -116,7 +117,7 @@ class Creature(Actor):
             else:
                 self.messages.append("The chest contains nothing of value.")
             target.set_open(True)
-            target.set_sprite(const.SPRITE_CHEST_OPEN)
+            target.set_sprite(const.ACTOR_DICT["SPRITE_CHEST_OPEN"])
 
         if not self.world_map[self.y + y_change][self.x + x_change].get_is_wall() and target is None:  # Checks if can step there
             self.x += x_change
@@ -348,6 +349,3 @@ class Container(Actor):
 
     def set_open(self, boolean):
         self.open = boolean
-
-    def set_sprite(self, sprite):
-        self.sprite = sprite

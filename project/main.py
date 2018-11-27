@@ -234,13 +234,16 @@ class Main:
         for actor in self.actors:
             actor.set_surface(None)
             actor.set_sprites(None)
+            actor.set_sprite(None)
         for item in self.items:
             print(item.name, item.surface, item.sprites)
             item.set_surface(None)
             item.set_sprites(None)
+            item.set_sprite(None)
             print(item.name, item.surface, item.sprites)
         for actor in self.actors_containers:
             actor.set_surface(None)
+            actor.set_sprites(None)
             actor.set_sprite(None)
 
         with open("savedata\savegame", "wb") as f:
