@@ -241,6 +241,7 @@ class Player(Creature):
                 self.inventory.pop(self.inventory.index(item))
 
     def draw_hud(self):
+        self.hud_heart_sprite = const.ACTOR_DICT["HUD_HEART_FULL"]
         full_hearts = self.hp
         drawn_hearts = 0
         y = 0
