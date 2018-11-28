@@ -4,19 +4,22 @@ import Draw, Button, Actor
 
 
 class Menu:
-    def __init__(self, main_surface, player, clock, items):
+    def __init__(self, main_surface, player, clock, items, buffs):
         self.main_surface = main_surface
         self.player = player
         self.clock = clock
         self.items = items
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
         self.draw = Draw.Draw(self.inventory_surface)
+        self.buffs = buffs
 
     def menu_main(self):
-        play_button = Button.Button(self.main_surface, "PLAY", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2))
+        play_button = Button.Button(self.main_surface, "CONTINUE", (200, 100),
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 220, const.MAIN_SURFACE_HEIGHT // 2))
+        new_game_button = Button.Button(self.main_surface, "NEW GAME", (200, 100),
+                                    (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2))
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 220, const.MAIN_SURFACE_HEIGHT // 2))
 
         self.main_surface.fill(const.WHITE)
 
@@ -37,13 +40,18 @@ class Menu:
 
             if play_button.update(input):
                 music.stop()
-                menu_open = False
+                return "CONTINUE"
+
+            if new_game_button.update(input):
+                music.stop()
+                return "NEW_GAME"
 
             if exit_button.update(input):
                 pg.quit()
                 exit()
 
             play_button.draw()
+            new_game_button.draw()
             exit_button.draw()
 
             pg.display.update()
@@ -92,7 +100,7 @@ class Menu:
                             elif isinstance(self.player.equipped, Actor.Equipable) and not isinstance(self.player.inventory[current_index], Actor.Consumable):
                                 self.player.messages.append("You already have something equipped.")
                             elif self.player.inventory:
-                                self.player.consume(self.player.inventory[current_index])
+                                self.player.consume(self.player.inventory[current_index], self.buffs)
                     elif event.key == pg.K_m:
                         if self.player.equipped is not None:
                             self.player.unequip(self.player.equipped)

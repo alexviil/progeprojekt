@@ -71,11 +71,13 @@ class Map:
                 self.game_map[y][x].explored_sprite = None
                 self.game_map[y][x].sprite = None
 
-    def initiate_surfaces(self):
+    def initialize_surfaces(self):
+        self.fov_map = libt.map_new(const.MAP_WIDTH, const.MAP_HEIGHT + 1)
         for y, row in enumerate(self.game_map):
             for x, tile in enumerate(row):
                 self.game_map[y][x].explored_sprite = const.WALL_AND_FLOOR_DICT[self.game_map[y][x].explored_sprite_key]
                 self.game_map[y][x].sprite = const.WALL_AND_FLOOR_DICT[self.game_map[y][x].sprite_key]
+        self.create_fov_map()
 
     def update(self, actor_locations):
         """

@@ -3,10 +3,11 @@ import pygame as pg
 
 
 class Buff:
-    def __init__(self, surface, sprites, target, hpbuff, dmgbuff, armorbuff, duration=5):
+    def __init__(self, surface, sprites_key, target, hpbuff, dmgbuff, armorbuff, duration=5):
         self.surface = surface
-        self.sprites = sprites
-        self.sprite = sprites[0]
+        self.sprites_key = sprites_key
+        self.sprites = const.BUFF_DICT[sprites_key]
+        self.sprite = self.sprites[0]
         self.target = target
         self.hpbuff = hpbuff
         self.dmgbuff = dmgbuff
@@ -46,3 +47,7 @@ class Buff:
         else:
             self.surface.blit(pg.transform.flip(self.sprite, True, False), ((self.x + camera.get_x_offset()) * const.TILE_WIDTH, (self.y + camera.get_y_offset()) * const.TILE_HEIGHT))
         self.frame_counter += 1
+
+    def destroy_sprites(self):
+        self.sprites.clear()
+        self.sprite = None

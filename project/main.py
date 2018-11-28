@@ -1,7 +1,8 @@
 import pygame as pg
+import os
 import libtcodpy as libt
 import constants as const
-import pickle
+import pickle, gzip
 import Actor, Draw, Map, Animations, Ai, Camera, Menu, Buffs, Generator, Spells, Tile
 
 """
@@ -28,19 +29,9 @@ class Main:
 
         self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_WIDTH, const.MAIN_SURFACE_HEIGHT))
 
-        # Game Map
-
         self.map_obj = Map.Map()
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
-
-        # self.test = []  # Collision attribute values of each tile for debugging
-        # for y in self.game_map:
-        #     row = []
-        #     for tile in y:
-        #         row.append(tile.get_is_wall())
-        #     self.test.append(row)s
-        # print(self.test)
 
         self.items = []
         self.actors_containers = []
@@ -57,15 +48,7 @@ class Main:
 
         # Actors (Creatures, containers, items)
 
-        gm = self.game_map
-        sm = self.surface_main
-        alist = self.actors
-        aclist = self.actors_containers
-        ilist = self.items
-        blist = self.buffs
-        msg = self.messages
-
-        self.generator = Generator.Generator(gm, sm, alist, aclist, ilist, blist, msg)
+        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
         self.map_obj.populate_rooms(self.generator)
         '''
         # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
@@ -99,11 +82,11 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, sm, alist, aclist, ilist, blist, msg, 21, 1, 3, 3)
+        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=10, dmg=3, inventory_limit=3)
 
-        self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
-        self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", gm, sm, alist, aclist, ilist, blist, msg, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
-        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", gm, sm, alist, aclist, ilist, blist, msg, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
+        self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", self.game_map, self.surface_main, self.messages, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
 
         self.actors.append(self.player)
 
@@ -113,13 +96,13 @@ class Main:
         # Calculate initial FOV
         self.map_obj.calculate_fov_map(self.player)
 
-        self.ai = Ai.Ai()
+        self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
 
         self.clock = pg.time.Clock()
 
-        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, alist, aclist, ilist, blist, self.clock, self.messages)
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
 
-        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items)
+        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs)
 
     def game_loop(self):
         """
@@ -148,22 +131,22 @@ class Main:
 
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_w:
-                        self.player.control(0, -1)
+                        self.player.control(0, -1, self.actors, self.actors_containers, self.items)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_s:
-                        self.player.control(0, 1)
+                        self.player.control(0, 1, self.actors, self.actors_containers, self.items)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_a:
-                        self.player.control(-1, 0)
+                        self.player.control(-1, 0, self.actors, self.actors_containers, self.items)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_d:
-                        self.player.control(1, 0)
+                        self.player.control(1, 0, self.actors, self.actors_containers, self.items)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_e:
                         if self.map_obj.get_tile(self.player.x, self.player.y).doorway:
                             self.change_levels()
                         else:
-                            self.player.pick_up()
+                            self.player.pick_up(self.items)
                         continue
                     elif event.key == pg.K_i:
                         self.menu.inventory_menu()
@@ -226,43 +209,72 @@ class Main:
         for actor in self.actors:
             actor.set_world_map(self.game_map)
 
-    def game_quit(self):
+    def game_save(self):
         self.map_obj.destroy_surfaces()
 
-        self.player.set_surface(None)
-        self.player.set_sprites(None)
         for actor in self.actors:
             actor.set_surface(None)
-            actor.set_sprites(None)
-            actor.set_sprite(None)
-        for item in self.items:
-            print(item.name, item.surface, item.sprites)
-            item.set_surface(None)
-            item.set_sprites(None)
-            item.set_sprite(None)
-            print(item.name, item.surface, item.sprites)
+            actor.destroy_sprites()
         for actor in self.actors_containers:
             actor.set_surface(None)
             actor.set_sprites(None)
             actor.set_sprite(None)
+        for item in self.items:
+            item.set_surface(None)
+            item.set_sprites(None)
+            item.set_sprite(None)
+        # for buff in self.buffs:
+        #     buff.destroy_sprites()
 
-        with open("savedata\savegame", "wb") as f:
+        with gzip.open("savedata\savegame", "wb") as f:
             pickle.dump([
-                         # self.player,
+                         self.player,
                          self.camera,
                          self.map_obj,
                          self.game_map,
-                         # self.actors,
-                         # self.actors_containers,
+                         self.actors,
+                         self.actors_containers,
                          self.items,
                          self.buffs,
                          self.messages
                         ], f)
+
+    def game_load(self):
+        if os.path.isfile("savedata\savegame") and os.path.getsize("savedata\savegame") > 0:
+            with gzip.open("savedata\savegame", "rb") as f:
+                self.player, self.camera, self.map_obj, self.game_map, self.actors, self.actors_containers, self.items, self.buffs, self.messages = pickle.load(f)
+
+            for actor in self.actors:
+                actor.set_surface(self.surface_main)
+                actor.init_sprites()
+            for actor in self.actors_containers:
+                actor.set_surface(self.surface_main)
+                actor.init_sprites()
+            for item in self.items:
+                item.set_surface(self.surface_main)
+                item.init_sprites()
+
+            self.map_obj.initialize_surfaces()
+            self.map_obj.calculate_fov_map(self.player)
+
+            self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers,
+                                                 self.items, self.buffs, self.messages)
+            self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
+
+            self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
+                                        self.actors, self.actors_containers, self.items, self.buffs, self.clock,
+                                        self.messages)
+
+
+    def game_quit(self):
+        self.game_save()
         pg.quit()
         exit()
 
     def game_start(self):
-        self.menu.menu_main()
+        command = self.menu.menu_main()
+        if command == "CONTINUE":
+            self.game_load()
 
 
 if __name__ == '__main__':

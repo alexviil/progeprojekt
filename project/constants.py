@@ -102,6 +102,10 @@ SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f3.png").convert_alpha()]
 
+BUFF_DICT = {
+            "SPRITES_RED_BUFF": SPRITES_RED_BUFF
+            }
+
 # Spells
 
 SPRITES_SPELL_LIGHTNING = [pg.image.load("sprites/spell_lightning_f0.png").convert_alpha(),
