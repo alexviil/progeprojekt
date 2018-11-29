@@ -279,7 +279,7 @@ class Player(Creature):
 
 
 class Item(Actor):
-    def __init__(self, x, y, name, sprites_key, world_map, surface, messages, equipped=False, mirror=False, picked_up=False):
+    def __init__(self, x, y, name, sprites_key, world_map, surface, messages, equipped=False, mirror=False):
         super().__init__(x, y, name, sprites_key, world_map, surface, messages)
         self.mirror = mirror
         self.sprites_key = sprites_key
@@ -293,12 +293,10 @@ class Item(Actor):
         self.equipped = equipped
         self.x_offset = const.ACTOR_DICT[self.sprites_key][2]
         self.y_offset = const.ACTOR_DICT[self.sprites_key][3]
-        self.picked_up = picked_up
 
     def become_picked_up(self, player, items):
         # NB, Changed this so inventory items are counted in overall items
-        self.picked_up = True
-        player.inventory.append(items[items.index(self)])
+        player.inventory.append(items.pop(items.index(self)))
         self.sprite = self.sprites[1]
         self.sprite_index = 1
 
@@ -320,10 +318,8 @@ class Item(Actor):
         return self.equipped
 
     def draw(self, camera, creature=None):
-        if not creature and not self.picked_up:
+        if not creature:
             self.surface.blit(self.sprite, ((self.x + camera.get_x_offset())* const.TILE_WIDTH, (self.y + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
-        elif not creature and self.picked_up:
-            return
         elif self.equipped:
             if isinstance(self, Equipable):
                 if creature.mirror is not self.mirror:

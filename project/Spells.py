@@ -63,7 +63,7 @@ class Spells:
                         if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
                             npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
-                            npc.take_damage(self.player.spell_damage)
+                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
                     self.lightning_spell_animation(valid_tiles_list)
@@ -116,7 +116,7 @@ class Spells:
                         if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
                             npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
-                            npc.take_damage(self.player.spell_damage)
+                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
                     self.fireball_spell_animation(valid_tiles_list)
@@ -167,7 +167,7 @@ class Spells:
                         if npc.get_location() == valid_tiles_list_collision[-1] and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
                             npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.equipped))
-                            npc.take_damage(self.player.spell_damage)
+                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
                             break
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
