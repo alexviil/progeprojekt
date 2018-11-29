@@ -82,9 +82,9 @@ class Generator:
             self.gen_demon(x, y)
 
     def gen_demon(self, x, y):
-        demon_weapon = Actor.Equipable(0, 0, "dRusty Sword", "SPRITE_RUSTY_SWORD", self.gm, self.sm,
+        demon_weapon = Actor.Equipable(0, 0, "Rusty Sword", "SPRITE_RUSTY_SWORD", self.gm, self.sm,
                                        self.msgs, 0, 0, 3, True)
-        self.items.append(demon_weapon)
+
         self.actors.append(Actor.Enemy(x, y, "Demon", "SPRITES_DEMON", True, self.gm, self.sm,
                                        self.msgs, 10, 0, 1, [],
                                        demon_weapon,

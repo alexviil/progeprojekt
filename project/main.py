@@ -218,6 +218,10 @@ class Main:
                     item.set_surface(None)
                     item.set_sprites(None)
                     item.set_sprite(None)
+            if actor.equipped:
+                actor.equipped.set_surface(None)
+                actor.equipped.set_sprites(None)
+                actor.equipped.set_sprite(None)
             actor.set_surface(None)
             actor.destroy_sprites()
         for actor in self.actors_containers:
@@ -261,6 +265,9 @@ class Main:
                     for item in actor.inventory:
                         item.set_surface(self.surface_main)
                         item.init_sprites()
+                if actor.equipped:
+                    actor.equipped.set_surface(self.surface_main)
+                    actor.equipped.init_sprites()
             for actor in self.actors_containers:
                 actor.set_surface(self.surface_main)
                 actor.init_sprites()
