@@ -237,8 +237,9 @@ class Main:
             item.set_surface(None)
             item.set_sprites(None)
             item.set_sprite(None)
-        # for buff in self.buffs:
-        #     buff.destroy_sprites()
+        for buff in self.buffs:
+            buff.set_surface(None)
+            buff.destroy_sprites()
 
         with gzip.open("savedata\savegame", "wb") as f:
             pickle.dump([
@@ -278,6 +279,9 @@ class Main:
             for item in self.items:
                 item.set_surface(self.surface_main)
                 item.init_sprites()
+            for buff in self.buffs:
+                buff.set_surface(self.surface_main)
+                buff.init_sprites()
 
             self.map_obj.initialize_surfaces()
             self.map_obj.calculate_fov_map(self.player)

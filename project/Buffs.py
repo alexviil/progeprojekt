@@ -6,7 +6,7 @@ class Buff:
     def __init__(self, surface, sprites_key, target, hpbuff, dmgbuff, armorbuff, duration=5):
         self.surface = surface
         self.sprites_key = sprites_key
-        self.sprites = const.BUFF_DICT[sprites_key]
+        self.sprites = const.BUFF_DICT[self.sprites_key]
         self.sprite = self.sprites[0]
         self.target = target
         self.hpbuff = hpbuff
@@ -49,5 +49,12 @@ class Buff:
         self.frame_counter += 1
 
     def destroy_sprites(self):
-        self.sprites.clear()
+        self.sprites = None
         self.sprite = None
+
+    def init_sprites(self):
+        self.sprites = const.BUFF_DICT[self.sprites_key]
+        self.sprite = self.sprites[0]
+
+    def set_surface(self, surface):
+        self.surface = surface
