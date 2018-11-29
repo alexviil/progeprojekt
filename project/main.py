@@ -213,9 +213,19 @@ class Main:
         self.map_obj.destroy_surfaces()
 
         for actor in self.actors:
+            if actor.inventory:
+                for item in actor.inventory:
+                    item.set_surface(None)
+                    item.set_sprites(None)
+                    item.set_sprite(None)
             actor.set_surface(None)
             actor.destroy_sprites()
         for actor in self.actors_containers:
+            if actor.inventory:
+                for item in actor.inventory:
+                    item.set_surface(None)
+                    item.set_sprites(None)
+                    item.set_sprite(None)
             actor.set_surface(None)
             actor.set_sprites(None)
             actor.set_sprite(None)
@@ -247,9 +257,17 @@ class Main:
             for actor in self.actors:
                 actor.set_surface(self.surface_main)
                 actor.init_sprites()
+                if actor.inventory:
+                    for item in actor.inventory:
+                        item.set_surface(self.surface_main)
+                        item.init_sprites()
             for actor in self.actors_containers:
                 actor.set_surface(self.surface_main)
                 actor.init_sprites()
+                if actor.inventory:
+                    for item in actor.inventory:
+                        item.set_surface(self.surface_main)
+                        item.init_sprites()
             for item in self.items:
                 item.set_surface(self.surface_main)
                 item.init_sprites()
@@ -264,6 +282,8 @@ class Main:
             self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
                                         self.actors, self.actors_containers, self.items, self.buffs, self.clock,
                                         self.messages)
+
+            self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs)
 
 
     def game_quit(self):

@@ -65,8 +65,6 @@ class Generator:
                        Actor.Equipable(x, y, "A Pretty Neat Staff", "SPRITE_WEAPON_STAFF", self.gm, self.sm,
                                        self.msgs, hpbuff, armorbuff, dmgbuff)
                        ]
-        for item in chest_items:
-            self.items.append(item)
 
         name = "Chest"
         random_num = libt.random_get_int(0, 1, 6)
