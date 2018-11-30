@@ -200,14 +200,15 @@ class Main:
         self.actors.append(self.player)
         self.map_obj = Map.Map()
         self.map_obj.create_map()
+        self.game_map.clear()
         self.game_map = self.map_obj.get_game_map()
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.camera.x_offset = const.CAMERA_CENTER_X - self.player.get_location()[0]
         self.camera.y_offset = const.CAMERA_CENTER_Y - self.player.get_location()[1]
+        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
         self.map_obj.populate_rooms(self.generator)
         self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
-        for actor in self.actors:
-            actor.set_world_map(self.game_map)
+        self.player.set_world_map(self.game_map)
 
     def game_save(self):
         self.map_obj.destroy_surfaces()
@@ -286,8 +287,6 @@ class Main:
             self.map_obj.initialize_surfaces()
             self.map_obj.calculate_fov_map(self.player)
 
-            self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers,
-                                                 self.items, self.buffs, self.messages)
             self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
 
             self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
