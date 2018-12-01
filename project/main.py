@@ -211,6 +211,9 @@ class Main:
         self.map_obj.populate_rooms(self.generator)
         self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
         self.player.set_world_map(self.game_map)
+        for buff in self.buffs:
+            if buff.target == self.player:
+                buff.x, buff.y = self.player.get_location()
 
     def game_save(self):
         self.map_obj.destroy_surfaces()

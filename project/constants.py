@@ -67,8 +67,8 @@ SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png").con
 
 SPRITE_WEAPON_BOW = [pg.image.load("sprites/weapon_bowdropped.png").convert_alpha(),
                      pg.image.load("sprites/weapon_bow.png").convert_alpha(),
-                     0.5,
-                     0]
+                     -0.5,
+                     -0.5]
 
 # Consumables
 
