@@ -14,7 +14,10 @@ class Ai:
         if creature.ai == "aggressive_roam":
             self.aggressive_roam(creature, player)
         elif creature.ai == "dazed":
-            pass
+            if libt.random_get_int(0, 0, 2) == 0:
+                self.move_randomly(creature)
+            else:
+                pass
 
     def move_randomly(self, creature):
         creature.control(libt.random_get_int(0, -1, 1), libt.random_get_int(0, -1, 1), self.actors, self.actors_containers, self.items)

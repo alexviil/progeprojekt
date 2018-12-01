@@ -102,8 +102,14 @@ SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f3.png").convert_alpha()]
 
+SPRITES_DAZED_BUFF = [pg.image.load("sprites/buff_dazed_f0.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f1.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f2.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f3.png").convert_alpha()]
+
 BUFF_DICT = {
-            "SPRITES_RED_BUFF": SPRITES_RED_BUFF
+            "SPRITES_RED_BUFF": SPRITES_RED_BUFF,
+            "SPRITES_DAZED_BUFF": SPRITES_DAZED_BUFF
             }
 
 # Spells
@@ -117,6 +123,11 @@ SPRITES_SPELL_FIREBALL = [pg.image.load("sprites/spell_fireball_f0.png").convert
                           pg.image.load("sprites/spell_fireball_f1.png").convert_alpha(),
                           pg.image.load("sprites/spell_fireball_f2.png").convert_alpha(),
                           pg.image.load("sprites/spell_fireball_f3.png").convert_alpha()]
+
+SPRITES_SPELL_DAZE = [pg.image.load("sprites/spell_daze_f0.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f1.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f2.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f3.png").convert_alpha()]
 
 
 # WALLS AND FLOORS
