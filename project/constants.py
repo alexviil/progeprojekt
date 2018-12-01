@@ -45,6 +45,10 @@ SPRITES_MIMIC = [pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_a
                  pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha(),
                  pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_alpha(),
                  pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha()]
+SPRITES_SKELETON = [pg.image.load("sprites/skelet_idle_anim_f0.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f1.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f2.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f3.png").convert_alpha()]
 
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png").convert_alpha()
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png").convert_alpha()
@@ -82,6 +86,7 @@ SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png").convert_al
 ACTOR_DICT = {
              "SPRITE_CHEST": SPRITE_CHEST,
              "SPRITE_CHEST_OPEN": SPRITE_CHEST_OPEN,
+             "SPRITES_SKELETON": SPRITES_SKELETON,
              "SPRITES_MIMIC": SPRITES_MIMIC,
              "SPRITES_DEMON": SPRITES_DEMON,
              "SPRITES_PLAYER": SPRITES_PLAYER,

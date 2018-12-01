@@ -22,7 +22,11 @@ class Spells:
             self.player.messages.append("You don't have any spells to cast.")
             self.player.spell_status = "cancelled"
         elif self.player.turns_since_spell < self.player.spell_cooldown:
-            self.player.messages.append("Spell still on cooldown, wait {0} more turns!".format(self.player.spell_cooldown - self.player.turns_since_spell))
+            plural = "s"
+            cooldown_left = self.player.spell_cooldown - self.player.turns_since_spell
+            if cooldown_left == 1:
+                plural = ""
+            self.player.messages.append("Spell still on cooldown, wait {0} more turn{1}!".format(cooldown_left, plural))
             self.player.spell_status = "cancelled"
         else:
             if self.player.spell == "Lightning":
@@ -35,7 +39,12 @@ class Spells:
                 self.ranged_attack()
             elif self.player.spell == "Nuke":
                 self.fireball_spell(99)
-                self.player.messages.append("30-killstreak reward activated by XxX_JuHaN2005_XxX")
+                self.player.messages.append("{0} burned everything to a crisp! Including himself.".format(self.player.name))
+                self.player.sprites_key = "SPRITES_SKELETON"
+                self.player.sprites = const.ACTOR_DICT["SPRITES_SKELETON"]
+                self.player.sprites_mirrored = [pg.transform.flip(e, True, False) for e in const.ACTOR_DICT["SPRITES_SKELETON"]]
+                self.player.max_hp = 1
+                self.player.hp = 1
 
     def lightning_spell(self):
         while True:
@@ -67,7 +76,7 @@ class Spells:
                     for npc in self.actors:
                         if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
-                            npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
+                            npc.messages.append("{0} is hit by {1} for {2} damage!".format(npc.name, self.player.spell, self.player.spell_damage))
                             npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
@@ -124,7 +133,7 @@ class Spells:
                     for npc in self.actors:
                         if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
-                            npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.spell))
+                            npc.messages.append("{0} is hit by {1} for {2} damage!".format(npc.name, self.player.spell, self.player.spell_damage))
                             npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
@@ -178,15 +187,21 @@ class Spells:
                     npcs_hit = False
                     for npc in self.actors:
                         if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
+                            no_buff = True
                             npcs_hit = True
-                            npc.messages.append("{0} is affected by {1}!".format(npc.name, self.player.spell))
-                            self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", npc, 0, 0, 0, 10, "dazed"))
-                            npc.ai = "dazed"
-                            npc.frame_counter = 0
-                            npc.idle_frames = round(npc.idle_frames * 1.25)
+                            npc.messages.append("{0} is affected by {1} for 10 turns!".format(npc.name, self.player.spell))
+                            for buff in self.buffs:
+                                if buff.target == npc and buff.ai_change == "dazed":
+                                    buff.turn_counter = 0
+                                    no_buff = False
+                            if no_buff:
+                                self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", npc, 0, 0, 0, 10, "dazed"))
+                                npc.ai = "dazed"
+                                npc.frame_counter = 0
+                                npc.idle_frames = round(npc.idle_frames * 1.25)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
-                    self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_DAZE)
+                    self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_DAZE, 4, 6)
                     self.player.spell_status = "cast"
                     return
 
@@ -229,13 +244,16 @@ class Spells:
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
                     self.player.turns_since_spell = 0
-                    self.player.messages.append("{0} shoots their {1}!".format(self.player.name, self.player.spell))
+                    self.player.messages.append("{0} shoots their {1}!".format(self.player.name, self.player.equipped.name))
                     npcs_hit = False
                     for npc in self.actors:
                         if npc.get_location() == valid_tiles_list_collision[-1] and isinstance(npc, Actor.Enemy):
                             npcs_hit = True
-                            npc.messages.append("{0} is hit by {1}!".format(npc.name, self.player.equipped))
-                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
+                            damage = round((self.player.spell_damage + 1) * len(valid_tiles_list_collision) / self.player.spell_range)
+                            if damage < 1:
+                                damage = 1
+                            npc.messages.append("{0} is hit by {1} for {2} damage!!".format(npc.name, self.player.equipped.name, damage))
+                            npc.take_damage(damage, self.actors, self.items)
                             break
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
@@ -268,34 +286,6 @@ class Spells:
         for x, y in circle:
             valid_tiles_list.append((int(center[0]) + x + self.camera.get_x_offset(), int(center[1]) + y + self.camera.get_y_offset() + 1))
             valid_tiles_list_collision.append((int(center[0]) + x, int(center[1]) + y))
-
-    def lightning_spell_animation(self, valid_tiles_list):
-        anim_sprites = 4
-        anim_frames = 3
-        animation_sprites = const.SPRITES_SPELL_LIGHTNING
-        for i in range(anim_sprites * anim_frames):
-            if i % anim_frames == 0:
-                Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
-            for (x, y) in valid_tiles_list:
-                self.surface_main.blit(animation_sprites[i // anim_frames], (x * const.TILE_WIDTH, (y-0.5) * const.TILE_HEIGHT))
-
-            pg.display.flip()
-
-            self.clock.tick(const.FPS_LIMIT)
-
-    def fireball_spell_animation(self, valid_tiles_list):
-        anim_sprites = 4
-        anim_frames = 5
-        animation_sprites = const.SPRITES_SPELL_FIREBALL
-        for i in range(anim_sprites * anim_frames):
-            if i % anim_frames == 0:
-                Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
-            for (x, y) in valid_tiles_list:
-                self.surface_main.blit(animation_sprites[i // anim_frames], (x * const.TILE_WIDTH, (y - 0.5) * const.TILE_HEIGHT))
-
-            pg.display.flip()
-
-            self.clock.tick(const.FPS_LIMIT)
 
     def spell_animation(self, valid_tiles_list, animation_sprites, sprite_count=4, anim_frames=4):
         for i in range(sprite_count * anim_frames):

@@ -25,7 +25,7 @@ class Ai:
     def aggressive_roam(self, creature, player):
         player_location = player.get_location()
         creature_location = creature.get_location()
-        if sqrt((player_location[0] - creature_location[0]) ** 2 + (player_location[1] - creature_location[1]) ** 2) >= 6:
+        if sqrt((player_location[0] - creature_location[0]) ** 2 + (player_location[1] - creature_location[1]) ** 2) >= 6 and creature.hp == creature.max_hp:
             self.move_randomly(creature)
         elif player_location[0] < creature_location[0]:
             if player_location[1] < creature_location[1]:
