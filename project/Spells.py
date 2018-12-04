@@ -1,6 +1,7 @@
 import constants as const
 import pygame as pg
 import Draw, Actor, Buffs
+from math import acos, degrees, sqrt
 
 
 class Spells:
@@ -70,6 +71,15 @@ class Spells:
                         self.player.spell_status = "cancelled"
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
+                    initial_status = self.player.mirror
+                    if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
+                        pass
+                    elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
+                        self.player.mirror = False
+                    else:
+                        self.player.mirror = True
+                    if initial_status != self.player.mirror:
+                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
@@ -122,6 +132,15 @@ class Spells:
                         self.player.spell_status = "cancelled"
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
+                    initial_status = self.player.mirror
+                    if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
+                        pass
+                    elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
+                        self.player.mirror = False
+                    else:
+                        self.player.mirror = True
+                    if initial_status != self.player.mirror:
+                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
                     circle_area = 13
                     if r == 99:
                         circle_area = -1
@@ -180,6 +199,15 @@ class Spells:
                         self.player.spell_status = "cancelled"
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
+                    initial_status = self.player.mirror
+                    if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
+                        pass
+                    elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
+                        self.player.mirror = False
+                    else:
+                        self.player.mirror = True
+                    if initial_status != self.player.mirror:
+                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
                     valid_tiles_list = valid_tiles_list[-5:]
                     valid_tiles_list_collision = valid_tiles_list_collision[-5:]
                     self.player.turns_since_spell = 0
@@ -243,6 +271,16 @@ class Spells:
                         self.player.spell_status = "cancelled"
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
+                    initial_status = self.player.mirror
+                    if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
+                        pass
+                    elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
+                        self.player.mirror = False
+                    else:
+                        self.player.mirror = True
+                    if initial_status != self.player.mirror:
+                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                    self.projectile_animation(valid_tiles_list, const.SPRITES_PROJECTILE_ARROW)
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} shoots their {1}!".format(self.player.name, self.player.equipped.name))
                     npcs_hit = False
@@ -300,3 +338,23 @@ class Spells:
             pg.display.flip()
 
             self.clock.tick(const.FPS_LIMIT)
+
+    def projectile_animation(self, valid_tiles_list, projectile_sprite, draw_frames=3):
+        player_vector = (valid_tiles_list[0][0]-valid_tiles_list[-1][0], -(valid_tiles_list[0][1]-valid_tiles_list[-1][1]))
+        player_vector_len = sqrt(player_vector[0] ** 2 + player_vector[1] ** 2)
+        if player_vector_len == 0:
+            return
+        angle = -90 + degrees(acos(player_vector[1]/player_vector_len))
+        sprite = projectile_sprite
+        if self.player.mirror:
+            sprite = pg.transform.flip(sprite, True, False)
+            angle = -angle
+        sprite = pg.transform.rotate(sprite, angle)
+        for (x, y) in valid_tiles_list[:-1]:
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            for i in range(draw_frames):
+                self.surface_main.blit(sprite, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
+
+                pg.display.flip()
+
+                self.clock.tick(const.FPS_LIMIT)

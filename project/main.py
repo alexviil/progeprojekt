@@ -178,6 +178,8 @@ class Main:
                     for buff in self.buffs:
                         buff.update(self.buffs, self.actors)
 
+                    self.ai.update_turn_counter()
+
             # Update actors' sprites
             Animations.Animations(self.actors).update()
 

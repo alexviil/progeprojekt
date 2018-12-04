@@ -9,6 +9,10 @@ class Ai:
         self.actors = actors
         self.actors_containers = actors_containers
         self.items = items
+        self.turn_counter = 0
+
+    def update_turn_counter(self):
+        self.turn_counter += 1
 
     def ai_turn(self, creature, player):
         if creature.ai == "aggressive_roam":
@@ -27,7 +31,11 @@ class Ai:
         creature_location = creature.get_location()
         if sqrt((player_location[0] - creature_location[0]) ** 2 + (player_location[1] - creature_location[1]) ** 2) >= 6 and creature.hp == creature.max_hp:
             self.move_randomly(creature)
-        elif player_location[0] < creature_location[0]:
+        else:
+            self.chase_player(creature, creature_location, player_location)
+
+    def chase_player(self, creature, creature_location, player_location):
+        if player_location[0] < creature_location[0]:
             if player_location[1] < creature_location[1]:
                 creature.control(- 1, - 1, self.actors, self.actors_containers, self.items)
             elif player_location[1] > creature_location[1]:

@@ -134,6 +134,7 @@ SPRITES_SPELL_DAZE = [pg.image.load("sprites/spell_daze_f0.png").convert_alpha()
                       pg.image.load("sprites/spell_daze_f2.png").convert_alpha(),
                       pg.image.load("sprites/spell_daze_f3.png").convert_alpha()]
 
+SPRITES_PROJECTILE_ARROW = pg.image.load("sprites/weapon_arrow.png").convert_alpha()
 
 # WALLS AND FLOORS
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
