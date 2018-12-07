@@ -99,7 +99,15 @@ class Map:
     def get_tile(self, x, y):
         return self.game_map[y][x]
 
-    def find_line(self, xy1, xy2, penetrate_npc=True, alist=None):
+    def get_tile_exists(self, x, y):
+        try:
+            if self.game_map[y][x]:
+                return True
+        except IndexError:
+            print("AA")
+            return False
+
+    def find_line(self, xy1, xy2, penetrate_npc=True, alist=None, penetrate_wall=False):
         x1, y1 = xy1
         x2, y2 = xy2
         libt.line_init(x1, y1, x2, y2)
@@ -118,6 +126,11 @@ class Map:
                             coord_list = coord_list[:coord_list.index(e)+1]
                         except ValueError:
                             pass
+        if not penetrate_wall:
+            for e in coord_list:
+                if self.get_tile(e[0], e[1]).get_is_wall():
+                    coord_list = coord_list[:-coord_list.index(e)]
+                    break
         return coord_list
 
     def create_fov_map(self):

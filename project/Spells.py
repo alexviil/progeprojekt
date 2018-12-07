@@ -57,12 +57,19 @@ class Spells:
 
             valid_tiles_list = []
             valid_tiles_list_collision = []
-            tiles_list = self.map_obj.find_line(self.player.get_location(), (int(map_x), int(map_y)))
+            tiles_list = []
+            tiles_list_initial = self.map_obj.find_line(self.player.get_location(), (int(map_x), int(map_y)))
+            for tile in tiles_list_initial:
+                try:
+                    if not self.map_obj.get_tile(tile[0], tile[1]).get_is_wall():
+                        tiles_list.append(tile)
+                except IndexError:
+                    continue
 
             for i, (x, y) in enumerate(tiles_list):
                 valid_tiles_list.append((x + self.camera.get_x_offset(), y + self.camera.get_y_offset() + 1))
                 valid_tiles_list_collision.append((x, y))
-                if i == self.player.spell_range - 1:
+                if i == self.player.spell_range - 1 and not self.map_obj.get_tile(x, y).get_is_wall():
                     break
 
             for spell_event in events_spell:
@@ -72,14 +79,18 @@ class Spells:
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
                     initial_status = self.player.mirror
-                    if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
-                        pass
-                    elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
-                        self.player.mirror = False
-                    else:
-                        self.player.mirror = True
-                    if initial_status != self.player.mirror:
-                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                    try:
+                        if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
+                            pass
+                        elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
+                            self.player.mirror = False
+                        else:
+                            self.player.mirror = True
+                        if initial_status != self.player.mirror:
+                            self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                        self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_LIGHTNING, 4, 3)
+                    except IndexError:
+                        return
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
@@ -90,7 +101,6 @@ class Spells:
                             npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
-                    self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_LIGHTNING, 4, 3)
                     self.player.spell_status = "cast"
                     return
 
@@ -133,19 +143,23 @@ class Spells:
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
                     initial_status = self.player.mirror
-                    if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
-                        pass
-                    elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
-                        self.player.mirror = False
-                    else:
-                        self.player.mirror = True
-                    if initial_status != self.player.mirror:
-                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
-                    circle_area = 13
-                    if r == 99:
-                        circle_area = -1
-                    valid_tiles_list = valid_tiles_list[-circle_area:]
-                    valid_tiles_list_collision = valid_tiles_list_collision[-circle_area:]
+                    try:
+                        if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
+                            pass
+                        elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
+                            self.player.mirror = False
+                        else:
+                            self.player.mirror = True
+                        if initial_status != self.player.mirror:
+                            self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                        circle_area = 13
+                        if r == 99:
+                            circle_area = -1
+                        valid_tiles_list = valid_tiles_list[-circle_area:]
+                        valid_tiles_list_collision = valid_tiles_list_collision[-circle_area:]
+                        self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_FIREBALL, 4, 5)
+                    except IndexError:
+                        return
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
@@ -156,7 +170,6 @@ class Spells:
                             npc.take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
-                    self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_FIREBALL, 4, 5)
                     self.player.spell_status = "cast"
                     return
 
@@ -184,7 +197,7 @@ class Spells:
             valid_tiles_list = []
             valid_tiles_list_collision = []
             r = 1
-            tiles_list = self.map_obj.find_line(self.player.get_location(), (int(map_x), int(map_y)))
+            tiles_list = self.map_obj.find_line(self.player.get_location(), (int(map_x), int(map_y)), True, None, False)
 
             for i, (x, y) in enumerate(tiles_list):
                 valid_tiles_list.append((x + self.camera.get_x_offset(), y + self.camera.get_y_offset() + 1))
@@ -200,16 +213,20 @@ class Spells:
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
                     initial_status = self.player.mirror
-                    if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
-                        pass
-                    elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
-                        self.player.mirror = False
-                    else:
-                        self.player.mirror = True
-                    if initial_status != self.player.mirror:
-                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
-                    valid_tiles_list = valid_tiles_list[-5:]
-                    valid_tiles_list_collision = valid_tiles_list_collision[-5:]
+                    try:
+                        if valid_tiles_list_collision[0][0] == self.player.get_location()[0]:
+                            pass
+                        elif valid_tiles_list_collision[0][0] > self.player.get_location()[0]:
+                            self.player.mirror = False
+                        else:
+                            self.player.mirror = True
+                        if initial_status != self.player.mirror:
+                            self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                        valid_tiles_list = valid_tiles_list[-5:]
+                        valid_tiles_list_collision = valid_tiles_list_collision[-5:]
+                        self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_DAZE, 4, 6)
+                    except IndexError:
+                        return
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
@@ -229,7 +246,6 @@ class Spells:
                                 npc.idle_frames = round(npc.idle_frames * 1.25)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
-                    self.spell_animation(valid_tiles_list, const.SPRITES_SPELL_DAZE, 4, 6)
                     self.player.spell_status = "cast"
                     return
 
@@ -260,6 +276,11 @@ class Spells:
             tiles_list = self.map_obj.find_line(self.player.get_location(), (int(map_x), int(map_y)), False, self.actors)
 
             for i, (x, y) in enumerate(tiles_list):
+                try:
+                    if self.map_obj.get_tile(x, y).get_is_wall():
+                        continue
+                except IndexError:
+                    continue
                 valid_tiles_list.append((x + self.camera.get_x_offset(), y + self.camera.get_y_offset() + 1))
                 valid_tiles_list_collision.append((x, y))
                 if i == self.player.spell_range - 1:
@@ -272,15 +293,18 @@ class Spells:
                         return
                 if spell_event.type == pg.MOUSEBUTTONDOWN:
                     initial_status = self.player.mirror
-                    if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
-                        pass
-                    elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
-                        self.player.mirror = False
-                    else:
-                        self.player.mirror = True
-                    if initial_status != self.player.mirror:
-                        self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
-                    self.projectile_animation(valid_tiles_list, const.SPRITES_PROJECTILE_ARROW)
+                    try:
+                        if valid_tiles_list_collision[-1][0] == self.player.get_location()[0]:
+                            pass
+                        elif valid_tiles_list_collision[-1][0] > self.player.get_location()[0]:
+                            self.player.mirror = False
+                        else:
+                            self.player.mirror = True
+                        if initial_status != self.player.mirror:
+                            self.player.sprite = pg.transform.flip(self.player.sprite, True, False)
+                        self.projectile_animation(valid_tiles_list, const.SPRITES_PROJECTILE_ARROW)
+                    except IndexError:
+                        return
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} shoots their {1}!".format(self.player.name, self.player.equipped.name))
                     npcs_hit = False
@@ -312,6 +336,8 @@ class Spells:
             self.clock.tick(const.FPS_LIMIT)
 
     def append_spell_radius(self, r, valid_tiles_list, valid_tiles_list_collision):
+        if not valid_tiles_list_collision:
+            return
         if r == 2:
             circle = [(0, -1), (0, -2), (1, -1), (1, 0), (2, 0), (1, 1), (0, 1), (0, 2), (-1, 1), (-1, 0), (-2, 0), (-1, -1)]
         elif r == 1:
