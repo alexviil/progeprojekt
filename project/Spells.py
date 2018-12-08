@@ -5,7 +5,7 @@ from math import acos, degrees, sqrt
 
 
 class Spells:
-    def __init__(self, player, camera, map_obj, game_map, surface, actors, actors_containers, items, buffs, clock, messages):
+    def __init__(self, player, camera, map_obj, game_map, surface, actors, actors_containers, items, buffs, clock, messages, effect_volume):
         self.player = player
         self.camera = camera
         self.map_obj = map_obj
@@ -17,6 +17,7 @@ class Spells:
         self.buffs = buffs
         self.clock = clock
         self.messages = messages
+        self.effect_volume = effect_volume
 
     def cast_spell(self):
         if not self.player.spell:
@@ -30,15 +31,20 @@ class Spells:
             self.player.messages.append("Spell still on cooldown, wait {0} more turn{1}!".format(cooldown_left, plural))
             self.player.spell_status = "cancelled"
         else:
+            effect = ""
             if self.player.spell == "Lightning":
+                effect = pg.mixer.Sound(const.LIGHTNING_SOUND)
                 self.lightning_spell()
             elif self.player.spell == "Fireball":
+                effect = pg.mixer.Sound(const.FIREBALL_SOUND)
                 self.fireball_spell(2)
             elif self.player.spell == "Daze":
                 self.daze_spell()
             elif self.player.spell == "Ranged":
+                effect = pg.mixer.Sound(const.RANGED_SOUND)
                 self.ranged_attack()
             elif self.player.spell == "Nuke":
+                effect = pg.mixer.Sound(const.FIREBALL_SOUND)
                 self.fireball_spell(99)
                 self.player.messages.append("{0} burned everything to a crisp! Including himself.".format(self.player.name))
                 self.player.sprites_key = "SPRITES_SKELETON"
@@ -46,6 +52,10 @@ class Spells:
                 self.player.sprites_mirrored = [pg.transform.flip(e, True, False) for e in const.ACTOR_DICT["SPRITES_SKELETON"]]
                 self.player.max_hp = 1
                 self.player.hp = 1
+            if effect:
+                effect.set_volume(self.effect_volume)
+                effect.play()
+
 
     def lightning_spell(self):
         while True:

@@ -78,7 +78,7 @@ class Creature(Actor):
         else:
             self.sprite = self.sprites[0]
             
-    def control(self, x_change, y_change, actors, actors_inanimate, ilist):
+    def control(self, x_change, y_change, actors, actors_inanimate, ilist, sound_volume):
         """
         Whether by AI or events, a Creature object can move in some direction. To do that, first, this function checks
         if the destination tile is already occupied by another creature. If so, the Creature object will set the other
@@ -95,6 +95,9 @@ class Creature(Actor):
 
         if isinstance(target, Creature) and not isinstance(target, self.__class__):  # if creature exists and is not same class, attacks it
             self.messages.append(self.name + " attacks " + target.name + " for " + str(max(0, self.dmg - target.armor)) + " damage.")
+            effect = pg.mixer.Sound(const.HIT_SOUND)
+            effect.set_volume(sound_volume)
+            effect.play()
             target.take_damage(max(0, self.dmg - target.armor), actors, ilist)
 
         elif isinstance(target, Container) and isinstance(self, Player):

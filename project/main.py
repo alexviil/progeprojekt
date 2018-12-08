@@ -98,13 +98,17 @@ class Main:
         # Calculate initial FOV
         self.map_obj.calculate_fov_map(self.player)
 
-        self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
-
         self.clock = pg.time.Clock()
 
-        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
+        self.music_volume = 0.05
+        self.effect_volume = 0.05
+        self.settings_load()
 
-        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs)
+        self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs, self.music_volume, self.effect_volume)
+
+        self.ai = Ai.Ai(self.actors, self.actors_containers, self.items, self.effect_volume)
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume)
+
 
     def game_loop(self):
         """
@@ -114,11 +118,7 @@ class Main:
         creates an FPS limit (to stop unwanted side effects, like actors seeming like they're on stimulants when the game
         runs on a fast computer).
         """
-        self.game_start()
-
-        music = pg.mixer.Sound(const.BACKGROUND_MUSIC)
-        music.set_volume(0.05)
-        music.play(-1)
+        self.game_menu()
 
         run = True
         while run:
@@ -132,17 +132,19 @@ class Main:
                     run = False
 
                 if event.type == pg.KEYDOWN:
+                    self.ai.effect_volume = self.effect_volume
+                    self.spells.effect_volume = self.effect_volume
                     if event.key == pg.K_w:
-                        self.player.control(0, -1, self.actors, self.actors_containers, self.items)
+                        self.player.control(0, -1, self.actors, self.actors_containers, self.items, self.effect_volume)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_s:
-                        self.player.control(0, 1, self.actors, self.actors_containers, self.items)
+                        self.player.control(0, 1, self.actors, self.actors_containers, self.items, self.effect_volume)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_a:
-                        self.player.control(-1, 0, self.actors, self.actors_containers, self.items)
+                        self.player.control(-1, 0, self.actors, self.actors_containers, self.items, self.effect_volume)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_d:
-                        self.player.control(1, 0, self.actors, self.actors_containers, self.items)
+                        self.player.control(1, 0, self.actors, self.actors_containers, self.items, self.effect_volume)
                         self.camera.set_offset(self.player.x, self.player.y)
                     elif event.key == pg.K_e:
                         if self.map_obj.get_tile(self.player.x, self.player.y).doorway:
@@ -157,6 +159,19 @@ class Main:
                         self.spells.cast_spell()
                         if self.player.spell_status == "cancelled":
                             continue
+                    elif event.key == pg.K_ESCAPE:
+                        command = self.menu.esc_menu()
+                        if command == "EXIT":
+                            self.game_quit()
+                        elif command == "MAIN_MENU":
+                            self.music.stop()
+                            self.game_save()
+                            self.game_menu()
+                        elif command == "SETTINGS":
+                            self.menu.settings_menu(self.music)
+                            self.music_volume = self.menu.music_volume
+                            self.effect_volume = self.menu.effect_volume
+                            self.settings_save()
                     else:
                         continue
 
@@ -211,15 +226,23 @@ class Main:
         self.camera.y_offset = const.CAMERA_CENTER_Y - self.player.get_location()[1]
         self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
         self.map_obj.populate_rooms(self.generator)
-        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume)
         self.player.set_world_map(self.game_map)
         for buff in self.buffs:
             if buff.target == self.player:
                 buff.x, buff.y = self.player.get_location()
 
+    def settings_load(self):
+        if os.path.isfile("savedata\savesettings") and os.path.getsize("savedata\savesettings") > 0:
+            with gzip.open("savedata\savesettings", "rb") as f:
+                self.music_volume, self.effect_volume = pickle.load(f)
+
+    def settings_save(self):
+        with gzip.open("savedata\savesettings", "wb") as f:
+            pickle.dump([self.music_volume, self.effect_volume], f)
+
     def game_save(self):
         self.map_obj.destroy_surfaces()
-
         for actor in self.actors:
             if actor.inventory:
                 for item in actor.inventory:
@@ -259,7 +282,7 @@ class Main:
                          self.actors_containers,
                          self.items,
                          self.buffs,
-                         self.messages
+                         self.messages,
                         ], f)
 
     def game_load(self):
@@ -294,24 +317,31 @@ class Main:
             self.map_obj.initialize_surfaces()
             self.map_obj.calculate_fov_map(self.player)
 
-            self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
+            self.ai = Ai.Ai(self.actors, self.actors_containers, self.items, self.effect_volume)
 
             self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
                                         self.actors, self.actors_containers, self.items, self.buffs, self.clock,
-                                        self.messages)
+                                        self.messages, self.effect_volume)
 
-            self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs)
-
+            self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs, self.music_volume, self.effect_volume)
 
     def game_quit(self):
         self.game_save()
         pg.quit()
         exit()
 
-    def game_start(self):
+    def game_menu(self):
+        self.music = pg.mixer.Sound(const.BACKGROUND_MUSIC)
         command = self.menu.menu_main()
+        self.music_volume = self.menu.music_volume
+        self.effect_volume = self.menu.effect_volume
+        self.settings_save()
+        self.music.set_volume(self.music_volume)
+        self.music.play(-1)
         if command == "CONTINUE":
             self.game_load()
+        elif command == "NEW_GAME":
+            self.__init__()
 
 
 if __name__ == '__main__':

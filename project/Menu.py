@@ -1,10 +1,10 @@
 import pygame as pg
 import constants as const
-import Draw, Button, Actor
+import Draw, Button, Actor, Slider
 
 
 class Menu:
-    def __init__(self, main_surface, player, clock, items, buffs):
+    def __init__(self, main_surface, player, clock, items, buffs, music_volume, effect_volume):
         self.main_surface = main_surface
         self.player = player
         self.clock = clock
@@ -12,6 +12,9 @@ class Menu:
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
         self.draw = Draw.Draw(self.inventory_surface)
         self.buffs = buffs
+        self.music_volume = music_volume
+        self.effect_volume = effect_volume
+        self.music = pg.mixer.Sound(const.MENU_MUSIC)
 
     def menu_main(self):
         play_button = Button.Button(self.main_surface, "CONTINUE", (200, 100),
@@ -23,14 +26,17 @@ class Menu:
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
                                     (const.MAIN_SURFACE_WIDTH // 2 + 330, const.MAIN_SURFACE_HEIGHT // 2))
 
-        self.main_surface.fill(const.WHITE)
-
-        music = pg.mixer.Sound(const.MENU_MUSIC)
-        music.set_volume(0.05)
-        music.play(-1)  # Infinitely looping music
+        self.music.set_volume(self.music_volume)
+        self.music.play(-1)
 
         menu_open = True
         while menu_open:
+            self.main_surface.fill(const.WHITE)
+            play_button.draw()
+            new_game_button.draw()
+            settings_button.draw()
+            exit_button.draw()
+
             events = pg.event.get()
             mouse = pg.mouse.get_pos()
             input = (events, mouse)
@@ -41,32 +47,30 @@ class Menu:
                     exit()
 
             if play_button.update(input):
-                music.stop()
+                self.music.stop()
                 return "CONTINUE"
 
             if new_game_button.update(input):
-                music.stop()
+                self.music.stop()
                 return "NEW_GAME"
 
             if settings_button.update(input):
-                self.settings_menu()
-                return "MENU"
+                self.settings_menu(self.music)
 
             if exit_button.update(input):
                 pg.quit()
                 exit()
 
-            play_button.draw()
-            new_game_button.draw()
-            settings_button.draw()
-            exit_button.draw()
-
             pg.display.update()
 
-    def settings_menu(self):
-        sett_surf = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
-        exit_button = Button.Button(sett_surf, "EXIT", (100, 50),
-                                    (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2))
+    def settings_menu(self, music):
+        sett_surf = pg.Surface((const.SETTINGS_MENU_WIDTH, const.SETTINGS_MENU_HEIGHT))
+        exit_button = Button.Button(self.main_surface, "EXIT", (100, 50),
+                                    (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2 + 100))
+        music_slider = Slider.Slider(self.main_surface, "MUSIC", (400, 7), music.get_volume(),
+                                     (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2 - 60))
+        effect_slider = Slider.Slider(self.main_surface, "SOUND EFFECTS", (400, 7), self.effect_volume,
+                                     (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2 + 15))
 
         close = False
         while not close:
@@ -74,13 +78,68 @@ class Menu:
             mouse = pg.mouse.get_pos()
             input = (events, mouse)
 
-            self.inventory_surface.fill(const.DARK_GRAY)
+            sett_surf.fill(const.DARKISH_GRAY)
+            self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.SETTINGS_MENU_WIDTH // 2,
+                                               const.MAIN_SURFACE_HEIGHT // 2 - const.SETTINGS_MENU_HEIGHT // 2))
+            exit_button.draw()
+            music_slider.draw()
+            effect_slider.draw()
+
+            for event in events:
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    exit()
+
+            button_held = music_slider.update(input)
+            while button_held:
+                events = pg.event.get()
+                mouse = pg.mouse.get_pos()
+                music.set_volume((music_slider.rect.centerx-400)/400)
+                self.music_volume = (music_slider.rect.centerx-400)/400
+                self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.SETTINGS_MENU_WIDTH // 2,
+                                                   const.MAIN_SURFACE_HEIGHT // 2 - const.SETTINGS_MENU_HEIGHT // 2))
+                if 400 <= mouse[0] <= 800:
+                    music_slider.rect.centerx = mouse[0]
+                elif mouse[0] < 400:
+                    music_slider.rect.centerx = 400
+                elif mouse[0] > 800:
+                    music_slider.rect.centerx = 800
+                music_slider.update(input)
+                exit_button.draw()
+                music_slider.draw()
+                effect_slider.draw()
+                pg.display.update()
+
+                for event in events:
+                    if event.type == pg.MOUSEBUTTONUP:
+                        button_held = False
+
+            button_held = effect_slider.update(input)
+            while button_held:
+                events = pg.event.get()
+                mouse = pg.mouse.get_pos()
+                self.effect_volume = (effect_slider.rect.centerx-400)/400
+                self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.SETTINGS_MENU_WIDTH // 2,
+                                                   const.MAIN_SURFACE_HEIGHT // 2 - const.SETTINGS_MENU_HEIGHT // 2))
+                if 400 <= mouse[0] <= 800:
+                    effect_slider.rect.centerx = mouse[0]
+                elif mouse[0] < 400:
+                    effect_slider.rect.centerx = 400
+                elif mouse[0] > 800:
+                    effect_slider.rect.centerx = 800
+                music_slider.draw()
+                effect_slider.update(input)
+                exit_button.draw()
+                effect_slider.draw()
+                pg.display.update()
+
+                for event in events:
+                    if event.type == pg.MOUSEBUTTONUP:
+                        button_held = False
 
             if exit_button.update(input):
                 close = True
 
-            exit_button.draw()
-            self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.INV_MENU_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
             self.clock.tick(const.FPS_LIMIT)
             pg.display.update()
 
@@ -146,5 +205,45 @@ class Menu:
             self.main_surface.blit(self.inventory_surface, (0, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
 
             self.clock.tick(const.FPS_LIMIT)
+
+            pg.display.update()
+
+    def esc_menu(self):
+        esc_surf = pg.Surface((const.ESC_MENU_WIDTH, const.ESC_MENU_HEIGHT))
+        menu_button = Button.Button(self.main_surface, "MAIN MENU", (200, 100),
+                                        (const.MAIN_SURFACE_WIDTH // 2 - 220, const.MAIN_SURFACE_HEIGHT // 2))
+        settings_button = Button.Button(self.main_surface, "SETTINGS", (200, 100),
+                                        (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2))
+        close_button = Button.Button(self.main_surface, "EXIT GAME", (200, 100),
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 220, const.MAIN_SURFACE_HEIGHT // 2))
+
+        menu_open = True
+        while menu_open:
+            esc_surf.fill(const.WHITE)
+            self.main_surface.blit(esc_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.ESC_MENU_WIDTH // 2,
+                                               const.MAIN_SURFACE_HEIGHT // 2 - const.ESC_MENU_HEIGHT // 2))
+
+            menu_button.draw()
+            settings_button.draw()
+            close_button.draw()
+
+            events = pg.event.get()
+            mouse = pg.mouse.get_pos()
+            input = (events, mouse)
+
+            for event in events:
+                if event.type == pg.QUIT:
+                    return "EXIT"
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    menu_open = False
+
+            if menu_button.update(input):
+                return "MAIN_MENU"
+
+            if settings_button.update(input):
+                return "SETTINGS"
+
+            if close_button.update(input):
+                return "EXIT"
 
             pg.display.update()

@@ -14,6 +14,7 @@ pg.display.set_mode((MAIN_SURFACE_WIDTH, MAIN_SURFACE_HEIGHT))
 
 # Colors
 GRAY = (122, 122, 122)
+DARKISH_GRAY = (70, 70, 70)
 DARK_GRAY = (30, 30, 30)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -24,6 +25,7 @@ FONT_DEBUG = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 16)
 FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
 FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 17)
 FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
+FONT_SETTINGS = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 23)
 
 # HUD
 HUD_HEART_FULL = pg.image.load("sprites/ui_heart_full.png").convert_alpha()
@@ -196,6 +198,12 @@ WALL_AND_FLOOR_DICT = {
 BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
+# WIP SOUND EFFECTS
+HIT_SOUND = "audio/Hit_Hurt13.wav"
+FIREBALL_SOUND = "audio/Explosion5.wav"
+RANGED_SOUND = "audio/Laser_Shoot30.wav"
+LIGHTNING_SOUND = "audio/Randomize23.wav"
+
 # Map values
 MAP_WIDTH = 21
 MAP_HEIGHT = 21
@@ -227,3 +235,11 @@ MESSAGE_NUMBER = 4
 # Inventory Menu
 INV_MENU_WIDTH = 300
 INV_MENU_HEIGHT = 300
+
+# Settings Menu
+SETTINGS_MENU_WIDTH = 500
+SETTINGS_MENU_HEIGHT = 300
+
+# Escape button menu
+ESC_MENU_HEIGHT = 200
+ESC_MENU_WIDTH = 700
