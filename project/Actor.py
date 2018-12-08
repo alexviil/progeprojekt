@@ -1,6 +1,6 @@
 import pygame as pg
 import constants as const
-import Buffs
+import Buffs, Menu
 
 
 class Actor:

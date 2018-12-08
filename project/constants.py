@@ -19,6 +19,7 @@ DARK_GRAY = (30, 30, 30)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+RED = (255, 0, 0)
 
 # Fonts
 FONT_DEBUG = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 16)
@@ -26,6 +27,7 @@ FONT_CONSOLE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 20)
 FONT_INVENTORY = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 17)
 FONT_MENU_BUTTON = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 30)
 FONT_SETTINGS = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 23)
+FONT_DEATH_MESSAGE = pg.font.Font("fonts/VCR_OSD_MONO_1.001.ttf", 160)
 
 # HUD
 HUD_HEART_FULL = pg.image.load("sprites/ui_heart_full.png").convert_alpha()
@@ -197,12 +199,14 @@ WALL_AND_FLOOR_DICT = {
 # Also probably better things out there, just going with this for now
 BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
+DEATH_MUSIC = "audio/HendyMarvin/12-hendy_marvin-it's_over.ogg"
 
 # WIP SOUND EFFECTS
 HIT_SOUND = "audio/Hit_Hurt13.wav"
 FIREBALL_SOUND = "audio/Explosion5.wav"
 RANGED_SOUND = "audio/Laser_Shoot30.wav"
 LIGHTNING_SOUND = "audio/Randomize23.wav"
+DEATH_SOUND = "audio/deathwip.wav"
 
 # Map values
 MAP_WIDTH = 21

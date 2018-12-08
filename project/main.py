@@ -82,7 +82,7 @@ class Main:
 
         self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
         '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=10, dmg=3, inventory_limit=3)
+        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=1, dmg=3, inventory_limit=3)
         self.player.inventory.clear()
 
         self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
@@ -183,10 +183,6 @@ class Main:
                                 0 <= (actor.y + self.camera.get_y_offset()) * const.TILE_HEIGHT <= const.MAIN_SURFACE_HEIGHT):
                             self.ai.ai_turn(actor, self.player)
 
-                    #TODO: On a big map it takes too long to update actor locations !!!, 100x100 is too much 50x50 was fine, could be fixed with lower spawn rates prob.
-                    # Don't think update_actor_locations is necessary anymore, also lags the game a lot
-                    # self.update_actor_locations()
-
                     self.map_obj.calculate_fov_map(self.player)
                     self.player.turns_since_spell += 1
 
@@ -204,6 +200,10 @@ class Main:
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
+
+            # death thingy
+            if self.player.hp <= 0:
+                self.player_death()
 
         self.game_quit()
 
@@ -340,9 +340,26 @@ class Main:
         self.music.set_volume(self.music_volume)
         self.music.play(-1)
         if command == "CONTINUE":
-            self.game_load()
-        elif command == "NEW_GAME":
+            if os.path.isfile("savedata\savegame") and os.path.getsize("savedata\savegame") > 0:
+                self.game_load()
+            else:
+                command = "NEW_GAME"
+        if command == "NEW_GAME":
             self.__init__()
+
+    def player_death(self):
+        self.music.stop()
+        effect = pg.mixer.Sound(const.DEATH_SOUND)
+        effect.set_volume(self.effect_volume)
+        effect.play()
+
+        command = self.menu.death_screen_menu()
+        if os.path.isfile("savedata\savegame") and os.path.getsize("savedata\savegame") > 0:
+            os.remove("savedata/savegame")
+        if command == "EXIT":
+            self.game_quit()
+        elif command == "MAIN_MENU":
+            self.game_menu()
 
 
 if __name__ == '__main__':

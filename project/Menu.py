@@ -10,11 +10,11 @@ class Menu:
         self.clock = clock
         self.items = items
         self.inventory_surface = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
-        self.draw = Draw.Draw(self.inventory_surface)
+        self.draw = Draw.Draw(self.main_surface)
+        self.draw_inv = Draw.Draw(self.inventory_surface)
         self.buffs = buffs
         self.music_volume = music_volume
         self.effect_volume = effect_volume
-        self.music = pg.mixer.Sound(const.MENU_MUSIC)
 
     def menu_main(self):
         play_button = Button.Button(self.main_surface, "CONTINUE", (200, 100),
@@ -26,6 +26,7 @@ class Menu:
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
                                     (const.MAIN_SURFACE_WIDTH // 2 + 330, const.MAIN_SURFACE_HEIGHT // 2))
 
+        self.music = pg.mixer.Sound(const.MENU_MUSIC)
         self.music.set_volume(self.music_volume)
         self.music.play(-1)
 
@@ -146,7 +147,7 @@ class Menu:
     def inventory_menu(self):
         close = False
 
-        text_height = self.draw.get_font_height(const.FONT_INVENTORY)
+        text_height = self.draw_inv.get_font_height(const.FONT_INVENTORY)
 
         while not close:
             self.inventory_surface.fill(const.DARK_GRAY)
@@ -197,10 +198,10 @@ class Menu:
             # Display list of items
             for i, item in enumerate(self.player.inventory):
                 if i == current_index:
-                    self.draw.draw_text(item.name, 0, 0 + (i * text_height), const.BLACK, const.FONT_INVENTORY,
+                    self.draw_inv.draw_text(item.name, 0, 0 + (i * text_height), const.BLACK, const.FONT_INVENTORY,
                                         False, const.WHITE)
                 else:
-                    self.draw.draw_text(item.name, 0, 0 + (i * text_height), const.WHITE, const.FONT_INVENTORY)
+                    self.draw_inv.draw_text(item.name, 0, 0 + (i * text_height), const.WHITE, const.FONT_INVENTORY)
 
             self.main_surface.blit(self.inventory_surface, (0, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
 
@@ -245,5 +246,35 @@ class Menu:
 
             if close_button.update(input):
                 return "EXIT"
+
+            pg.display.update()
+
+    def death_screen_menu(self):
+        death_surface = pg.Surface((const.MAIN_SURFACE_WIDTH, 300))
+        menu_button = Button.Button(self.main_surface, "MAIN MENU", (200, 100),
+                                        (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2+220))
+
+        self.music = pg.mixer.Sound(const.DEATH_MUSIC)
+        self.music.set_volume(self.music_volume)
+        self.music.play(-1)
+
+        menu_open = True
+        while menu_open:
+            death_surface.fill(const.DARK_GRAY)
+            self.main_surface.blit(death_surface, (0, const.MAIN_SURFACE_HEIGHT//2-150))
+            self.draw.draw_text("YOU DIED", const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2, const.RED, const.FONT_DEATH_MESSAGE, center=True)
+            menu_button.draw()
+
+            events = pg.event.get()
+            mouse = pg.mouse.get_pos()
+            input = (events, mouse)
+
+            for event in events:
+                if event.type == pg.QUIT:
+                    return "EXIT"
+
+            if menu_button.update(input):
+                self.music.stop()
+                return "MAIN_MENU"
 
             pg.display.update()
