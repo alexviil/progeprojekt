@@ -15,11 +15,13 @@ class Menu:
 
     def menu_main(self):
         play_button = Button.Button(self.main_surface, "CONTINUE", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 - 220, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 330, const.MAIN_SURFACE_HEIGHT // 2))
         new_game_button = Button.Button(self.main_surface, "NEW GAME", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2))
+        settings_button = Button.Button(self.main_surface, "SETTINGS", (200, 100),
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 + 220, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 330, const.MAIN_SURFACE_HEIGHT // 2))
 
         self.main_surface.fill(const.WHITE)
 
@@ -46,14 +48,40 @@ class Menu:
                 music.stop()
                 return "NEW_GAME"
 
+            if settings_button.update(input):
+                self.settings_menu()
+                return "MENU"
+
             if exit_button.update(input):
                 pg.quit()
                 exit()
 
             play_button.draw()
             new_game_button.draw()
+            settings_button.draw()
             exit_button.draw()
 
+            pg.display.update()
+
+    def settings_menu(self):
+        sett_surf = pg.Surface((const.INV_MENU_WIDTH, const.INV_MENU_HEIGHT))
+        exit_button = Button.Button(sett_surf, "EXIT", (100, 50),
+                                    (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2))
+
+        close = False
+        while not close:
+            events = pg.event.get()
+            mouse = pg.mouse.get_pos()
+            input = (events, mouse)
+
+            self.inventory_surface.fill(const.DARK_GRAY)
+
+            if exit_button.update(input):
+                close = True
+
+            exit_button.draw()
+            self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.INV_MENU_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
+            self.clock.tick(const.FPS_LIMIT)
             pg.display.update()
 
     def inventory_menu(self):
