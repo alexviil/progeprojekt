@@ -1,9 +1,10 @@
 import constants as const
 import pygame as pg
+import Actor
 
 
 class Buff:
-    def __init__(self, surface, sprites_key, target, hpbuff, dmgbuff, armorbuff, duration=5):
+    def __init__(self, surface, sprites_key, target, hpbuff, dmgbuff, armorbuff, duration=5, ai_change=None):
         self.surface = surface
         self.sprites_key = sprites_key
         self.sprites = const.BUFF_DICT[self.sprites_key]
@@ -22,12 +23,24 @@ class Buff:
         self.mirror = self.target.mirror
         self.frame_counter = 0
         self.idle_frames = 7
+        self.initial_ai = None
+        self.initial_idle_frames = target.idle_frames
+        if isinstance(target, Actor.Enemy):
+            self.initial_ai = target.ai
+            self.ai_change = ai_change
 
-    def update(self, blist):
+    def update(self, blist, alist):
+        if self.target not in alist:
+            blist.pop(blist.index(self))
+            return
         self.turn_counter += 1
         self.x, self.y = self.target.get_location()
         self.mirror = self.target.mirror
         if self.turn_counter == self.duration:
+            if self.initial_ai:
+                self.target.ai = self.initial_ai
+            self.target.idle_frames = self.initial_idle_frames
+            self.target.frame_counter = 0
             self.target.max_hp -= self.hpbuff
             self.target.hp = max(1, self.target.hp - self.hpbuff)
             self.target.dmg -= self.dmgbuff
@@ -36,7 +49,8 @@ class Buff:
             btype = ""
             if self.dmgbuff + self.hpbuff + self.armorbuff < 0:
                 btype = "de"
-            self.target.messages.append(self.target.name + "'s {0}buff wanes off.".format(btype))
+            if isinstance(self.target, Actor.Player):
+                self.target.messages.append(self.target.name + "'s {0}buff wanes off.".format(btype))
 
     def draw(self, camera):
         if self.frame_counter == self.idle_frames * 4:

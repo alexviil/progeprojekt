@@ -45,6 +45,10 @@ SPRITES_MIMIC = [pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_a
                  pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha(),
                  pg.image.load("sprites/chest_mimic_open_anim_f1.png").convert_alpha(),
                  pg.image.load("sprites/chest_mimic_open_anim_f2.png").convert_alpha()]
+SPRITES_SKELETON = [pg.image.load("sprites/skelet_idle_anim_f0.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f1.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f2.png").convert_alpha(),
+                    pg.image.load("sprites/skelet_idle_anim_f3.png").convert_alpha()]
 
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png").convert_alpha()
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png").convert_alpha()
@@ -63,8 +67,8 @@ SPRITE_RUSTY_SWORD = [pg.image.load("sprites/weapon_rusty_sworddropped.png").con
 
 SPRITE_WEAPON_BOW = [pg.image.load("sprites/weapon_bowdropped.png").convert_alpha(),
                      pg.image.load("sprites/weapon_bow.png").convert_alpha(),
-                     0.5,
-                     0]
+                     -0.5,
+                     -0.5]
 
 # Consumables
 
@@ -82,6 +86,7 @@ SPRITE_POTION_RED_LARGE = [pg.image.load("sprites/flask_big_red.png").convert_al
 ACTOR_DICT = {
              "SPRITE_CHEST": SPRITE_CHEST,
              "SPRITE_CHEST_OPEN": SPRITE_CHEST_OPEN,
+             "SPRITES_SKELETON": SPRITES_SKELETON,
              "SPRITES_MIMIC": SPRITES_MIMIC,
              "SPRITES_DEMON": SPRITES_DEMON,
              "SPRITES_PLAYER": SPRITES_PLAYER,
@@ -102,8 +107,14 @@ SPRITES_RED_BUFF = [pg.image.load("sprites/buff_red_f0.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f2.png").convert_alpha(),
                     pg.image.load("sprites/buff_red_f3.png").convert_alpha()]
 
+SPRITES_DAZED_BUFF = [pg.image.load("sprites/buff_dazed_f0.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f1.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f2.png").convert_alpha(),
+                      pg.image.load("sprites/buff_dazed_f3.png").convert_alpha()]
+
 BUFF_DICT = {
-            "SPRITES_RED_BUFF": SPRITES_RED_BUFF
+            "SPRITES_RED_BUFF": SPRITES_RED_BUFF,
+            "SPRITES_DAZED_BUFF": SPRITES_DAZED_BUFF
             }
 
 # Spells
@@ -118,6 +129,12 @@ SPRITES_SPELL_FIREBALL = [pg.image.load("sprites/spell_fireball_f0.png").convert
                           pg.image.load("sprites/spell_fireball_f2.png").convert_alpha(),
                           pg.image.load("sprites/spell_fireball_f3.png").convert_alpha()]
 
+SPRITES_SPELL_DAZE = [pg.image.load("sprites/spell_daze_f0.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f1.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f2.png").convert_alpha(),
+                      pg.image.load("sprites/spell_daze_f3.png").convert_alpha()]
+
+SPRITES_PROJECTILE_ARROW = pg.image.load("sprites/weapon_arrow.png").convert_alpha()
 
 # WALLS AND FLOORS
 SPRITE_WALLEXPLORED = pg.image.load("sprites/wall_middarkened.png").convert()
@@ -180,8 +197,8 @@ BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
 
 # Map values
-MAP_WIDTH = 70
-MAP_HEIGHT = 70
+MAP_WIDTH = 21
+MAP_HEIGHT = 21
 
 MAX_ROOM_SIZE = 20
 MIN_ROOM_SIZE = 7

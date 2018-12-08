@@ -248,7 +248,6 @@ class Player(Creature):
 
     def draw_hud(self):
         self.hud_heart_sprite = const.ACTOR_DICT["HUD_HEART_FULL"]
-        full_hearts = self.hp
         drawn_hearts = 0
         y = 0
         for x in range(self.max_hp):

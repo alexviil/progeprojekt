@@ -85,8 +85,10 @@ class Main:
         self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=10, dmg=3, inventory_limit=3)
 
         self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
+        self.items.append(Actor.Equipable(player_x-1, player_y-1, "Staff of ICBM with Pu-239 (for debugging only ofc)", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 0, 0, 0, False, False, "Nuke", 999, 0, 999))
         self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
-        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", self.game_map, self.surface_main, self.messages, 0, -1, 0, False, False, "Ranged", 2, 2, 7))
+        self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", self.game_map, self.surface_main, self.messages, 0, -1, 0, False, False, "Ranged", 2, 0, 8))
+        self.items.append(Actor.Equipable(player_x, player_y-1, "Staff of Confusion (aka Staff of Calculus)", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Daze", 1, 0, 5))
 
         self.actors.append(self.player)
 
@@ -174,7 +176,9 @@ class Main:
 
                     # Update active buffs
                     for buff in self.buffs:
-                        buff.update(self.buffs)
+                        buff.update(self.buffs, self.actors)
+
+                    self.ai.update_turn_counter()
 
             # Update actors' sprites
             Animations.Animations(self.actors).update()
@@ -200,14 +204,18 @@ class Main:
         self.actors.append(self.player)
         self.map_obj = Map.Map()
         self.map_obj.create_map()
+        self.game_map.clear()
         self.game_map = self.map_obj.get_game_map()
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.camera.x_offset = const.CAMERA_CENTER_X - self.player.get_location()[0]
         self.camera.y_offset = const.CAMERA_CENTER_Y - self.player.get_location()[1]
+        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
         self.map_obj.populate_rooms(self.generator)
         self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages)
-        for actor in self.actors:
-            actor.set_world_map(self.game_map)
+        self.player.set_world_map(self.game_map)
+        for buff in self.buffs:
+            if buff.target == self.player:
+                buff.x, buff.y = self.player.get_location()
 
     def game_save(self):
         self.map_obj.destroy_surfaces()
@@ -286,8 +294,6 @@ class Main:
             self.map_obj.initialize_surfaces()
             self.map_obj.calculate_fov_map(self.player)
 
-            self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers,
-                                                 self.items, self.buffs, self.messages)
             self.ai = Ai.Ai(self.actors, self.actors_containers, self.items)
 
             self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
