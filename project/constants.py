@@ -207,6 +207,8 @@ FIREBALL_SOUND = "audio/Explosion5.wav"
 RANGED_SOUND = "audio/Laser_Shoot30.wav"
 LIGHTNING_SOUND = "audio/Randomize23.wav"
 DEATH_SOUND = "audio/deathwip.wav"
+BUFF_SOUND = "audio/Powerup.wav"
+CHEST_SOUND = "audio/Pickup_Coin30.wav"
 
 # Map values
 MAP_WIDTH = 21

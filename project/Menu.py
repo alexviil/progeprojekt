@@ -188,7 +188,7 @@ class Menu:
                             elif isinstance(self.player.equipped, Actor.Equipable) and not isinstance(self.player.inventory[current_index], Actor.Consumable):
                                 self.player.messages.append("You already have something equipped.")
                             elif self.player.inventory:
-                                self.player.consume(self.player.inventory[current_index], self.buffs)
+                                self.player.consume(self.player.inventory[current_index], self.buffs, self.effect_volume)
                     elif event.key == pg.K_m:
                         if self.player.equipped is not None:
                             self.player.unequip(self.player.equipped)

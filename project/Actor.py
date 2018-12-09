@@ -113,6 +113,9 @@ class Creature(Actor):
                     target.y += 1  # very bootleg way of making the item(s) drop in front of the chest but  ¯\_(ツ)_/¯
                     item.drop(target, ilist)
                     target.y -= 1
+                    effect = pg.mixer.Sound(const.CHEST_SOUND)
+                    effect.set_volume(sound_volume)
+                    effect.play()
             else:
                 self.messages.append("The chest contains nothing of value.")
             target.set_open(True)
@@ -233,7 +236,7 @@ class Player(Creature):
                 self.spell_cooldown = 0
                 self.spell_damage = 0
 
-    def consume(self, item, buffs):
+    def consume(self, item, buffs, volume):
         if isinstance(item, Consumable):
             if item.heal > 0:
                 if self.hp == self.max_hp:
@@ -245,6 +248,9 @@ class Player(Creature):
                     self.messages.append("Healed for " + str(self.hp - hp_before) + " health points!")
                     self.inventory.pop(self.inventory.index(item))
             elif item.armorbuff > 0 or item.hpbuff > 0 or item.dmgbuff > 0:
+                effect = pg.mixer.Sound(const.BUFF_SOUND)
+                effect.set_volume(volume)
+                effect.play()
                 buffs.append(Buffs.Buff(self.surface, item.buff_sprites_key, self, item.hpbuff, item.dmgbuff, item.armorbuff, item.buff_duration))
                 self.messages.append("Buffed for " + str(item.buff_duration) + " turns! HP+: {0} DMG+: {1} ARM+: {2}".format(item.hpbuff, item.dmgbuff, item.armorbuff))
                 self.inventory.pop(self.inventory.index(item))
