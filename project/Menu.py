@@ -205,6 +205,17 @@ class Menu:
 
             self.main_surface.blit(self.inventory_surface, (0, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
 
+            self.draw.draw_text("k - next item", const.MAIN_SURFACE_HEIGHT//2, 2,
+                                const.WHITE, const.FONT_INVENTORY)
+            self.draw.draw_text("j - equip item", const.MAIN_SURFACE_HEIGHT // 2+text_height, 2,
+                                const.WHITE, const.FONT_INVENTORY)
+            self.draw.draw_text("m - unequip item", const.MAIN_SURFACE_HEIGHT // 2+text_height*2, 2,
+                                const.WHITE, const.FONT_INVENTORY)
+            self.draw.draw_text("l - drop item", const.MAIN_SURFACE_HEIGHT // 2+text_height*3, 2,
+                                const.WHITE, const.FONT_INVENTORY)
+            self.draw.draw_text("spacebar - cast spell", const.MAIN_SURFACE_HEIGHT // 2+text_height*4, 2,
+                                const.WHITE, const.FONT_INVENTORY)
+
             self.clock.tick(const.FPS_LIMIT)
 
             pg.display.update()
