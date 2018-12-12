@@ -47,9 +47,23 @@ class Generator:
         hpbuff = libt.random_get_int(0, 1+self.hp_buff, 4+self.hp_buff)
         armorbuff = libt.random_get_int(0, 0+self.arm_buff, 1+self.arm_buff)
         dmgbuff = libt.random_get_int(0, 1+self.dmg_buff, 4+self.dmg_buff)
-        random_num = libt.random_get_int(0, 4)
+        range = libt.random_get_int(4, 7)
+        spell_dmg = 12 - range
+        cooldown = round(5 * spell_dmg)
+        temp_num = libt.random_get_int(0, 3)
+        spell = ["Lightning", "Fireball", "Daze", "Ranged"][temp_num]
+        name = {"Lightning": "Staff of Arc Lightning", "Fireball": "Staff of Fireball Explosion", "Daze": "Staff of Area Daze", "Ranged": "Wooden Longbow"}
+        if temp_num == 3:
+            range = libt.random_get_int(6, 8)
+            spell_dmg = 10 - range
+            cooldown = 3
+            sprite = "SPRITE_WEAPON_BOW"
+        else:
+            sprite = "SPRITE_WEAPON_STAFF"
 
-        # TODO: magic staff generator
+        self.items.append(
+            Actor.Equipable(x, y, name[spell], sprite, self.gm, self.sm, self.msgs, hpbuff, armorbuff, dmgbuff, False,
+                            False, spell, spell_dmg, cooldown, range))
 
     def gen_item(self, x, y):
         random_num = libt.random_get_int(0, 0, 1)
