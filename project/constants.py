@@ -201,7 +201,7 @@ WALL_AND_FLOOR_DICT = {
                       }
 
 
-# Audio, not sure if can use Hendy Marvin's music technically
+# Music by Hendy Marvin
 # Also probably better things out there, just going with this for now
 BACKGROUND_MUSIC = "audio/HendyMarvin/02-hendy_marvin-plan_revenge.ogg"
 MENU_MUSIC = "audio/HendyMarvin/01-hendy_marvin-intro_story.ogg"
