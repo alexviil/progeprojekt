@@ -12,12 +12,13 @@ class Map:
     Map also checks actor locations when they move, updating tiles to let them know where the actors can't step,
     and calculates the field of view for the player according to player's coordinates.
     """
-    def __init__(self):
+    def __init__(self, floor):
         self.game_map = list()
         self.bit_map = list()
         self.fov_map = libt.map_new(const.MAP_WIDTH, const.MAP_HEIGHT+1)
         self.first_room_center = (1, 1)
         self.rooms = list()
+        self.floor = floor
 
     def create_map(self):
         self.game_map.clear()

@@ -29,7 +29,9 @@ class Main:
 
         self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_WIDTH, const.MAIN_SURFACE_HEIGHT))
 
-        self.map_obj = Map.Map()
+        self.floor = 1
+
+        self.map_obj = Map.Map(self.floor)
         self.map_obj.create_map()
         self.game_map = self.map_obj.get_game_map()
 
@@ -48,41 +50,10 @@ class Main:
 
         # Actors (Creatures, containers, items)
 
-        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
+        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages, self.floor)
         self.map_obj.populate_rooms(self.generator)
-        '''
-        # NB!: If item is not present in game world (in an inventory) then x = 0 and y = 0
-        # Equipable template: Actor.Equipable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, equipped=False, mirror=False)
 
-        self.items.append(Actor.Equipable(4, 4, "Staff of Five HP", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 5, 0, 0))
-        self.items.append(Actor.Equipable(3, 4, "Enhcanted Trinket of Five Armor", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, blist, ilist, msg, 0, 5, 0))
-        self.items.append(Actor.Equipable(4, 3, "Something Wizards Something Five Damage", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, blist, ilist, msg, 0, 0, 5))
-
-        self.enemy_weapons = [Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Rusty Sword", const.SPRITE_RUSTY_SWORD, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 1, True),
-                              Actor.Equipable(0, 0, "Wooden Stick", const.SPRITE_WEAPON_STAFF, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 0, True)]
-
-        # Consumable template: Actor.Consumable(x, y, name, sprites, gm, sm, alist, aclist, ilist, blist, msg, hpbuff, armorbuff, dmgbuff, buff_duration, heal, equipped=False)
-
-        self.chest_items = [Actor.Consumable(0, 0, "Chest Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 0, 0, 3)]
-
-        self.items.append(Actor.Consumable(2, 2, "Healing Potion", const.SPRITE_POTION_RED, gm, sm, alist, aclist, ilist, blist, msg, 0, 0, 0, 0, 8))
-        self.items.append(Actor.Consumable(2, 3, "All +3 Potion", const.SPRITE_POTION_RED_LARGE, gm, sm, alist, aclist, ilist, blist, msg, 3, 3, 3, 30, 0, const.SPRITES_RED_BUFF))
-
-        # NB!: Maximum value for frame_counter -> int is 4 * idle_frames - 1
-        # Actor template: Actor.Enemy(x, y, name, sprites, mirror, gm, sm, alist, aclist, ilist, blist, msg, hp, armor, dm, equipped, inventory, idle_frames, frame_counter)
-
-        self.actors.append(Actor.Enemy(10, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[0], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(11, 9, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[1], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(11, 10, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], self.enemy_weapons[2], libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-        self.actors.append(Actor.Enemy(10, 11, "Demon", const.SPRITES_DEMON, True, gm, sm, alist, aclist, ilist, blist, msg, 10, 0, 1, [], None, libt.random_get_int(0, 5, 9), libt.random_get_int(0, 0, 19)))
-
-        self.actors_containers.append(Actor.Container(7, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, [self.chest_items[0]]))
-        self.actors_containers.append(Actor.Container(3, 7, "kirst", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg))
-
-        self.actors_containers.append(Actor.Container(3, 9, "Mimic", const.SPRITE_CHEST, gm, sm, alist, aclist, ilist, blist, msg, "MIMIC"))
-        '''
-        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=1, dmg=3, inventory_limit=3)
+        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=3, dmg=3, inventory_limit=3)
         self.player.inventory.clear()
 
         self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
@@ -108,8 +79,7 @@ class Main:
         self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs, self.music_volume, self.effect_volume)
 
         self.ai = Ai.Ai(self.actors, self.actors_containers, self.items, self.effect_volume)
-        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume)
-
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume, self.floor)
 
     def game_loop(self):
         """
@@ -196,7 +166,8 @@ class Main:
             Animations.Animations(self.actors).update()
 
             # Draw game
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            draw_obj = Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs)
+            draw_obj.draw_game(self.clock, self.messages, self.camera, self.floor)
 
             # FPS limit and tracker
             self.clock.tick(const.FPS_LIMIT)
@@ -218,16 +189,17 @@ class Main:
         self.actors_containers.clear()
         self.items.clear()
         self.actors.append(self.player)
-        self.map_obj = Map.Map()
+        self.floor += 1
+        self.map_obj = Map.Map(self.floor)
         self.map_obj.create_map()
         self.game_map.clear()
         self.game_map = self.map_obj.get_game_map()
         self.player.set_location(self.map_obj.first_room_center[0], self.map_obj.first_room_center[1])
         self.camera.x_offset = const.CAMERA_CENTER_X - self.player.get_location()[0]
         self.camera.y_offset = const.CAMERA_CENTER_Y - self.player.get_location()[1]
-        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages)
+        self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages, self.floor)
         self.map_obj.populate_rooms(self.generator)
-        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume)
+        self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.clock, self.messages, self.effect_volume, self.floor)
         self.player.set_world_map(self.game_map)
         for buff in self.buffs:
             if buff.target == self.player:
@@ -284,12 +256,13 @@ class Main:
                          self.items,
                          self.buffs,
                          self.messages,
+                         self.floor
                         ], f)
 
     def game_load(self):
         if os.path.isfile("savedata\savegame") and os.path.getsize("savedata\savegame") > 0:
             with gzip.open("savedata\savegame", "rb") as f:
-                self.player, self.camera, self.map_obj, self.game_map, self.actors, self.actors_containers, self.items, self.buffs, self.messages = pickle.load(f)
+                self.player, self.camera, self.map_obj, self.game_map, self.actors, self.actors_containers, self.items, self.buffs, self.messages, self.floor = pickle.load(f)
 
             for actor in self.actors:
                 actor.set_surface(self.surface_main)
@@ -322,7 +295,7 @@ class Main:
 
             self.spells = Spells.Spells(self.player, self.camera, self.map_obj, self.game_map, self.surface_main,
                                         self.actors, self.actors_containers, self.items, self.buffs, self.clock,
-                                        self.messages, self.effect_volume)
+                                        self.messages, self.effect_volume, self.floor)
 
             self.menu = Menu.Menu(self.surface_main, self.player, self.clock, self.items, self.buffs, self.music_volume, self.effect_volume)
 

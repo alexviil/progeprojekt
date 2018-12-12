@@ -46,6 +46,16 @@ class Draw:
         font_rect = font_obj.get_rect()
         return font_rect.height
 
+    def get_text_width(self, font, text):
+        font_obj = font.render(text, False, const.BLACK)
+        font_rect = font_obj.get_rect()
+        return font_rect.width
+
+    def draw_floor_number(self, floor):
+        to_write = "Floor: " + str(floor)
+        self.draw_text(to_write, const.MAIN_SURFACE_WIDTH/2-self.get_text_width(const.FONT_DEBUG, to_write)/2,
+                       const.MAIN_SURFACE_HEIGHT-self.get_font_height(const.FONT_DEBUG)-20, const.WHITE, const.FONT_DEBUG)
+
 
 class DrawWorld(Draw):
     def __init__(self, surface, game_map, player, fov_map, npcs=[], containers=[], items=[], buffs=[]):
@@ -75,7 +85,7 @@ class DrawWorld(Draw):
                         self.surface.blit(tile.explored_sprite, ((tile.x + camera.get_x_offset()) * const.TILE_WIDTH,
                                                                  (tile.y + camera.get_y_offset()) * const.TILE_HEIGHT))
 
-    def draw_game(self, clock, messages, camera):
+    def draw_game(self, clock, messages, camera, floor):
         """Draws the game and all elements, if they are within the field of view of the player."""
         # Reset the surface
         self.surface.fill(const.BLACK)
@@ -115,6 +125,9 @@ class DrawWorld(Draw):
 
         # Draw Console text
         self.draw_console_messages(messages, const.FONT_CONSOLE)
+
+        # Draw floor values
+        self.draw_floor_number(floor)
 
         # Update display
         pg.display.flip()

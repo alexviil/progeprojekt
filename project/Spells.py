@@ -5,7 +5,7 @@ from math import acos, degrees, sqrt
 
 
 class Spells:
-    def __init__(self, player, camera, map_obj, game_map, surface, actors, actors_containers, items, buffs, clock, messages, effect_volume):
+    def __init__(self, player, camera, map_obj, game_map, surface, actors, actors_containers, items, buffs, clock, messages, effect_volume, floor):
         self.player = player
         self.camera = camera
         self.map_obj = map_obj
@@ -18,6 +18,7 @@ class Spells:
         self.clock = clock
         self.messages = messages
         self.effect_volume = effect_volume
+        self.floor = floor
 
     def cast_spell(self):
         if not self.player.spell:
@@ -119,7 +120,7 @@ class Spells:
             select_surface.set_alpha(150)
             select_surface.convert_alpha()
 
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera, self.floor)
             for (x, y) in valid_tiles_list:
                     self.surface_main.blit(select_surface, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
 
@@ -188,7 +189,7 @@ class Spells:
             select_surface.set_alpha(150)
             select_surface.convert_alpha()
 
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera, self.floor)
             for (x, y) in valid_tiles_list:
                 self.surface_main.blit(select_surface, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
 
@@ -265,7 +266,7 @@ class Spells:
             select_surface.convert_alpha()
 
             Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors,
-                           self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+                           self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera, self.floor)
             for (x, y) in valid_tiles_list:
                 self.surface_main.blit(select_surface, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
 
@@ -337,7 +338,7 @@ class Spells:
             select_surface.set_alpha(150)
             select_surface.convert_alpha()
 
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera, self.floor)
             for (x, y) in valid_tiles_list:
                 self.surface_main.blit(select_surface, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
 
@@ -366,7 +367,7 @@ class Spells:
             if i % anim_frames == 0:
                 Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors,
                                self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages,
-                                                                                         self.camera)
+                                                                                         self.camera, self.floor)
             for (x, y) in valid_tiles_list:
                 self.surface_main.blit(animation_sprites[i // anim_frames],
                                        (x * const.TILE_WIDTH, (y - 0.5) * const.TILE_HEIGHT))
@@ -387,7 +388,7 @@ class Spells:
             angle = -angle
         sprite = pg.transform.rotate(sprite, angle)
         for (x, y) in valid_tiles_list[:-1]:
-            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera)
+            Draw.DrawWorld(self.surface_main, self.game_map, self.player, self.map_obj.fov_map, self.actors, self.actors_containers, self.items, self.buffs).draw_game(self.clock, self.messages, self.camera, self.floor)
             for i in range(draw_frames):
                 self.surface_main.blit(sprite, (x * const.TILE_WIDTH, y * const.TILE_HEIGHT))
 

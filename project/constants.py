@@ -53,6 +53,10 @@ SPRITES_SKELETON = [pg.image.load("sprites/skelet_idle_anim_f0.png").convert_alp
                     pg.image.load("sprites/skelet_idle_anim_f1.png").convert_alpha(),
                     pg.image.load("sprites/skelet_idle_anim_f2.png").convert_alpha(),
                     pg.image.load("sprites/skelet_idle_anim_f3.png").convert_alpha()]
+SPRITES_ICE_ZOMBIE = [pg.image.load("sprites/ice_zombie_idle_anim_f0.png").convert_alpha(),
+                      pg.image.load("sprites/ice_zombie_idle_anim_f1.png").convert_alpha(),
+                      pg.image.load("sprites/ice_zombie_idle_anim_f2.png").convert_alpha(),
+                      pg.image.load("sprites/ice_zombie_idle_anim_f3.png").convert_alpha()]
 
 SPRITE_CHEST = pg.image.load("sprites/chest_empty_open_anim_f0.png").convert_alpha()
 SPRITE_CHEST_OPEN = pg.image.load("sprites/chest_empty_open_anim_f2.png").convert_alpha()
@@ -94,6 +98,7 @@ ACTOR_DICT = {
              "SPRITES_MIMIC": SPRITES_MIMIC,
              "SPRITES_DEMON": SPRITES_DEMON,
              "SPRITES_PLAYER": SPRITES_PLAYER,
+             "SPRITES_ICE_ZOMBIE": SPRITES_ICE_ZOMBIE,
              "HUD_HEART_FULL": HUD_HEART_FULL,
              "HUD_HEART_FLASH": HUD_HEART_FLASH,
              "HUD_HEART_EMPTY": HUD_HEART_EMPTY,
@@ -211,12 +216,12 @@ BUFF_SOUND = "audio/Powerup.wav"
 CHEST_SOUND = "audio/Pickup_Coin30.wav"
 
 # Map values
-MAP_WIDTH = 21
-MAP_HEIGHT = 21
+MAP_WIDTH = 100
+MAP_HEIGHT = 100
 
 MAX_ROOM_SIZE = 20
 MIN_ROOM_SIZE = 7
-POSSIBLE_ROOM_NUM = 2000
+POSSIBLE_ROOM_NUM = 500
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
