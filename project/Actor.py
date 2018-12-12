@@ -341,8 +341,12 @@ class Item(Actor):
                 self.surface.blit(self.sprite, ((creature.x + self.x_offset + camera.get_x_offset()) * const.TILE_WIDTH, (creature.y + self.y_offset + 1 + camera.get_y_offset()) * const.TILE_HEIGHT))
 
     def init_sprites(self):
-        self.sprites = const.ACTOR_DICT[self.sprites_key]
-        self.sprite = const.ACTOR_DICT[self.sprites_key][self.sprite_index]
+        if self.mirror:
+            self.sprites = [pg.transform.flip(e, True, False) for e in const.ACTOR_DICT[self.sprites_key][:2]]
+            self.sprite = self.sprites[self.sprite_index]
+        else:
+            self.sprites = const.ACTOR_DICT[self.sprites_key]
+            self.sprite = const.ACTOR_DICT[self.sprites_key][self.sprite_index]
 
 
 class Equipable(Item):
