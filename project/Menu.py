@@ -32,7 +32,7 @@ class Menu:
 
         menu_open = True
         while menu_open:
-            self.main_surface.fill(const.WHITE)
+            self.main_surface.blit(pg.image.load("background.png"), (0, 0))
             play_button.draw()
             new_game_button.draw()
             settings_button.draw()
