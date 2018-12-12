@@ -4,7 +4,7 @@ import Draw
 
 
 class Button:
-    def __init__(self, surface, text, size, coords, color_mouseover=const.GREEN, color_default=const.GRAY, text_color_mouseover=const.BLACK, text_color_default=const.BLACK):
+    def __init__(self, surface, text, size, coords, color_mouseover=const.DARK_RED, color_default=const.GRAY, text_color_mouseover=const.BLACK, text_color_default=const.BLACK):
         self.surface = surface
         self.text = text
         self.size = size

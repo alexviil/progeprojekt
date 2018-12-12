@@ -29,7 +29,7 @@ class Main:
 
         self.surface_main = pg.display.set_mode((const.MAIN_SURFACE_WIDTH, const.MAIN_SURFACE_HEIGHT))
 
-        self.floor = 1
+        self.floor = 4
 
         self.map_obj = Map.Map(self.floor)
         self.map_obj.create_map()
@@ -53,15 +53,18 @@ class Main:
         self.generator = Generator.Generator(self.game_map, self.surface_main, self.actors, self.actors_containers, self.items, self.buffs, self.messages, self.floor)
         self.map_obj.populate_rooms(self.generator)
 
-        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=3, dmg=3, inventory_limit=3)
+        self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=21, armor=3, dmg=3, inventory_limit=10)
         self.player.inventory.clear()
 
+        """
+        STAFFS WITH SPELLS FOR DEBUGGING
+        
         self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
         self.items.append(Actor.Equipable(player_x-1, player_y-1, "Staff of ICBM with Pu-239 (for debugging only ofc)", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 0, 0, 0, False, False, "Nuke", 999, 0, 999))
         self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Lightning", 5, 0, 5))
         self.items.append(Actor.Equipable(player_x, player_y+1, "Bow of rooty tooty point n' shooty", "SPRITE_WEAPON_BOW", self.game_map, self.surface_main, self.messages, 0, -1, 0, False, False, "Ranged", 2, 0, 8))
         self.items.append(Actor.Equipable(player_x, player_y-1, "Staff of Confusion (aka Staff of Calculus)", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Daze", 1, 0, 5))
-
+        """
         self.actors.append(self.player)
 
         # Actor locations used for collision boxes
@@ -326,7 +329,7 @@ class Main:
         effect.set_volume(self.effect_volume)
         effect.play()
 
-        command = self.menu.death_screen_menu()
+        command = self.menu.death_screen_menu(self.floor)
         if os.path.isfile("savedata\savegame") and os.path.getsize("savedata\savegame") > 0:
             os.remove("savedata/savegame")
         if command == "EXIT":

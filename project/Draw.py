@@ -53,7 +53,7 @@ class Draw:
 
     def draw_floor_number(self, floor):
         to_write = "Floor: " + str(floor)
-        self.draw_text(to_write, const.MAIN_SURFACE_WIDTH/2-self.get_text_width(const.FONT_DEBUG, to_write)/2,
+        self.draw_text(to_write, const.MAIN_SURFACE_WIDTH-self.get_text_width(const.FONT_DEBUG, to_write)-75,
                        const.MAIN_SURFACE_HEIGHT-self.get_font_height(const.FONT_DEBUG)-20, const.WHITE, const.FONT_DEBUG)
 
 

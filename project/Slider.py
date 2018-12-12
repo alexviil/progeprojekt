@@ -4,7 +4,7 @@ import Draw
 
 
 class Slider:
-    def __init__(self, surface, text, size, start_pos, coords, color_default=const.GRAY, color_mouseover=const.GREEN):
+    def __init__(self, surface, text, size, start_pos, coords, color_default=const.GRAY, color_mouseover=const.GREEN, text_color=const.WHITE):
         self.surface = surface
         self.size = size
         self.coords = coords
@@ -13,6 +13,7 @@ class Slider:
         self.current_color = color_default
         self.start_x = start_pos*400+400
         self.text = text
+        self.text_color = text_color
 
         self.rect = pg.Rect(self.coords, (10, 30))
         self.rect.center = (self.start_x, self.coords[1])
@@ -43,4 +44,4 @@ class Slider:
     def draw(self):
         pg.draw.rect(self.surface, const.WHITE, self.bg_rect)
         pg.draw.rect(self.surface, self.current_color, self.rect)
-        self.draw_obj.draw_text(self.text, self.coords[0], self.coords[1]-25, const.BLACK, const.FONT_SETTINGS, True)
+        self.draw_obj.draw_text(self.text, self.coords[0], self.coords[1]-25, self.text_color, const.FONT_SETTINGS, True)

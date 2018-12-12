@@ -18,13 +18,13 @@ class Menu:
 
     def menu_main(self):
         play_button = Button.Button(self.main_surface, "CONTINUE", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 - 330, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 330, const.MAIN_SURFACE_HEIGHT // 2+50))
         new_game_button = Button.Button(self.main_surface, "NEW GAME", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 - 110, const.MAIN_SURFACE_HEIGHT // 2+50))
         settings_button = Button.Button(self.main_surface, "SETTINGS", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 110, const.MAIN_SURFACE_HEIGHT // 2+50))
         exit_button = Button.Button(self.main_surface, "EXIT", (200, 100),
-                                    (const.MAIN_SURFACE_WIDTH // 2 + 330, const.MAIN_SURFACE_HEIGHT // 2))
+                                    (const.MAIN_SURFACE_WIDTH // 2 + 330, const.MAIN_SURFACE_HEIGHT // 2+50))
 
         self.music = pg.mixer.Sound(const.MENU_MUSIC)
         self.music.set_volume(self.music_volume)
@@ -79,7 +79,7 @@ class Menu:
             mouse = pg.mouse.get_pos()
             input = (events, mouse)
 
-            sett_surf.fill(const.DARKISH_GRAY)
+            sett_surf.fill(const.BLACK)
             self.main_surface.blit(sett_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.SETTINGS_MENU_WIDTH // 2,
                                                const.MAIN_SURFACE_HEIGHT // 2 - const.SETTINGS_MENU_HEIGHT // 2))
             exit_button.draw()
@@ -163,10 +163,13 @@ class Menu:
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_i:
                         close = True
-                    if event.key == pg.K_k:
+                    if event.key == pg.K_s:
                         self.player.next_selection()
                         current_index = self.player.selection
-                    if event.key == pg.K_l:
+                    if event.key == pg.K_w:
+                        self.player.prev_selection()
+                        current_index = self.player.selection
+                    if event.key == pg.K_f:
                         if not self.player.inventory:
                             self.player.messages.append("You have no items to drop")
                         else:
@@ -179,7 +182,7 @@ class Menu:
                             if not item_here:
                                 self.player.messages.append("Dropped " + self.player.inventory[current_index].name + ".")
                                 self.player.inventory[current_index].drop(self.player, self.items)
-                    elif event.key == pg.K_j:
+                    elif event.key == pg.K_e:
                         if not self.player.inventory:
                             self.player.messages.append("You have no items noob")
                         else:
@@ -189,7 +192,7 @@ class Menu:
                                 self.player.messages.append("You already have something equipped.")
                             elif self.player.inventory:
                                 self.player.consume(self.player.inventory[current_index], self.buffs, self.effect_volume)
-                    elif event.key == pg.K_m:
+                    elif event.key == pg.K_r:
                         if self.player.equipped is not None:
                             self.player.unequip(self.player.equipped)
                         else:
@@ -205,16 +208,29 @@ class Menu:
 
             self.main_surface.blit(self.inventory_surface, (0, const.MAIN_SURFACE_HEIGHT // 2 - const.INV_MENU_HEIGHT // 2))
 
-            self.draw.draw_text("k - next item", const.MAIN_SURFACE_HEIGHT//2, 2,
+            console_surf = pg.Surface((720, text_height*5))
+            console_surf.fill(const.BLACK)
+            self.main_surface.blit(console_surf, (0, 4+const.MAIN_SURFACE_HEIGHT-text_height*5))
+
+            self.draw.draw_text("w - previous item", 2, const.MAIN_SURFACE_HEIGHT // 2+70-text_height,
                                 const.WHITE, const.FONT_INVENTORY)
-            self.draw.draw_text("j - equip item", const.MAIN_SURFACE_HEIGHT // 2+text_height, 2,
+            self.draw.draw_text("s - next item", 2, const.MAIN_SURFACE_HEIGHT//2+70,
                                 const.WHITE, const.FONT_INVENTORY)
-            self.draw.draw_text("m - unequip item", const.MAIN_SURFACE_HEIGHT // 2+text_height*2, 2,
+            self.draw.draw_text("e - use/equip item", 2, const.MAIN_SURFACE_HEIGHT // 2+text_height+70,
                                 const.WHITE, const.FONT_INVENTORY)
-            self.draw.draw_text("l - drop item", const.MAIN_SURFACE_HEIGHT // 2+text_height*3, 2,
+            self.draw.draw_text("r - unequip item", 2, const.MAIN_SURFACE_HEIGHT // 2+text_height*2+70,
                                 const.WHITE, const.FONT_INVENTORY)
-            self.draw.draw_text("spacebar - cast spell", const.MAIN_SURFACE_HEIGHT // 2+text_height*4, 2,
+            self.draw.draw_text("f - drop item", 2, const.MAIN_SURFACE_HEIGHT // 2+text_height*3+70,
                                 const.WHITE, const.FONT_INVENTORY)
+            self.draw.draw_text("spacebar - cast spell", 2, const.MAIN_SURFACE_HEIGHT // 2+text_height*4+70,
+                                const.WHITE, const.FONT_INVENTORY)
+
+            self.draw.draw_console_messages(self.player.messages, const.FONT_CONSOLE)
+
+            hud_surf = pg.Surface((320, 240))
+            hud_surf.fill(const.BLACK)
+            self.main_surface.blit(hud_surf, (0, 0))
+            self.player.draw_hud()
 
             self.clock.tick(const.FPS_LIMIT)
 
@@ -231,7 +247,7 @@ class Menu:
 
         menu_open = True
         while menu_open:
-            esc_surf.fill(const.WHITE)
+            esc_surf.fill(const.DARK_GRAY)
             self.main_surface.blit(esc_surf, (const.MAIN_SURFACE_WIDTH // 2 - const.ESC_MENU_WIDTH // 2,
                                                const.MAIN_SURFACE_HEIGHT // 2 - const.ESC_MENU_HEIGHT // 2))
 
@@ -260,7 +276,7 @@ class Menu:
 
             pg.display.update()
 
-    def death_screen_menu(self):
+    def death_screen_menu(self, floor):
         death_surface = pg.Surface((const.MAIN_SURFACE_WIDTH, 300))
         menu_button = Button.Button(self.main_surface, "MAIN MENU", (200, 100),
                                         (const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2+220))
@@ -274,6 +290,8 @@ class Menu:
             death_surface.fill(const.DARK_GRAY)
             self.main_surface.blit(death_surface, (0, const.MAIN_SURFACE_HEIGHT//2-150))
             self.draw.draw_text("YOU DIED", const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2, const.RED, const.FONT_DEATH_MESSAGE, center=True)
+            self.draw.draw_text("You made it to floor "+str(floor), const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2+115, const.RED,
+                                const.FONT_CONSOLE, center=True)
             menu_button.draw()
 
             events = pg.event.get()

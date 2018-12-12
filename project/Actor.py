@@ -204,6 +204,11 @@ class Player(Creature):
         if self.selection >= len(self.inventory):
             self.selection = 0
 
+    def prev_selection(self):
+        self.selection -= 1
+        if self.selection < 0:
+            self.selection = len(self.inventory)-1
+
     def equip(self, item):
         if not self.equipped and item in self.inventory and isinstance(item, Equipable):
             self.messages.append("Equipped " + item.name + ".")

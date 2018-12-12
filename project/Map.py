@@ -179,44 +179,19 @@ class Map:
                     generator.gen_container(libt.random_get_int(0, room.x1+1, room.x2-1),
                                             libt.random_get_int(0, room.y1 + 1, room.y2 - 2))
 
-            for i in range(room_area // 90):
+            for i in range(room_area // 75):
                 generator.gen_monster(libt.random_get_int(0, room.x1+1, room.x2-1),
                                       libt.random_get_int(0, room.y1 + 1, room.y2 - 1))
 
-            for i in range(room_area // 60):
+            for i in range(room_area // 70):
                 rand_num = libt.random_get_int(0, 0, 100)
                 if rand_num >= 10:
                     generator.gen_item(libt.random_get_int(0, room.x1+1, room.x2-1),
                                        libt.random_get_int(0, room.y1+1, room.y2-1))
-                elif rand_num < 10:
+                elif rand_num < 10+self.floor*2:
                     generator.gen_equipable(libt.random_get_int(0, room.x1+1, room.x2-1),
                                             libt.random_get_int(0, room.y1+1, room.y2-1))
-    #
-    # def create_test_map(self):
-    #     """
-    #     Creates the game map, currently a simple square to test things out. Has a set of floor sprites to choose
-    #     from, with a strong bias towards the first, simplest floor tile sprite. Creates a FOV map for the player as well.
-    #     """
-    #     self.game_map = list()
-    #     for y in range(const.MAP_HEIGHT):
-    #         row = []
-    #         for x in range(const.MAP_WIDTH):
-    #             random = libt.random_get_int(0, 0, 7)
-    #             bias = 0
-    #             while random != 0 and bias != 12:
-    #                 bias += 1
-    #                 random = libt.random_get_int(0, 0, 7)
-    #             if y == 0 or y == const.MAP_HEIGHT - 1 or x == 0 or x == const.MAP_WIDTH - 1:
-    #                 row.append(Tile.Tile(x, y + 1, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED))
-    #                 continue
-    #             row.append(
-    #                 Tile.Tile(x, y + 1, False, False, "SPRITES_FLOOR" + str(random), "SPRITES_FLOOREXPLORED" + str(random)))
-    #         self.game_map.append(row)
-    #
-    #     # TODO Need to figure out this +1 y thing, "it's probably just pygame being pygame" - Alex
-    #     self.game_map[11][11] = Tile.Tile(11, 12, True, False, const.SPRITE_WALL, const.SPRITE_WALLEXPLORED)
-    #
-    #     self.create_fov_map()
+
 
 class Room:
     def __init__(self, x, y, width, height):
@@ -229,9 +204,3 @@ class Room:
 
     def check_intersection(self, other_room):
         return self.x1 <= other_room.x2 and self.x2 >= other_room.x1 and self.y1 <= other_room.y2 and self.y2 >= other_room.y1
-
-
-if __name__ == '__main__':
-    level = Map()
-    level.create_map()
-    level.create_test_map()
