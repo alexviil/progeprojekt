@@ -296,8 +296,13 @@ class Menu:
             death_surface.fill(const.DARK_GRAY)
             self.main_surface.blit(death_surface, (0, const.MAIN_SURFACE_HEIGHT//2-150))
             self.draw.draw_text("YOU DIED", const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2, const.RED, const.FONT_DEATH_MESSAGE, center=True)
-            self.draw.draw_text("You made it to floor "+str(floor), const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2+115, const.RED,
-                                const.FONT_CONSOLE, center=True)
+            if floor == 1:
+                self.draw.draw_text("Couldn't get past the first floor :)", const.MAIN_SURFACE_WIDTH // 2, const.MAIN_SURFACE_HEIGHT // 2+115, const.RED,
+                                    const.FONT_CONSOLE, center=True)
+            else:
+                self.draw.draw_text("You made it to floor " + str(floor), const.MAIN_SURFACE_WIDTH // 2,
+                                    const.MAIN_SURFACE_HEIGHT // 2 + 115, const.RED,
+                                    const.FONT_CONSOLE, center=True)
             menu_button.draw()
 
             events = pg.event.get()

@@ -176,21 +176,27 @@ class Map:
             for i in range(room_area // 110):
                 rand_num = libt.random_get_int(0, 0, 100)
                 if rand_num >= 55:
-                    generator.gen_container(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                            libt.random_get_int(0, room.y1 + 1, room.y2 - 2))
+                    x = libt.random_get_int(0, room.x1+2, room.x2-2)
+                    y = libt.random_get_int(0, room.y1+2, room.y2-2)
+                    if x == room.center_x and y == room.center_y:
+                        x += 1
+                    generator.gen_container(x, y)
 
             for i in range(room_area // 75):
-                generator.gen_monster(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                      libt.random_get_int(0, room.y1 + 1, room.y2 - 1))
+                x = libt.random_get_int(0, room.x1 + 1, room.x2 - 1)
+                y = libt.random_get_int(0, room.y1 + 1, room.y2 - 1)
+                generator.gen_monster(x, y)
 
             for i in range(room_area // 70):
                 rand_num = libt.random_get_int(0, 0, 100)
+                x = libt.random_get_int(0, room.x1 + 1, room.x2 - 1)
+                y = libt.random_get_int(0, room.y1 + 1, room.y2 - 1)
+                if x == room.center_x and y == room.center_y:
+                    x += 1
                 if rand_num >= 10:
-                    generator.gen_item(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                       libt.random_get_int(0, room.y1+1, room.y2-1))
+                    generator.gen_item(x, y)
                 elif rand_num < 10+self.floor*2:
-                    generator.gen_equipable(libt.random_get_int(0, room.x1+1, room.x2-1),
-                                            libt.random_get_int(0, room.y1+1, room.y2-1))
+                    generator.gen_equipable(x, y)
 
 
 class Room:
