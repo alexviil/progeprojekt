@@ -37,7 +37,9 @@ class Generator:
         armorbuff = libt.random_get_int(0, 0+self.arm_buff, 1+self.arm_buff)
         dmgbuff = libt.random_get_int(0, 1+self.dmg_buff, 2+self.dmg_buff)
 
-        self.items.append(Actor.Equipable(x, y, "A Pretty Neat Staff", "SPRITE_WEAPON_STAFF", self.gm, self.sm,
+        name = self.gen_staff_name()
+
+        self.items.append(Actor.Equipable(x, y, name, "SPRITE_WEAPON_STAFF", self.gm, self.sm,
                           self.msgs, hpbuff, armorbuff, dmgbuff))
 
     def gen_magic_staff(self, x, y):
@@ -64,7 +66,8 @@ class Generator:
                 sprite = "SPRITE_WEAPON_BOW"
             else:
                 sprite = "SPRITE_WEAPON_STAFF"
-
+        if spell == "Daze":
+            spell_dmg = spell_dmg // 2
         self.items.append(Actor.Equipable(x, y, name[spell], sprite, self.gm, self.sm, self.msgs, hpbuff, armorbuff, dmgbuff, False,
                           False, spell, spell_dmg, cooldown, range))
 
@@ -94,7 +97,7 @@ class Generator:
 
     def gen_plus_3_potion(self, x, y):
         self.items.append(Actor.Consumable(x, y, "+3 Potion", "SPRITE_POTION_RED_LARGE", self.gm, self.sm,
-                                           self.msgs, 2, 2, 2, 30, 0, "SPRITES_RED_BUFF"))
+                                           self.msgs, 3, 3, 3, 30, 0, "SPRITES_RED_BUFF"))
 
     def gen_plus_4_potion(self, x, y):
         self.items.append(Actor.Consumable(x, y, "+4 Potion", "SPRITE_POTION_RED_LARGE", self.gm, self.sm,
@@ -119,7 +122,7 @@ class Generator:
                              self.msgs, 0, 0, 0, 0, heal),
                            Actor.Consumable(x, y, "+4 Potion", "SPRITE_POTION_RED_LARGE", self.gm, self.sm,
                                             self.msgs, 4, 4, 4, 30, 0, "SPRITES_RED_BUFF"),
-                           Actor.Equipable(x, y, "A Pretty Neat Staff", "SPRITE_WEAPON_STAFF", self.gm, self.sm,
+                           Actor.Equipable(x, y, self.gen_staff_name(), "SPRITE_WEAPON_STAFF", self.gm, self.sm,
                                            self.msgs, hpbuff+2, armorbuff, dmgbuff+1),
                            Actor.Equipable(x, y, "Wooden Longbow", "SPRITE_WEAPON_BOW",
                                            self.gm, self.sm, self.msgs, hpbuff, armorbuff, dmgbuff, False, False,
@@ -182,3 +185,15 @@ class Generator:
         self.actors.append(Actor.Enemy(x, y, "Ice Zombie", "SPRITES_ICE_ZOMBIE", True, self.gm, self.sm,
                                        self.msgs, 10 + self.hp_buff, 2 + self.arm_buff, libt.random_get_int(0, 2, 3) + self.dmg_buff,
                                        zombie_inventory))
+    def gen_staff_name(self):
+        randint1 = libt.random_get_int(0, 0, 8)
+        randint2 = libt.random_get_int(0, 0, 3)
+        randint3 = libt.random_get_int(0, 0, 5)
+        randint4 = libt.random_get_int(0, 0, 4)
+
+        prefix = ["Wooden", "Ancient", "Forgotten", "Unenchanted", "Pine", "Weak", "Starter", "Feeble", "Frail"][randint1]
+        itemname = ["Stick", "Staff", "Pole", "Rod"][randint2]
+        suffix1 = ["Little", "Minor", "Slight", "Unsteady", "Decrepit", "Inefficient"][randint3]
+        suffix2 = ["Use", "Empowerment", "Enhancement", "Self-Defence", "Power"][randint4]
+
+        return "{0} {1} of {2} {3}".format(prefix, itemname, suffix1, suffix2)

@@ -94,11 +94,11 @@ class Creature(Actor):
                 break
 
         if isinstance(target, Creature) and not isinstance(target, self.__class__):  # if creature exists and is not same class, attacks it
-            self.messages.append(self.name + " attacks " + target.name + " for " + str(max(0, self.dmg - target.armor)) + " damage.")
+            self.messages.append(self.name + " attacks " + target.name + " for " + str(max(1, self.dmg - target.armor)) + " damage.")
             effect = pg.mixer.Sound(const.HIT_SOUND)
             effect.set_volume(sound_volume)
             effect.play()
-            target.take_damage(max(0, self.dmg - target.armor), actors, ilist)
+            target.take_damage(max(1, self.dmg - target.armor), actors, ilist)
 
         elif isinstance(target, Container) and isinstance(self, Player):
             if target.is_open():

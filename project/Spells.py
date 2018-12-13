@@ -1,6 +1,7 @@
 import constants as const
 import pygame as pg
 import Draw, Actor, Buffs
+import libtcodpy as libt
 from math import acos, degrees, sqrt
 
 
@@ -29,7 +30,10 @@ class Spells:
             cooldown_left = self.player.spell_cooldown - self.player.turns_since_spell
             if cooldown_left == 1:
                 plural = ""
-            self.player.messages.append("Spell still on cooldown, wait {0} more turn{1}!".format(cooldown_left, plural))
+            if self.player.spell == "Ranged":
+                self.player.messages.append("Bow not yet ready, wait {0} more turn{1}!".format(cooldown_left, plural))
+            else:
+                self.player.messages.append("Spell still on cooldown, wait {0} more turn{1}!".format(cooldown_left, plural))
             self.player.spell_status = "cancelled"
         else:
             effect = ""
@@ -54,7 +58,7 @@ class Spells:
                 self.player.sprites_mirrored = [pg.transform.flip(e, True, False) for e in const.ACTOR_DICT["SPRITES_SKELETON"]]
                 self.player.max_hp = 1
                 self.player.hp = 1
-            if effect:
+            if effect and self.player.spell_status != "cancelled":
                 effect.set_volume(self.effect_volume)
                 effect.play()
 
@@ -252,7 +256,7 @@ class Spells:
                                     buff.turn_counter = 0
                                     no_buff = False
                             if no_buff:
-                                self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", npc, 0, 0, 0, 10, "dazed"))
+                                self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", npc, 0, 0, 0, libt.random_get_int(12, 18), "dazed"))
                                 npc.ai = "dazed"
                                 npc.frame_counter = 0
                                 npc.idle_frames = round(npc.idle_frames * 1.25)
