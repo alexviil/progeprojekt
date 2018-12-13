@@ -40,6 +40,7 @@ class Spells:
                 effect = pg.mixer.Sound(const.FIREBALL_SOUND)
                 self.fireball_spell(2)
             elif self.player.spell == "Daze":
+                effect = pg.mixer.Sound(const.DAZE_SOUND)
                 self.daze_spell()
             elif self.player.spell == "Ranged":
                 effect = pg.mixer.Sound(const.RANGED_SOUND)

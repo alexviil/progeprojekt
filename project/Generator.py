@@ -51,6 +51,7 @@ class Generator:
         spell = ["Lightning", "Fireball", "Daze", "Ranged"][temp_num]
         name = {"Lightning": "Staff of Arc Lightning", "Fireball": "Staff of Fireball Explosion", "Daze": "Staff of Area Daze", "Ranged": "Wooden Longbow"}
         if self.floor <= 2:
+            spell = "Ranged"
             range = libt.random_get_int(0, 6, 8)
             spell_dmg = 10 - range
             cooldown = 3
@@ -113,7 +114,7 @@ class Generator:
         brange = libt.random_get_int(0, 6, 8)
         bspell_dmg = 10 - brange
         bcooldown = 3
-        if self.floor <= 3:
+        if self.floor <= 2:
             chest_items = [Actor.Consumable(x, y, "Healing Potion", "SPRITE_POTION_RED", self.gm, self.sm,
                              self.msgs, 0, 0, 0, 0, heal),
                            Actor.Consumable(x, y, "+4 Potion", "SPRITE_POTION_RED_LARGE", self.gm, self.sm,
@@ -168,7 +169,7 @@ class Generator:
                                        self.msgs, 0, 0, libt.random_get_int(0, 1, 2)+self.dmg_buff, True)
 
         self.actors.append(Actor.Enemy(x, y, "Demon", "SPRITES_DEMON", True, self.gm, self.sm,
-                                       self.msgs, 8+self.hp_buff, 1+self.arm_buff, libt.random_get_int(0, 3, 5), [],
+                                       self.msgs, 8+self.hp_buff, 1+self.arm_buff, libt.random_get_int(0, 3, 4), [],
                                        demon_weapon))
 
     def gen_ice_zombie(self, x, y):
@@ -179,5 +180,5 @@ class Generator:
                             ]
 
         self.actors.append(Actor.Enemy(x, y, "Ice Zombie", "SPRITES_ICE_ZOMBIE", True, self.gm, self.sm,
-                                       self.msgs, 10 + self.hp_buff, 2 + self.arm_buff, libt.random_get_int(0, 3, 4) + self.dmg_buff,
+                                       self.msgs, 10 + self.hp_buff, 2 + self.arm_buff, libt.random_get_int(0, 2, 3) + self.dmg_buff,
                                        zombie_inventory))
