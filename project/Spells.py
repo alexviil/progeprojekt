@@ -110,11 +110,11 @@ class Spells:
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
-                    for npc in self.actors:
-                        if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
+                    for i in range(len(self.actors) - 1, -1, -1):
+                        if self.actors[i].get_location() in valid_tiles_list_collision and isinstance(self.actors[i], Actor.Enemy):
                             npcs_hit = True
-                            npc.messages.append("{0} is hit by {1} for {2} damage!".format(npc.name, self.player.spell, self.player.spell_damage))
-                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
+                            self.actors[i].messages.append("{0} is hit by {1} for {2} damage!".format(self.actors[i].name, self.player.spell, self.player.spell_damage))
+                            self.actors[i].take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
                     self.player.spell_status = "cast"
@@ -179,11 +179,11 @@ class Spells:
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
-                    for npc in self.actors:
-                        if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
+                    for i in range(len(self.actors) - 1, -1, -1):
+                        if self.actors[i].get_location() in valid_tiles_list_collision and isinstance(self.actors[i], Actor.Enemy):
                             npcs_hit = True
-                            npc.messages.append("{0} is hit by {1} for {2} damage!".format(npc.name, self.player.spell, self.player.spell_damage))
-                            npc.take_damage(self.player.spell_damage, self.actors, self.items)
+                            self.actors[i].messages.append("{0} is hit by {1} for {2} damage!".format(self.actors[i].name, self.player.spell, self.player.spell_damage))
+                            self.actors[i].take_damage(self.player.spell_damage, self.actors, self.items)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
                     self.player.spell_status = "cast"
@@ -246,20 +246,20 @@ class Spells:
                     self.player.turns_since_spell = 0
                     self.player.messages.append("{0} casts {1}!".format(self.player.name, self.player.spell))
                     npcs_hit = False
-                    for npc in self.actors:
-                        if npc.get_location() in valid_tiles_list_collision and isinstance(npc, Actor.Enemy):
+                    for i in range(len(self.actors)-1, -1, -1):
+                        if self.actors[i].get_location() in valid_tiles_list_collision and isinstance(self.actors[i], Actor.Enemy):
                             no_buff = True
                             npcs_hit = True
-                            npc.messages.append("{0} is affected by {1} for 10 turns!".format(npc.name, self.player.spell))
+                            self.actors[i].messages.append("{0} is affected by {1} for 10 turns!".format(self.actors[i].name, self.player.spell))
                             for buff in self.buffs:
-                                if buff.target == npc and buff.ai_change == "dazed":
+                                if buff.target == self.actors[i] and buff.ai_change == "dazed":
                                     buff.turn_counter = 0
                                     no_buff = False
                             if no_buff:
-                                self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", npc, 0, 0, 0, libt.random_get_int(12, 18), "dazed"))
-                                npc.ai = "dazed"
-                                npc.frame_counter = 0
-                                npc.idle_frames = round(npc.idle_frames * 1.25)
+                                self.buffs.append(Buffs.Buff(self.surface_main, "SPRITES_DAZED_BUFF", self.actors[i], 0, 0, 0, libt.random_get_int(0, 12, 18), "dazed"))
+                                self.actors[i].ai = "dazed"
+                                self.actors[i].frame_counter = 0
+                                self.actors[i].idle_frames = round(self.actors[i].idle_frames * 1.25)
                     if not npcs_hit:
                         self.player.messages.append("It didn't hit anyone... noob")
                     self.player.spell_status = "cast"

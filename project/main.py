@@ -44,7 +44,7 @@ class Main:
         self.messages = []
 
         # Camera (aka offset to move the world surface instead of having a camera to move with the player, because pygame :)
-        #         NB! Set initial coordinates same as player to avoid
+        #         NB! Set initial coordinates same as player
         player_x, player_y = self.map_obj.first_room_center
         self.camera = Camera.Camera(player_x, player_y)
 
@@ -56,9 +56,10 @@ class Main:
         self.player = Actor.Player(player_x, player_y, "Juhan", "SPRITES_PLAYER", False, self.game_map, self.surface_main, self.messages, hp=20, armor=3, dmg=3, inventory_limit=10)
         self.player.inventory.clear()
 
-        """
+
         # STAFFS WITH SPELLS FOR DEBUGGING
-        
+
+        """
         self.items.append(Actor.Equipable(player_x-1, player_y, "Staff of Fireball", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Fireball", 5, 0, 5))
         self.items.append(Actor.Equipable(player_x-1, player_y-1, "Staff of ICBM with Pu-239 (for debugging only ofc)", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 0, 0, 0, False, False, "Nuke", 999, 0, 999))
         self.items.append(Actor.Equipable(player_x+1, player_y, "Staff of Arc Lightning", "SPRITE_WEAPON_STAFF", self.game_map, self.surface_main, self.messages, 1, 1, 0, False, False, "Lightning", 5, 0, 5))

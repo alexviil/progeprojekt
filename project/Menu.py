@@ -63,9 +63,9 @@ class Menu:
                 exit()
 
             font_height = self.draw.get_font_height(const.FONT_CONSOLE)
-            self.draw.draw_text("Music by Hendy Marvin", 5, const.MAIN_SURFACE_HEIGHT-font_height-5, const.DARK_GRAY,
+            self.draw.draw_text("Music by Hendy Marvin", 5, const.MAIN_SURFACE_HEIGHT-font_height-5, const.GRAY,
                                 const.FONT_CONSOLE)
-            self.draw.draw_text("Art by 0x72", const.MAIN_SURFACE_WIDTH - 132, const.MAIN_SURFACE_HEIGHT-font_height-5, const.DARK_GRAY,
+            self.draw.draw_text("Art by 0x72", const.MAIN_SURFACE_WIDTH - 132, const.MAIN_SURFACE_HEIGHT-font_height-5, const.GRAY,
                                 const.FONT_CONSOLE)
 
             pg.display.update()
