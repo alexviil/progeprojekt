@@ -4,9 +4,9 @@
 ---------------------------------------------------------------
 ---------------------------------------------------------------
 
-Töötamiseks vajab 32-bitist püütonit ja töötab Windowsis.
-64-bitise püütoni puhul on (vist) vaja 64-bitist SDL2.dll
-ja (vist) peaks töötama. (vb on vaja ka teist libtcod versiooni)
+TÃ¶Ã¶tamiseks vajab 32-bitist pÃ¼Ã¼tonit ja tÃ¶Ã¶tab Windowsis.
+64-bitise pÃ¼Ã¼toni puhul on (vist) vaja 64-bitist SDL2.dll
+ja (vist) peaks tÃ¶Ã¶tama. (vb on vaja ka teist libtcod versiooni)
 
 Linuxil on vaja ise ehitada libtcod ja SDL2.dll (vist).
 Ubuntu 14.04 ja Fedora 22 puhul on asi lihtne, teistel juhtudel
@@ -14,78 +14,82 @@ lihtsalt edu.
 
 https://github.com/libtcod/libtcod/tree/master/build/autotools?fbclid=IwAR3pjMEkTz-H-cSJuWscRfWdL7cy9SXCiTiCAKJDjrIEIymrA4_P8fXlKJM
 
-Kui mõne bugi leiad siis tõenäoliselt on see hoopis feature.
-Nii töötab tänapäeva mängudisain.
+Kui mÃµne bugi leiad siis tÃµenÃ¤oliselt on see hoopis feature.
+Nii tÃ¶Ã¶tab tÃ¤napÃ¤eva mÃ¤ngudisain.
 
 ---------------------------------------------------------------
--------------------Kuidas käivitada, mängida-------------------
+-------------------Kuidas kÃ¤ivitada, mÃ¤ngida-------------------
 ---------------------------------------------------------------
 
-Võta Thonnys või kusiganes main.py lahti ja pane käima. Kasutab
+VÃµta Thonnys vÃµi kusiganes main.py lahti ja pane kÃ¤ima. Kasutab
 teeke libtcodpy, mis on juba failides olemas, ja pygame, mis
 peab kasutajal endal olemas olema.
 
-ESC - Menüü
+Kui pygame puudub, siis installimiseks veendu, et pÃ¼Ã¼ton
+on sul PATH environment variables all olemas ja kirjuta
+command prompti: "py -m pip install -U pygame --user" jutumÃ¤rkideta
+
+ESC - MenÃ¼Ã¼
 WASD - liikumine(s.h. kirstude avamine ja vastastele haiget tegemine)
-I - avab seljakoti menüü, kus näitab ka mida iga nupp teeb.
-E - läheb redelist alla järgmisesse tasemesse või võtab üles maas oleva eseme
-SPACE - käes eseme funktsiooni kasutamine (shoot bow / cast spell)
+I - avab seljakoti menÃ¼Ã¼, kus nÃ¤itab ka mida iga nupp teeb.
+E - lÃ¤heb redelist alla jÃ¤rgmisesse tasemesse vÃµi vÃµtab Ã¼les maas oleva eseme
+SPACE - kÃ¤es eseme funktsiooni kasutamine (shoot bow / cast spell)
 
 Spell staffid hakkavad spawnima alates 3. tasemest, kuid vibud
 tekivad juba varem. Et spelli castida pead veenduma, et ese on
-üldse kätte võetud.
+Ã¼ldse kÃ¤tte vÃµetud.
 
-Mäng save'ib progressi ka, ehk kui mängust quit paned siis
-järgmine kord saad continue game nupust edasi mängida.
+MÃ¤ng save'ib progressi ka, ehk kui mÃ¤ngust quit paned siis
+jÃ¤rgmine kord saad continue game nupust edasi mÃ¤ngida.
 
 ---------------------------------------------------------------
 -----------------------------Vihjed----------------------------
 ---------------------------------------------------------------
 
-*Seljakotti mahub kuni 10 asja, käes hoitud ese mitte kaasaarvatud,
-seega korja võimalikult palju jõujooke, et elusid taastada ja
+*Seljakotti mahub kuni 10 asja, kÃ¤es hoitud ese mitte kaasaarvatud,
+seega korja vÃµimalikult palju jÃµujooke, et elusid taastada ja
 enda omadusi ajutiselt tugevdada.
 
-*Kirstud võivad vahest hoopis kollid olla, seega ära neid ava, kui
-sul on vähe elusid.
+*Kirstud vÃµivad vahest hoopis kollid olla, seega Ã¤ra neid ava, kui
+sul on vÃ¤he elusid.
 
 *Staffid, mis annavad flat bonuse, ja staffid, mis omavad spelli
-funktsiooni, näevad samasugused välja, seega tasub alates 3. tasemest
-kõiki kontrollida. Varem tasub ka, kuna iga staffi flat bonused on erinevad.
+funktsiooni, nÃ¤evad samasugused vÃ¤lja, seega tasub alates 3. tasemest
+kÃµiki kontrollida. Varem tasub ka, kuna iga staffi flat bonused on erinevad.
 
 *Iga tasemega muutuvad kollid tiba tugevamaks.
 
 *Buff potioneid saab korraga juua nii palju kui seljakotis on ja palju
-E tähte jaksad vajutada.
+E tÃ¤hte jaksad vajutada.
 
-*Osad kollid pillavad oma relva maha, mis on tavaliselt väga nõrk aga
-kõige esimesel tasemel võib kasuks tulla.
+*Osad kollid pillavad oma relva maha, mis on tavaliselt vÃ¤ga nÃµrk aga
+kÃµige esimesel tasemel vÃµib kasuks tulla.
 
-*Mängul puudub niinimetatud win condition, kuna kui poolpurjus eestlane
-koperdub pimedates tunnelites aina sügavamale ja sügavamale (ja veel
-sellised tunnelid kust ka kaine mõistusega inimesed on jäänud
+*MÃ¤ngul puudub niinimetatud win condition, kuna kui poolpurjus eestlane
+koperdub pimedates tunnelites aina sÃ¼gavamale ja sÃ¼gavamale (ja veel
+sellised tunnelid kust ka kaine mÃµistusega inimesed on jÃ¤Ã¤nud
 teadmata kadunuks) siis annab loogiliselt tuletada et ega sellises
-olukorras otseselt võita ei saagi. Küll on aga floor counter, kui 
-sõbraga mängid ja saad ühe taseme võrra kaugemale siis saad talle
-näkku määrida.
+olukorras otseselt vÃµita ei saagi. KÃ¼ll on aga floor counter, kui 
+sÃµbraga mÃ¤ngid ja saad Ã¼he taseme vÃµrra kaugemale siis saad talle
+nÃ¤kku mÃ¤Ã¤rida.
 
-*Kui sa tahad kuskile YT gameplay vms millegi pärast üles panna siis
-võta muusika maha, ei mäleta litsentsi tingimusi. 
+*Kui sa tahad kuskile YT gameplay vms millegi pÃ¤rast Ã¼les panna siis
+vÃµta muusika maha, ei mÃ¤leta litsentsi tingimusi. 
 
 ---------------------------------------------------------------
 -----------------------------Intro-----------------------------
 ---------------------------------------------------------------
 
 Aasta on 1972 ja Eesti eksiilvalitsusest Juhan Juhansson* (nimi
-muudetud, arendajatele teada) on Pariisis seoses väliseestlaste
+muudetud, arendajatele teada) on Pariisis seoses vÃ¤liseestlaste
 kokkusaamisega, et arutada hetke olukorda maailmas, ja ka lihtsalt
-eesti keele elus hoidmiseks. Kuna aga Pariisis on iga päeva kohta
-2/3 tõenäosus, et samal päeval leiab aset protest, siis kahjuks
-Juhan oma rahvuskaaslasteni ei jõudnudki. Selle asemel pidi ta
-sõjalaadsest olukorrast pagema, ning kõige rahulikum koht selleks
-sattus olema Montparnasse'i surnuaed. Olles ka päeva jooksul
-alkoholi tarbinud, nagu eestlased ikka, otsustab ta minna seal mööda
-tunnelit alla, kuni märkab, et ei teagi kus ta enam on. Tuleb
-välja, et ta on jõudnud Pariisi katakombidesse, ning ta ei ole seal
-üksi. Siit algabki mäng, kus Juhan võitleb kollidega ja, nagu iga
-vaimselt kohal inimene teeks, läheb aina sügavamale katakombidesse.
+eesti keele elus hoidmiseks. Kuna aga Pariisis on iga pÃ¤eva kohta
+2/3 tÃµenÃ¤osus, et samal pÃ¤eval leiab aset protest, siis kahjuks
+Juhan oma rahvuskaaslasteni ei jÃµudnudki. Selle asemel pidi ta
+sÃµjalaadsest olukorrast pagema, ning kÃµige rahulikum koht selleks
+sattus olema Montparnasse'i surnuaed. Olles ka pÃ¤eva jooksul
+alkoholi tarbinud, nagu eestlased ikka, otsustab ta minna seal mÃ¶Ã¶da
+tunnelit alla, kuni mÃ¤rkab, et ei teagi kus ta enam on. Tuleb
+vÃ¤lja, et ta on jÃµudnud Pariisi katakombidesse, ning ta ei ole seal
+Ã¼ksi. Siit algabki mÃ¤ng, kus Juhan vÃµitleb kollidega ja, nagu iga
+vaimselt kohal inimene teeks, lÃ¤heb aina sÃ¼gavamale katakombidesse.
